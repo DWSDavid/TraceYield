@@ -1,0 +1,44 @@
+# Factor weights — the single most important knob in the system.
+# These are STARTING priors. backtest/ tunes them out-of-sample.
+# Each horizon weights the same factors differently: short horizons lean on
+# Fed communication & positioning; long horizons lean on inflation & liquidity.
+
+factors:
+  fomc_nlp:        # hawkish/dovish tone from minutes + speeches
+    description: "Fed communication tone, [-1 dovish, +1 hawkish]"
+  inflation:       # CPI/PCE trend vs expectations + breakevens
+    description: "Inflation regime, higher = upward yield pressure"
+  liquidity:       # QT pace, bank reserves, RRP balance
+    description: "Fed balance-sheet liquidity, tighter = upward yield pressure"
+  global_rates:    # US-DE, US-JP differentials & foreign curve moves
+    description: "Global rate differentials & safe-haven flows"
+  political_risk:  # elections, chair transition, fiscal/geopolitical shocks
+    description: "Political/geopolitical risk premium"
+
+# Weights per horizon (must each sum to 1.0)
+horizons:
+  1w:
+    fomc_nlp:       0.35
+    inflation:      0.20
+    liquidity:      0.15
+    global_rates:   0.20
+    political_risk: 0.10
+  1m:
+    fomc_nlp:       0.30
+    inflation:      0.25
+    liquidity:      0.20
+    global_rates:   0.15
+    political_risk: 0.10
+  3m:
+    fomc_nlp:       0.20
+    inflation:      0.30
+    liquidity:      0.25
+    global_rates:   0.15
+    political_risk: 0.10
+
+# Direction thresholds on the blended signal score (range roughly [-1, +1])
+# score = sum(weight_i * factor_score_i); positive = yields UP = bond BEAR
+thresholds:
+  bear_above:  0.15    # score > +0.15 -> Bear bonds (yields up)
+  bull_below: -0.15    # score < -0.15 -> Bull bonds (yields down)
+  # between the two -> Neutral

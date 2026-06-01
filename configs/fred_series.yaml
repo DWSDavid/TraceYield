@@ -1,0 +1,37 @@
+# FRED series IDs grouped by the factor they feed.
+# Pull these daily (most are daily; macro releases are monthly/weekly).
+
+treasury_yields:        # the prediction targets + curve
+  DGS2:  "2-Year Treasury yield"
+  DGS5:  "5-Year Treasury yield"
+  DGS10: "10-Year Treasury yield   # PRIMARY TARGET"
+  DGS20: "20-Year Treasury yield"
+  DGS30: "30-Year Treasury yield"
+  T10Y2Y: "10Y-2Y spread (2s10s curve)"
+
+inflation:
+  CPIAUCSL:  "CPI, all urban consumers"
+  PCEPILFE:  "Core PCE price index (Fed's preferred gauge)"
+  T5YIE:     "5-Year breakeven inflation"
+  T10YIE:    "10-Year breakeven inflation"
+  T5YIFR:    "5y5y forward inflation expectation"
+
+liquidity:
+  WALCL:     "Fed total assets (balance sheet size) — weekly H.4.1"
+  WRESBAL:   "Reserve balances held at Fed (bank reserves)"
+  RRPONTSYD: "Overnight reverse repo (RRP) volume"
+  WTREGEN:   "Treasury General Account (TGA)"
+
+global_rates:
+  IRLTLT01DEM156N: "Germany 10Y long-term govt bond yield"
+  IRLTLT01JPM156N: "Japan 10Y long-term govt bond yield"
+  # US-DE / US-JP differentials computed in signals/
+
+policy:
+  DFEDTARU:  "Fed funds target upper bound"
+  EFFR:      "Effective federal funds rate"
+  SOFR:      "Secured overnight financing rate"
+
+cross_asset:            # for the impact map / market-implied context
+  VIXCLS:    "VIX equity volatility"
+  DTWEXBGS:  "Broad trade-weighted USD index"

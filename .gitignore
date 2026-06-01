@@ -1,0 +1,38 @@
+# Secrets
+.env
+*.key
+
+# Data — never commit raw pulls, caches, or large processed files
+data/raw/
+data/cache/
+data/processed/
+data/reports/*.html
+*.parquet
+*.h5
+*.hdf5
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Models / artifacts
+*.pkl
+*.joblib
+*.ubj
+experiments/checkpoints/
+
+# Tooling
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,0 +1,31 @@
+# --- Data ingestion ---
+fredapi>=0.5.2          # FRED economic data (CPI, PCE, reserves, yields)
+yfinance>=0.2.40        # market prices (TLT, equities, gold, FX) for cross-asset
+requests>=2.32          # Fed website docs, generic HTTP
+pandas>=2.2
+numpy>=1.26
+pyarrow>=16.0           # parquet
+python-dotenv>=1.0      # load .env secrets
+
+# --- NLP (hybrid keyword + LLM) ---
+anthropic>=0.39         # Claude API for deep FOMC hawkish/dovish scoring
+beautifulsoup4>=4.12    # parse Fed HTML statements/minutes
+pdfplumber>=0.11        # parse Fed PDF speeches/minutes
+
+# --- Modeling ---
+xgboost>=2.1
+lightgbm>=4.5
+scikit-learn>=1.5
+
+# --- Config / orchestration ---
+pyyaml>=6.0
+omegaconf>=2.3          # structured config (optional, Hydra-lite)
+
+# --- Reporting ---
+jinja2>=3.1             # HTML report templating
+rich>=13.7              # pretty terminal report
+
+# --- Dev ---
+black>=24.0
+ruff>=0.6
+pytest>=8.0
