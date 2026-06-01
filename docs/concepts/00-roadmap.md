@@ -10,6 +10,7 @@ plain-English curriculum. Read top to bottom; each builds on the last.
 | 2 | [02-the-10y-treasury.md](02-the-10y-treasury.md) | What is the 10Y yield and why is it the most important number in finance? |
 | 3 | [03-chain-reaction.md](03-chain-reaction.md) | When the Fed/10Y moves, what dominoes fall across the world? |
 | 4 | [04-glossary.md](04-glossary.md) | Every term (QT, RRP, breakevens, 2s10s, DV01...) in one place |
+| ★ | [05-core-logic.md](05-core-logic.md) | **核心因果链总梳理(中文+双语)** — yield↔price、通胀/美联储/流动性怎么推动利率、为什么老是 Neutral。**蒙了就先看这篇** |
 
 ## The 30-second mental model
 1. The **Fed** (via the **FOMC**) sets the *overnight* interest rate and controls
