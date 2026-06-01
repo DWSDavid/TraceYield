@@ -20,30 +20,40 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.ingestion.fred_client import fetch_all
 from src.signals.factors import compute_all
 from src.models.predictor import predict
+from src.nlp.fomc_analyzer import latest_statement_score
 from src.report import render
 
 
-def main() -> None:
-    print("[1/4] Ingesting FRED data...")
+def main(use_llm: bool = True) -> None:
+    print("[1/5] Ingesting FRED data...")
     df = fetch_all()
-
     current_10y = float(df["DGS10"].dropna().iloc[-1])
     print(f"      Current 10Y = {current_10y:.2f}%")
 
-    print("[2/4] Computing factor scores...")
-    # hawkish/political default to 0 until NLP + news pipelines are wired in.
-    factors = compute_all(df, hawkish=0.0, political=0.0)
+    print("[2/5] Scoring latest FOMC statement...")
+    fomc = latest_statement_score(use_llm=use_llm)
+    hawkish = float(fomc["blended"]) if fomc else 0.0
+    if fomc:
+        print(f"      {fomc['file']}: hawkish {hawkish:+.2f} "
+              f"(llm={fomc['llm_score']}, kw={fomc['keyword_score']})")
+    else:
+        print("      no FOMC docs found; fomc_nlp=0")
+
+    print("[3/5] Computing factor scores...")
+    factors = compute_all(df, hawkish=hawkish, political=0.0)
     for k, v in factors.items():
         print(f"      {k:14s} {v:+.3f}")
 
-    print("[3/4] Predicting...")
+    print("[4/5] Predicting...")
     preds = predict(factors, current_10y)
 
-    print("[4/4] Rendering report...")
+    print("[5/5] Rendering reports (markdown + HTML)...")
     md = render.to_markdown(preds, current_10y)
-    path = render.save(md)
+    md_path = render.save(md)
+    html = render.to_html(preds, current_10y, factors, fomc=fomc)
+    html_path = render.save_html(html)
     print("\n" + md)
-    print(f"\nSaved -> {path}")
+    print(f"\nSaved -> {md_path}\n        {html_path}")
 
 
 if __name__ == "__main__":

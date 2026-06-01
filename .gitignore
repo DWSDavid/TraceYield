@@ -7,9 +7,11 @@ data/raw/
 data/cache/
 data/processed/
 data/reports/*.html
+FOMC/             # source Fed PDFs — keep binaries out of git
 *.parquet
 *.h5
 *.hdf5
+*.pdf
 
 # Python
 __pycache__/

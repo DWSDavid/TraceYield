@@ -1,0 +1,10 @@
+# Which LLM provider scores FOMC documents on event days.
+# Switch provider here without touching code. Each needs its key in .env.
+
+llm:
+  provider: openai        # openai | anthropic | gemini
+  models:
+    openai:    gpt-4o     # also: gpt-4o-mini (cheaper)
+    anthropic: claude-opus-4-8
+    gemini:    gemini-2.0-flash
+  max_chars: 40000        # truncate very long minutes to control cost
