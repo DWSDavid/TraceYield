@@ -67,6 +67,7 @@ def analyze(use_llm: bool = True, refresh: bool = False) -> list[dict]:
                 "llm_score": llm_score,
                 "rationale": (llm_res or {}).get("rationale", ""),
                 "key_phrases": (llm_res or {}).get("key_phrases", []),
+                "key_quotes": (llm_res or {}).get("key_quotes", []),
                 "provider": (llm_res or {}).get("provider", "keyword-only"),
             }
             cache[key] = rec
@@ -82,9 +83,40 @@ def analyze(use_llm: bool = True, refresh: bool = False) -> list[dict]:
 
 
 def latest_statement_score(use_llm: bool = True) -> dict | None:
-    """The newest STATEMENT's record — what feeds `fomc_nlp`."""
+    """The newest STATEMENT's record."""
     recs = [r for r in analyze(use_llm=use_llm) if r["kind"] == "statement"]
     return recs[-1] if recs else None
+
+
+def latest_minutes_score(use_llm: bool = True) -> dict | None:
+    """The newest MINUTES record."""
+    recs = [r for r in analyze(use_llm=use_llm) if r["kind"] == "minutes"]
+    return recs[-1] if recs else None
+
+
+# Statement is the official current stance; minutes adds the detailed debate
+# behind it. Statement leads, minutes informs.
+STATEMENT_WEIGHT = 0.6
+
+
+def combined_fomc_score(use_llm: bool = True) -> dict | None:
+    """Blend latest statement + latest minutes into the fomc_nlp factor.
+
+    Returns a record carrying the blended hawkish score plus BOTH source docs
+    (with their quotes) so the report can show the evidence trail.
+    """
+    recs = analyze(use_llm=use_llm)
+    stmt = next((r for r in reversed(recs) if r["kind"] == "statement"), None)
+    mins = next((r for r in reversed(recs) if r["kind"] == "minutes"), None)
+    if not stmt and not mins:
+        return None
+    if stmt and mins:
+        blended = round(STATEMENT_WEIGHT * stmt["blended"]
+                        + (1 - STATEMENT_WEIGHT) * mins["blended"], 3)
+    else:
+        src = stmt or mins
+        blended = src["blended"]
+    return {"blended": blended, "statement": stmt, "minutes": mins}
 
 
 if __name__ == "__main__":

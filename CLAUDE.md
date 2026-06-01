@@ -87,6 +87,21 @@ TraceYield/
 - Secrets (FRED_API_KEY, ANTHROPIC_API_KEY) in `.env`, never committed.
 - Every model/weight change must be backtested before merge.
 
+## Working preferences (David) — don't make him re-state these
+- **Reply in Chinese** by default (he writes Chinese); keep code/identifiers English.
+- **GPT-4o is the primary LLM** for FOMC scoring (key in `.env`). Keyword scorer is
+  only a noisy cross-check at 0.2 weight — never let it flip the LLM's sign.
+- **Always show evidence**: FOMC scores must come with verbatim `key_quotes` from
+  the source doc (esp. minutes) — credibility matters more than a bare number.
+- **Two parallel tracks**: build the system AND teach the concepts. He's learning
+  the domain alongside building — explain the "why," use the `macro-tutor` agent.
+- **Log progress** to `PROGRESS.md` (newest on top) after each meaningful update.
+- **He values interpretability** — every prediction must decompose into signed
+  factor contributions; no black boxes.
+- Reminder: his OpenAI key was pasted in plaintext once — suggest rotating it.
+
 ## Status
-🟡 Scaffolding. Next: wire FRED ingestion + keyword NLP, then first naive
-backtest. See `docs/concepts/` to build domain understanding in parallel.
+🟢 Runs end-to-end on live FRED data + GPT FOMC scoring with quote evidence +
+HTML report. See `PROGRESS.md` for the running log.
+Next candidates: first walk-forward backtest · tune weights/bp-sensitivity ·
+add dot-plot (SEP) parsing · news pipeline for `political_risk`.

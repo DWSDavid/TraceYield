@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.ingestion.fred_client import fetch_all
 from src.signals.factors import compute_all
 from src.models.predictor import predict
-from src.nlp.fomc_analyzer import latest_statement_score
+from src.nlp.fomc_analyzer import combined_fomc_score
 from src.report import render
 
 
@@ -30,12 +30,16 @@ def main(use_llm: bool = True) -> None:
     current_10y = float(df["DGS10"].dropna().iloc[-1])
     print(f"      Current 10Y = {current_10y:.2f}%")
 
-    print("[2/5] Scoring latest FOMC statement...")
-    fomc = latest_statement_score(use_llm=use_llm)
+    print("[2/5] Scoring latest FOMC statement + minutes...")
+    fomc = combined_fomc_score(use_llm=use_llm)
     hawkish = float(fomc["blended"]) if fomc else 0.0
     if fomc:
-        print(f"      {fomc['file']}: hawkish {hawkish:+.2f} "
-              f"(llm={fomc['llm_score']}, kw={fomc['keyword_score']})")
+        s, m = fomc.get("statement"), fomc.get("minutes")
+        if s:
+            print(f"      statement {s['file']}: blended {s['blended']:+.2f}")
+        if m:
+            print(f"      minutes   {m['file']}: blended {m['blended']:+.2f}")
+        print(f"      -> combined fomc_nlp {hawkish:+.2f}")
     else:
         print("      no FOMC docs found; fomc_nlp=0")
 

@@ -20,7 +20,10 @@ Return STRICT JSON only, no prose:
                     -1 = very dovish (easier, yields down)>,
   "confidence": <float in [0, 1]>,
   "rationale": "<2-3 sentences citing specific language>",
-  "key_phrases": ["<verbatim phrases that drove the score>"]
+  "key_phrases": ["<short verbatim phrases that drove the score>"],
+  "key_quotes": ["<2-4 FULL verbatim sentences copied EXACTLY from the document
+                  that most justify the score — these are evidence, do not
+                  paraphrase, quote word-for-word>"]
 }}
 
 Document:

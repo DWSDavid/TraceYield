@@ -90,20 +90,38 @@ def to_html(preds, current_10y: float, factors: dict,
                   f"<td class='num'>{raw:+.2f}</td>"
                   f"<td class='num'>{contrib:+.3f}</td></tr>")
 
+    def _doc_block(label: str, rec: dict | None) -> str:
+        if not rec:
+            return ""
+        col = '#dc2626' if rec.get('blended', 0) >= 0 else '#16a34a'
+        quotes = "".join(f"<blockquote>“{q}”</blockquote>"
+                         for q in rec.get("key_quotes", [])[:4])
+        phrases = "".join(f"<span class='chip'>{p}</span>"
+                          for p in rec.get("key_phrases", [])[:6])
+        return f"""
+          <div class="doc">
+            <div class="dochead"><span class="badge">{label}</span>
+              <span class="docfile">{rec.get('file','')}</span>
+              <b style="color:{col};margin-left:auto">{rec.get('blended',0):+.2f}</b></div>
+            <p class="muted">LLM {rec.get('llm_score')} · keyword
+              {rec.get('keyword_score')} · {rec.get('provider','')}</p>
+            <p class="rationale">{rec.get('rationale','')}</p>
+            {quotes}
+            <div class="chips">{phrases}</div>
+          </div>"""
+
     fomc_block = ""
     if fomc:
-        phrases = "".join(f"<span class='chip'>{p}</span>"
-                          for p in fomc.get("key_phrases", [])[:6])
+        comb = fomc.get('blended', 0)
+        col = '#dc2626' if comb >= 0 else '#16a34a'
         fomc_block = f"""
         <div class="card">
-          <h2>FOMC tone — {fomc.get('file','')}</h2>
-          <p class="score">hawkish score
-            <b style="color:{'#dc2626' if fomc.get('blended',0)>=0 else '#16a34a'}">
-            {fomc.get('blended',0):+.2f}</b>
-            <span class="muted">(LLM {fomc.get('llm_score')} · keyword
-            {fomc.get('keyword_score')} · {fomc.get('provider','')})</span></p>
-          <p class="rationale">{fomc.get('rationale','')}</p>
-          <div class="chips">{phrases}</div>
+          <h2>FOMC tone &amp; evidence</h2>
+          <p class="score">combined hawkish score
+            <b style="color:{col}">{comb:+.2f}</b>
+            <span class="muted">(0.6·statement + 0.4·minutes)</span></p>
+          {_doc_block('STATEMENT', fomc.get('statement'))}
+          {_doc_block('MINUTES', fomc.get('minutes'))}
         </div>"""
 
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -133,6 +151,14 @@ def to_html(preds, current_10y: float, factors: dict,
  .rationale{{color:#cbd5e1}} .muted{{color:#64748b;font-size:13px;font-weight:400}}
  .score{{font-size:15px}} .foot{{color:#64748b;font-size:12px;text-align:center;
    margin-top:8px}}
+ .doc{{border-top:1px solid #334155;padding-top:14px;margin-top:14px}}
+ .dochead{{display:flex;align-items:center;gap:10px;margin-bottom:4px}}
+ .badge{{background:#2563eb;color:#fff;font-size:11px;font-weight:700;
+   letter-spacing:.04em;padding:2px 8px;border-radius:5px}}
+ .docfile{{color:#94a3b8;font-size:13px}}
+ blockquote{{margin:8px 0;padding:8px 14px;border-left:3px solid #2563eb;
+   background:#0f172a;border-radius:0 6px 6px 0;color:#e2e8f0;font-size:13.5px;
+   font-style:italic}}
 </style></head><body><div class="wrap">
  <h1>UST 10Y Yield Prediction</h1>
  <p class="sub">{run_date:%A, %B %d, %Y} · current 10Y <b class="big"
