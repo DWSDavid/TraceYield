@@ -4,6 +4,27 @@ Newest entry on top. One entry per meaningful update. Format: `## YYYY-MM-DD —
 
 ---
 
+## 2026-06-01 - Phase 1.3 FOMC and political proxy wired into backtest
+- `src/backtest/walk_forward.py` now calls `fomc_factor_asof(d)` for each
+  walk-forward date, so `fomc_nlp` is point-in-time instead of 0 over history.
+- `political_risk` is no longer hardcoded to 0. v1 proxy uses FRED `VIXCLS` as a
+  risk-off/safe-haven proxy: high VIX maps to negative yield pressure
+  (`political_risk = -zscore(VIXCLS)`). This is documented as a temporary proxy
+  until Phase 3 news NLP.
+- `scripts/daily_run.py` also uses the VIX proxy for the daily political/risk
+  score instead of hardcoding neutral.
+- Backtest diagnostic now prints average absolute 3m factor contributions; latest
+  P1.3 run showed `fomc_nlp=0.072` and `political_risk=0.041`, confirming both
+  contribute non-zero signal.
+- Backtest 2015-01-01 -> 2026-05-31, before release-date/vintage correction:
+  - 1w: IC 0.047, DA 48.0%.
+  - 1m: IC 0.074, DA 48.6%.
+  - 3m: IC 0.099, DA 47.8%.
+- Comparison vs old macro-only baseline (3m IC 0.088, DA 52.6%): FOMC/VIX proxy
+  lifted 3m IC by +0.011 but reduced raw sign directional accuracy by -4.8 pp.
+  Keep the signal for interpretability, but do not claim predictive improvement
+  until P1.4 honest-lag backtest and later tuning.
+
 ## 2026-06-01 - Phase 1.2 historical FOMC scoring series implemented
 - Added `configs/model.yaml` `llm.backfill_model: gpt-4o-mini`; live/latest
   scoring still uses the configured OpenAI live model (`gpt-4o`).

@@ -4,6 +4,7 @@ where POSITIVE = upward pressure on yields (bond bearish).
 This is deliberately simple and rule-based for v0 so the first backtest is
 interpretable. The ML model (models/) later learns refinements on top of these.
 """
+
 from __future__ import annotations
 
 import pandas as pd
@@ -42,7 +43,7 @@ def liquidity_factor(df: pd.DataFrame) -> float:
     """Shrinking Fed assets / falling reserves => tighter => positive."""
     parts = []
     if "WALCL" in df:
-        parts.append(-_zscore_last(_pct_change(df, "WALCL", 13)))   # QT = balance down
+        parts.append(-_zscore_last(_pct_change(df, "WALCL", 13)))  # QT = balance down
     if "WRESBAL" in df:
         parts.append(-_zscore_last(_pct_change(df, "WRESBAL", 13)))
     return sum(parts) / len(parts) if parts else 0.0
@@ -62,13 +63,19 @@ def political_risk_factor(score: float = 0.0) -> float:
     return max(-1.0, min(1.0, score))
 
 
+def political_risk_proxy(df: pd.DataFrame) -> float:
+    """VIX risk-off proxy: high risk stress tends to pull 10Y yields lower."""
+    if "VIXCLS" in df:
+        return -_zscore_last(df["VIXCLS"])
+    return 0.0
+
+
 def fomc_factor(hawkish_score: float = 0.0) -> float:
     """Direct pass-through of the NLP hawkish/dovish score (already in [-1, 1])."""
     return max(-1.0, min(1.0, hawkish_score))
 
 
-def compute_all(df: pd.DataFrame, hawkish: float = 0.0,
-                political: float = 0.0) -> dict:
+def compute_all(df: pd.DataFrame, hawkish: float = 0.0, political: float = 0.0) -> dict:
     return {
         "fomc_nlp": fomc_factor(hawkish),
         "inflation": inflation_factor(df),
