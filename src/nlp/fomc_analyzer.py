@@ -54,6 +54,7 @@ def analyze(
     refresh: bool = False,
     docs: list[FomcDoc] | None = None,
     limit: int | None = None,
+    scoring_model: str | None = None,
 ) -> list[dict]:
     """Score every FOMC doc (cached). Returns list of dicts, oldest -> newest."""
     cache = _load_cache()
@@ -76,7 +77,7 @@ def analyze(
             llm_res, llm_score = None, None
             if use_llm:
                 try:
-                    llm_res = score_document(d.text)
+                    llm_res = score_document(d.text, model=scoring_model)
                     llm_score = float(llm_res.get("hawkish_score", 0.0))
                 except Exception as e:  # noqa: BLE001
                     print(f"[fomc] LLM scoring failed for {key}: {e}")
@@ -173,7 +174,11 @@ def main(argv: list[str] | None = None) -> None:
     )
     args = parser.parse_args(argv)
 
-    for r in analyze(use_llm=not args.no_llm, refresh=args.refresh, limit=args.limit):
+    for r in analyze(
+        use_llm=not args.no_llm,
+        refresh=args.refresh,
+        limit=args.limit,
+    ):
         print(
             f"{r['date']} {r['kind']:9s} kw={r['keyword_score']:+.2f} "
             f"llm={r['llm_score']} blend={r['blended']:+.2f}  {r['file']}"

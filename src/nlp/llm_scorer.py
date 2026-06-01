@@ -5,6 +5,7 @@ configs/model.yaml. Each returns the SAME contract:
     {hawkish_score in [-1,1], confidence in [0,1], rationale, key_phrases}
 Scores are auditable (every one carries a written rationale).
 """
+
 from __future__ import annotations
 
 import json
@@ -37,18 +38,31 @@ def _cfg() -> dict:
 
 
 def _parse(raw: str) -> dict:
-    raw = raw.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+    raw = (
+        raw.strip()
+        .removeprefix("```json")
+        .removeprefix("```")
+        .removesuffix("```")
+        .strip()
+    )
     try:
         return json.loads(raw)
     except json.JSONDecodeError:
-        return {"hawkish_score": 0.0, "confidence": 0.0,
-                "rationale": "parse_failed", "key_phrases": [], "raw": raw}
+        return {
+            "hawkish_score": 0.0,
+            "confidence": 0.0,
+            "rationale": "parse_failed",
+            "key_phrases": [],
+            "raw": raw,
+        }
 
 
 # --- providers -------------------------------------------------------------
 
+
 def _score_openai(doc: str, model: str) -> dict:
     from openai import OpenAI
+
     client = OpenAI(api_key=env("OPENAI_API_KEY"))
     resp = client.chat.completions.create(
         model=model,
@@ -60,9 +74,11 @@ def _score_openai(doc: str, model: str) -> dict:
 
 def _score_anthropic(doc: str, model: str) -> dict:
     import anthropic
+
     client = anthropic.Anthropic(api_key=env("ANTHROPIC_API_KEY"))
     msg = client.messages.create(
-        model=model, max_tokens=1024,
+        model=model,
+        max_tokens=1024,
         messages=[{"role": "user", "content": PROMPT.format(doc=doc)}],
     )
     return _parse(msg.content[0].text)
@@ -70,9 +86,9 @@ def _score_anthropic(doc: str, model: str) -> dict:
 
 def _score_gemini(doc: str, model: str) -> dict:
     from google import genai
+
     client = genai.Client(api_key=env("GEMINI_API_KEY"))
-    resp = client.models.generate_content(
-        model=model, contents=PROMPT.format(doc=doc))
+    resp = client.models.generate_content(model=model, contents=PROMPT.format(doc=doc))
     return _parse(resp.text)
 
 
@@ -83,11 +99,15 @@ _PROVIDERS = {
 }
 
 
-def score_document(text: str, provider: str | None = None) -> dict:
+def score_document(
+    text: str,
+    provider: str | None = None,
+    model: str | None = None,
+) -> dict:
     """Score a Fed document. provider defaults to configs/model.yaml."""
     cfg = _cfg()
     provider = provider or cfg["provider"]
-    model = cfg["models"][provider]
+    model = model or cfg["models"][provider]
     doc = text[: cfg["max_chars"]]
     result = _PROVIDERS[provider](doc, model)
     result["provider"] = provider
@@ -96,7 +116,9 @@ def score_document(text: str, provider: str | None = None) -> dict:
 
 
 if __name__ == "__main__":
-    sample = ("The Committee judges that inflation remains elevated and the "
-              "stance of policy is restrictive. It is not yet appropriate to "
-              "reduce the target range.")
+    sample = (
+        "The Committee judges that inflation remains elevated and the "
+        "stance of policy is restrictive. It is not yet appropriate to "
+        "reduce the target range."
+    )
     print(json.dumps(score_document(sample), indent=2, ensure_ascii=False))

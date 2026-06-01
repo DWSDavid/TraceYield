@@ -3,8 +3,13 @@
 
 llm:
   provider: openai        # openai | anthropic | gemini
+  backfill_model: gpt-4o-mini
   models:
     openai:    gpt-4o     # also: gpt-4o-mini (cheaper)
     anthropic: claude-opus-4-8
     gemini:    gemini-2.0-flash
   max_chars: 40000        # truncate very long minutes to control cost
+  pricing_per_1m_tokens:
+    gpt-4o-mini:
+      input: 0.15
+      output: 0.60

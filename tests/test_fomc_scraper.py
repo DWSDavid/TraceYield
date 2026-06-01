@@ -269,7 +269,7 @@ def test_analyze_upgrades_keyword_only_cache_when_llm_requested():
     )
     calls = []
 
-    def fake_score_document(text):
+    def fake_score_document(text, model=None):
         calls.append(text)
         return {
             "hawkish_score": 0.8,

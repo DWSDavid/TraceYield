@@ -4,6 +4,22 @@ Newest entry on top. One entry per meaningful update. Format: `## YYYY-MM-DD —
 
 ---
 
+## 2026-06-01 - Phase 1.2 historical FOMC scoring series implemented
+- Added `configs/model.yaml` `llm.backfill_model: gpt-4o-mini`; live/latest
+  scoring still uses the configured OpenAI live model (`gpt-4o`).
+- Added `src/signals/fomc_series.py` with `build()` and `fomc_factor_asof(d)`.
+  The series is indexed by public release date, not meeting/reference date:
+  statements use decision/release date; minutes use the calendar's exact
+  "Released Month DD, YYYY" date when present, falling back to +21 days.
+- Ran historical backfill across official Fed HTML docs: 262 rows, 2010-01-27
+  through 2026-05-20, all 262 with non-null LLM scores. Output:
+  `data/processed/fomc_scores.parquet`.
+- Backfill estimate printed by the CLI: model `gpt-4o-mini`, 262 docs,
+  ~1,579,893 input tokens, ~91,700 output tokens, estimated cost ~$0.2920.
+- Added tests proving `fomc_factor_asof(d)` returns only scores known on/before
+  `d`, and that build uses the configured backfill model plus minutes release
+  dates.
+
 ## 2026-06-01 - Phase 1.1 historical FOMC HTML scraper implemented
 - Added `src/ingestion/fomc_scraper.py`: official federalreserve.gov scraper for
   FOMC statements and minutes. Supports full calendar discovery from 2010 onward
