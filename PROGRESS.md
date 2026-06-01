@@ -4,6 +4,21 @@ Newest entry on top. One entry per meaningful update. Format: `## YYYY-MM-DD —
 
 ---
 
+## 2026-06-01 — v1 spec written; handing implementation to Codex
+- Wrote `docs/SPEC_v1.md`: the authoritative v1 build sheet. Upgrades v0 from a
+  blunt static scoring table to a 3-layer signal engine (Macro Regime → Market
+  Confirmation → Trade Signal) with informative Neutral states.
+- **Division of labour:** Codex implements phase by phase; Claude validates each
+  phase (backtest, look-ahead audit, acceptance gates, IC/dir-acc deltas).
+- Phased plan: P1 fill gaps (historical FOMC HTML scraper + score history + wire
+  into backtest + release-date correction) · P2 informative output (Conflict
+  Index, graded Bias, Triggers, yield-curve prediction) · P3 new data layers (Fed
+  market pricing, macro surprise, rates decomposition, technical/positioning) ·
+  P4 regime classifier + synthesis.
+- AGENTS.md now points Codex at the spec.
+- **Open decision for next session:** macro surprise needs a consensus/calendar
+  data source (may require a new API key) — research in P3.2.
+
 ## 2026-06-01 — First walk-forward backtest (honest baseline)
 - Rewrote `walk_forward.py` to measure IC (corr of score vs forward yield change)
   + directional accuracy + a threshold sweep — all threshold-free metrics.

@@ -1,5 +1,12 @@
 # TraceYield — US Treasury Yield Direction Prediction
 
+> ## 🚧 ACTIVE WORK: build to `docs/SPEC_v1.md`
+> **Codex implements, Claude validates.** Read **[docs/SPEC_v1.md](docs/SPEC_v1.md)**
+> before writing any code — it is the authoritative v1 build sheet (phased plan,
+> file contracts, acceptance gates, hard rules). Build phase by phase, in order;
+> stop at each phase boundary for Claude's validation. Keep `scripts/daily_run.py`
+> and `pytest` green at every commit. Working preferences are in `CLAUDE.md`.
+
 ## Project overview
 A daily-triggered system that predicts the **direction (bull/bear/neutral) and
 point level** of US Treasury yields — primarily the **10-Year (UST 10Y)** — by
