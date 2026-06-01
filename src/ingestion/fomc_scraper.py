@@ -11,7 +11,7 @@ import argparse
 import re
 import time
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from html import unescape
 from html.parser import HTMLParser
 from pathlib import Path
@@ -30,8 +30,35 @@ USER_AGENT = (
 )
 
 _STATEMENT_RE = re.compile(r"/newsevents/pressreleases/monetary(\d{8})a\.htm$")
+_LEGACY_STATEMENT_RE = re.compile(r"/newsevents/press/monetary/(\d{8})a\.htm$")
 _MINUTES_RE = re.compile(r"/monetarypolicy/fomcminutes(\d{8})\.htm$")
 _KIND_ORDER = {"statement": 0, "minutes": 1}
+_MONTHS = {
+    "jan": 1,
+    "january": 1,
+    "feb": 2,
+    "february": 2,
+    "mar": 3,
+    "march": 3,
+    "apr": 4,
+    "april": 4,
+    "may": 5,
+    "jun": 6,
+    "june": 6,
+    "jul": 7,
+    "july": 7,
+    "aug": 8,
+    "august": 8,
+    "sep": 9,
+    "sept": 9,
+    "september": 9,
+    "oct": 10,
+    "october": 10,
+    "nov": 11,
+    "november": 11,
+    "dec": 12,
+    "december": 12,
+}
 
 
 @dataclass(frozen=True)
@@ -47,6 +74,8 @@ def classify_url(url: str) -> FomcLink | None:
     path = parsed.path
     m = _STATEMENT_RE.search(path)
     kind = "statement"
+    if not m:
+        m = _LEGACY_STATEMENT_RE.search(path)
     if not m:
         m = _MINUTES_RE.search(path)
         kind = "minutes"
@@ -222,6 +251,135 @@ def discover_doc_links_from_html(html: str, base_url: str) -> list[FomcLink]:
     )
 
 
+def _parse_months(value: str) -> list[int]:
+    months = []
+    for raw in re.split(r"[/\s]+", value.lower()):
+        key = re.sub(r"[^a-z]", "", raw)
+        if key in _MONTHS:
+            months.append(_MONTHS[key])
+    return months
+
+
+def _meeting_dates_from_parts(year: int, month_text: str, day_text: str) -> set[date]:
+    months = _parse_months(month_text)
+    if not months:
+        return set()
+    days = [int(x) for x in re.findall(r"\d{1,2}", day_text)]
+    if not days:
+        return set()
+
+    start_month = months[0]
+    start = date(year, start_month, days[0])
+    if len(days) == 1:
+        return {start}
+
+    end_month = months[-1] if days[-1] < days[0] and len(months) > 1 else start_month
+    end_year = year + 1 if end_month < start_month else year
+    end = date(end_year, end_month, days[-1])
+    out = set()
+    cur = start
+    while cur <= end:
+        out.add(cur)
+        cur += timedelta(days=1)
+    return out
+
+
+def _meeting_dates_from_current_year_sections(html: str) -> set[date]:
+    dates: set[date] = set()
+    heading_re = re.compile(
+        r"<h4><a[^>]*>\s*(20\d{2})\s+FOMC Meetings\s*</a></h4>",
+        re.I,
+    )
+    headings = list(heading_re.finditer(html))
+    row_re = re.compile(
+        r"fomc-meeting__month[^>]*>.*?<strong>(.*?)</strong>.*?"
+        r"fomc-meeting__date[^>]*>(.*?)</div>",
+        re.I | re.S,
+    )
+    for i, heading in enumerate(headings):
+        year = int(heading.group(1))
+        end = headings[i + 1].start() if i + 1 < len(headings) else len(html)
+        section = html[heading.end() : end]
+        for month_text, day_text in row_re.findall(section):
+            dates.update(_meeting_dates_from_parts(year, month_text, day_text))
+    return dates
+
+
+def discover_meeting_dates_from_html(html: str, base_url: str) -> set[date]:
+    """Extract scheduled FOMC meeting dates from an official calendar page."""
+    try:
+        from bs4 import BeautifulSoup
+    except ImportError:
+        BeautifulSoup = None
+
+    dates: set[date] = set()
+    dates.update(_meeting_dates_from_current_year_sections(html))
+    if BeautifulSoup is not None:
+        soup = BeautifulSoup(html, "html.parser")
+        for row in soup.find_all(class_=re.compile(r"\bfomc-meeting\b")):
+            panel = row.find_parent(class_=re.compile(r"\bpanel\b"))
+            year_text = panel.get_text(" ", strip=True) if panel else html
+            year_match = re.search(r"\b(20\d{2})\s+FOMC Meetings\b", year_text)
+            month_el = row.find(class_=re.compile(r"\bfomc-meeting__month\b"))
+            day_el = row.find(class_=re.compile(r"\bfomc-meeting__date\b"))
+            if not year_match or not month_el or not day_el:
+                continue
+            dates.update(
+                _meeting_dates_from_parts(
+                    int(year_match.group(1)),
+                    month_el.get_text(" ", strip=True),
+                    day_el.get_text(" ", strip=True),
+                )
+            )
+        heading_re = re.compile(
+            r"([A-Za-z/]+)\s+(\d{1,2}(?:-\d{1,2})?)\s+Meeting\s+-\s+(20\d{2})"
+        )
+        for heading in soup.find_all(string=heading_re):
+            match = heading_re.search(heading)
+            if not match:
+                continue
+            dates.update(
+                _meeting_dates_from_parts(
+                    int(match.group(3)),
+                    match.group(1),
+                    match.group(2),
+                )
+            )
+        return dates
+
+    heading_re = re.compile(
+        r"([A-Za-z/]+)\s+(\d{1,2}(?:-\d{1,2})?)\s+Meeting\s+-\s+(20\d{2})",
+        re.I,
+    )
+    for month_text, day_text, year_text in heading_re.findall(html):
+        dates.update(_meeting_dates_from_parts(int(year_text), month_text, day_text))
+    return dates
+
+
+def filter_links_to_meeting_dates(
+    links: list[FomcLink],
+    meeting_dates: set[date],
+    *,
+    window_days: int = 2,
+) -> tuple[list[FomcLink], list[FomcLink]]:
+    """Drop statement releases that are not near a scheduled FOMC meeting."""
+    kept: list[FomcLink] = []
+    dropped: list[FomcLink] = []
+    for link in links:
+        if link.kind != "statement":
+            kept.append(link)
+            continue
+        near_meeting = any(
+            abs((link.doc_date - meeting_date).days) <= window_days
+            for meeting_date in meeting_dates
+        )
+        if near_meeting:
+            kept.append(link)
+        else:
+            dropped.append(link)
+    return kept, dropped
+
+
 def calendar_urls(start_year: int = 2010, end_year: int | None = None) -> list[str]:
     """Return Fed calendar URLs needed to discover docs from start_year onward."""
     end_year = end_year or date.today().year
@@ -236,6 +394,8 @@ def _session():
     try:
         import requests
     except ImportError:
+        return None
+    if not hasattr(requests, "Session"):
         return None
 
     session = requests.Session()
@@ -285,6 +445,23 @@ def _write_doc(link: FomcLink, html: str, raw_root: Path = RAW_FOMC) -> Path:
     return text_path
 
 
+def remove_dropped_statement_files(
+    links: list[FomcLink],
+    *,
+    raw_root: Path = RAW_FOMC,
+) -> int:
+    """Remove stale raw statement files for links excluded by meeting filter."""
+    removed = 0
+    for link in links:
+        if link.kind != "statement":
+            continue
+        for path in _paths_for_link(link, raw_root):
+            if path.exists():
+                path.unlink()
+                removed += 1
+    return removed
+
+
 def _to_fomc_doc(link: FomcLink, text_path: Path):
     from src.nlp.fomc_loader import FomcDoc
 
@@ -307,14 +484,27 @@ def scrape(
     """Discover, download, cache, and load FOMC statement/minutes HTML docs."""
     session = _session()
     links: dict[tuple[str, date], FomcLink] = {}
+    meeting_dates: set[date] = set()
     for url in calendar_urls(start_year=start_year):
         html = fetch_url(url, session=session, force=force)
+        meeting_dates.update(discover_meeting_dates_from_html(html, base_url=url))
         for link in discover_doc_links_from_html(html, base_url=url):
             if link.doc_date.year >= start_year:
                 links[(link.kind, link.doc_date)] = link
 
+    kept_links, dropped_links = filter_links_to_meeting_dates(
+        list(links.values()),
+        meeting_dates,
+    )
+    removed_files = remove_dropped_statement_files(dropped_links)
+    print(
+        "[fomc] statement meeting-date filter dropped "
+        f"{len(dropped_links)} non-meeting statement links "
+        f"and removed {removed_files} stale raw files"
+    )
+
     docs = []
-    for link in sorted(links.values(), key=lambda x: (x.doc_date, _KIND_ORDER[x.kind])):
+    for link in sorted(kept_links, key=lambda x: (x.doc_date, _KIND_ORDER[x.kind])):
         if limit is not None and len(docs) >= limit:
             break
         html_path, text_path = _paths_for_link(link)

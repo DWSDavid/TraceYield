@@ -32,6 +32,12 @@ STATEMENT_HTML = """
 CALENDAR_HTML = """
 <html>
   <body>
+    <div class="panel panel-default"><div class="panel-heading"><h4>2026 FOMC Meetings</h4></div>
+      <div class="row fomc-meeting">
+        <div class="fomc-meeting__month"><strong>January</strong></div>
+        <div class="fomc-meeting__date">27-28</div>
+      </div>
+    </div>
     <h4>January</h4>
     <p>Statement:
       <a href="/newsevents/pressreleases/monetary20260128a.htm">HTML</a>
@@ -41,6 +47,9 @@ CALENDAR_HTML = """
     </p>
     <p>Implementation Note
       <a href="/newsevents/pressreleases/monetary20260128a1.htm">HTML</a>
+    </p>
+    <p>Legacy statement:
+      <a href="/newsevents/press/monetary/20100127a.htm">Statement</a>
     </p>
   </body>
 </html>
@@ -93,13 +102,79 @@ def test_discover_doc_links_classifies_statement_and_minutes():
     )
 
     assert [(link.kind, link.doc_date.isoformat()) for link in links] == [
+        ("statement", "2010-01-27"),
         ("statement", "2026-01-28"),
         ("minutes", "2026-01-28"),
     ]
-    assert links[0].url == (
+    assert links[1].url == (
         "https://www.federalreserve.gov/newsevents/pressreleases/"
         "monetary20260128a.htm"
     )
+
+
+def test_discover_meeting_dates_from_calendar_rows():
+    dates = fomc_scraper.discover_meeting_dates_from_html(
+        CALENDAR_HTML,
+        base_url="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    )
+
+    assert [d.isoformat() for d in sorted(dates)] == [
+        "2026-01-27",
+        "2026-01-28",
+    ]
+
+
+def test_filter_statement_links_to_real_meeting_dates_only():
+    links = [
+        fomc_scraper.FomcLink(
+            "statement",
+            date(2026, 1, 28),
+            "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260128a.htm",
+        ),
+        fomc_scraper.FomcLink(
+            "statement",
+            date(2026, 1, 5),
+            "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260105a.htm",
+        ),
+        fomc_scraper.FomcLink(
+            "minutes",
+            date(2026, 1, 28),
+            "https://www.federalreserve.gov/monetarypolicy/fomcminutes20260128.htm",
+        ),
+    ]
+
+    kept, dropped = fomc_scraper.filter_links_to_meeting_dates(
+        links,
+        meeting_dates={date(2026, 1, 27), date(2026, 1, 28)},
+    )
+
+    assert [(link.kind, link.doc_date.isoformat()) for link in kept] == [
+        ("statement", "2026-01-28"),
+        ("minutes", "2026-01-28"),
+    ]
+    assert [(link.kind, link.doc_date.isoformat()) for link in dropped] == [
+        ("statement", "2026-01-05")
+    ]
+
+
+def test_remove_dropped_statement_files_deletes_stale_raw_docs():
+    link = fomc_scraper.FomcLink(
+        "statement",
+        date(2026, 1, 5),
+        "https://www.federalreserve.gov/newsevents/pressreleases/monetary20260105a.htm",
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        raw_root = Path(tmp) / "raw" / "fomc"
+        html_path, text_path = fomc_scraper._paths_for_link(link, raw_root)
+        html_path.parent.mkdir(parents=True)
+        html_path.write_text("<html></html>", encoding="utf-8")
+        text_path.write_text("stale non-meeting release", encoding="utf-8")
+
+        removed = fomc_scraper.remove_dropped_statement_files([link], raw_root=raw_root)
+
+    assert removed == 2
+    assert not html_path.exists()
+    assert not text_path.exists()
 
 
 def test_loader_reads_downloaded_html_text():
@@ -227,3 +302,29 @@ def test_analyze_upgrades_keyword_only_cache_when_llm_requested():
     assert rec["llm_score"] == 0.8
     assert rec["file"] == "2026-01-28.txt"
     assert rec["cache_key"] == key
+
+
+def test_analyzer_main_defaults_to_recent_limit(monkeypatch, capsys):
+    seen = {}
+
+    def fake_analyze(use_llm=True, refresh=False, limit=None):
+        seen["use_llm"] = use_llm
+        seen["refresh"] = refresh
+        seen["limit"] = limit
+        return [
+            {
+                "date": "2026-01-28",
+                "kind": "statement",
+                "keyword_score": 0.0,
+                "llm_score": None,
+                "blended": 0.0,
+                "file": "2026-01-28.txt",
+                "rationale": "",
+            }
+        ]
+
+    monkeypatch.setattr(fomc_analyzer, "analyze", fake_analyze)
+    fomc_analyzer.main([])
+
+    assert seen == {"use_llm": True, "refresh": False, "limit": 5}
+    assert "2026-01-28 statement" in capsys.readouterr().out

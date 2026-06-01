@@ -7,6 +7,7 @@ feeds the pipeline's `fomc_nlp` factor.
 
 from __future__ import annotations
 
+import argparse
 import json
 
 from src.utils.config import DATA
@@ -15,6 +16,7 @@ from src.nlp.keyword_scorer import score_text
 from src.nlp.llm_scorer import score_document
 
 CACHE = DATA / "cache" / "fomc_scores.json"
+_KIND_ORDER = {"statement": 0, "minutes": 1}
 
 
 def _load_cache() -> dict:
@@ -51,10 +53,14 @@ def analyze(
     use_llm: bool = True,
     refresh: bool = False,
     docs: list[FomcDoc] | None = None,
+    limit: int | None = None,
 ) -> list[dict]:
     """Score every FOMC doc (cached). Returns list of dicts, oldest -> newest."""
     cache = _load_cache()
     docs = docs if docs is not None else load(extract=True)
+    docs = sorted(docs, key=lambda d: (d.doc_date, _KIND_ORDER.get(d.kind, 99)))
+    if limit is not None:
+        docs = docs[-limit:] if limit > 0 else []
     out = []
     for d in docs:
         key = _cache_key(d)
@@ -95,7 +101,7 @@ def analyze(
         out.append(rec)
 
     _save_cache(cache)
-    out.sort(key=lambda r: (r["date"], r["kind"]))
+    out.sort(key=lambda r: (r["date"], _KIND_ORDER.get(r["kind"], 99)))
     return out
 
 
@@ -147,11 +153,34 @@ def combined_fomc_score(use_llm: bool = True) -> dict | None:
     return {"blended": blended, "statement": stmt, "minutes": mins}
 
 
-if __name__ == "__main__":
-    for r in analyze(use_llm=True):
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=5,
+        help="Number of most recent docs to score. Use 0 to score none.",
+    )
+    parser.add_argument(
+        "--no-llm",
+        action="store_true",
+        help="Use keyword-only scoring; useful for smoke tests.",
+    )
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Ignore cached scores for selected docs.",
+    )
+    args = parser.parse_args(argv)
+
+    for r in analyze(use_llm=not args.no_llm, refresh=args.refresh, limit=args.limit):
         print(
             f"{r['date']} {r['kind']:9s} kw={r['keyword_score']:+.2f} "
             f"llm={r['llm_score']} blend={r['blended']:+.2f}  {r['file']}"
         )
         if r["rationale"]:
             print(f"    -> {r['rationale'][:140]}")
+
+
+if __name__ == "__main__":
+    main()
