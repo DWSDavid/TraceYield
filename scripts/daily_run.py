@@ -8,6 +8,12 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+# Windows consoles default to GBK/cp1252 and choke on the report's arrows.
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
+
 # Make `src` importable when run as a plain script.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 

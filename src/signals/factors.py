@@ -22,11 +22,17 @@ def _zscore_last(s: pd.Series, window: int = 252) -> float:
     return float(max(-1.0, min(1.0, z / 2.0)))  # /2 so ~2sigma maps to the edge
 
 
+def _pct_change(df: pd.DataFrame, col: str, periods: int) -> pd.Series:
+    """pct_change AFTER dropping NaNs — weekly/monthly series sit in a daily
+    frame full of NaN gaps, so we must compact them first or every diff is NaN."""
+    return df[col].dropna().pct_change(periods)
+
+
 def inflation_factor(df: pd.DataFrame) -> float:
     """Rising core PCE + rising breakevens => positive (yields up)."""
     parts = []
     if "PCEPILFE" in df:
-        parts.append(_zscore_last(df["PCEPILFE"].pct_change(12) * 100))
+        parts.append(_zscore_last(_pct_change(df, "PCEPILFE", 12) * 100))
     if "T10YIE" in df:
         parts.append(_zscore_last(df["T10YIE"]))
     return sum(parts) / len(parts) if parts else 0.0
@@ -36,9 +42,9 @@ def liquidity_factor(df: pd.DataFrame) -> float:
     """Shrinking Fed assets / falling reserves => tighter => positive."""
     parts = []
     if "WALCL" in df:
-        parts.append(-_zscore_last(df["WALCL"].pct_change(13)))   # QT = balance down
+        parts.append(-_zscore_last(_pct_change(df, "WALCL", 13)))   # QT = balance down
     if "WRESBAL" in df:
-        parts.append(-_zscore_last(df["WRESBAL"].pct_change(13)))
+        parts.append(-_zscore_last(_pct_change(df, "WRESBAL", 13)))
     return sum(parts) / len(parts) if parts else 0.0
 
 
