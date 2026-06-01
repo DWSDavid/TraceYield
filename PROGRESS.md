@@ -4,6 +4,27 @@ Newest entry on top. One entry per meaningful update. Format: `## YYYY-MM-DD —
 
 ---
 
+## 2026-06-01 - Phase 1.1 historical FOMC HTML scraper implemented
+- Added `src/ingestion/fomc_scraper.py`: official federalreserve.gov scraper for
+  FOMC statements and minutes. Supports full calendar discovery from 2010 onward
+  and single-URL review/download, e.g.
+  `python -m src.ingestion.fomc_scraper --url https://www.federalreserve.gov/newsevents/pressreleases/monetary20260128a.htm`.
+- Download cache is cache-first and polite: official User-Agent, local HTML cache,
+  raw HTML plus extracted text saved under `data/raw/fomc/{statement,minutes}/`.
+  Re-running `--start-year 2010 --sleep 0` completed without network access from
+  cache.
+- Extended `src/nlp/fomc_loader.py` so the NLP pipeline reads both legacy local
+  PDFs in `FOMC/` and downloaded Fed HTML text in `data/raw/fomc/`, deduped by
+  exact `kind + date` with official HTML preferred.
+- Acceptance gate evidence: full backfill loaded 260 official HTML docs: 129
+  statements and 131 minutes. File check: all extracted `.txt` files non-empty
+  (statement min 870 chars; minutes min 40,353 chars).
+- Daily scoring guard: live `combined_fomc_score()` now hydrates only the latest
+  statement and latest minutes, so Phase 1.1 does not accidentally trigger a
+  260-document LLM backfill. Historical scoring remains Phase 1.2.
+- Verification: `pytest tests` = 10 passed; Black check passed on changed files;
+  Ruff check passed on changed files.
+
 ## 2026-06-01 — v1 spec written; handing implementation to Codex
 - Wrote `docs/SPEC_v1.md`: the authoritative v1 build sheet. Upgrades v0 from a
   blunt static scoring table to a 3-layer signal engine (Macro Regime → Market

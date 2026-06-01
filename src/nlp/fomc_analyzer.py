@@ -1,17 +1,16 @@
-"""Orchestrates FOMC scoring: load PDFs -> keyword + LLM score -> cache -> blend.
+"""Orchestrates FOMC scoring: load Fed docs -> keyword + LLM -> cache -> blend.
 
-Caches per-document scores in data/cache/fomc_scores.json keyed by filename, so
-the (paid) LLM only runs on documents it hasn't seen. The latest statement's
-blended score feeds the pipeline's `fomc_nlp` factor.
+Caches per-document scores in data/cache/fomc_scores.json, so the (paid) LLM
+only runs on documents it hasn't seen. The latest statement's blended score
+feeds the pipeline's `fomc_nlp` factor.
 """
+
 from __future__ import annotations
 
 import json
-from datetime import date
-from pathlib import Path
 
 from src.utils.config import DATA
-from src.nlp.fomc_loader import load, FomcDoc
+from src.nlp.fomc_loader import FomcDoc, hydrate, load
 from src.nlp.keyword_scorer import score_text
 from src.nlp.llm_scorer import score_document
 
@@ -34,6 +33,13 @@ def _save_cache(c: dict) -> None:
 LLM_WEIGHT = 0.8
 
 
+def _cache_key(doc: FomcDoc) -> str:
+    """Stable score-cache key; HTML statement/minutes share filenames by date."""
+    if doc.source == "local_pdf":
+        return doc.path.name
+    return f"{doc.source}:{doc.kind}:{doc.doc_date.isoformat()}"
+
+
 def _blend(keyword: float, llm: float | None) -> float:
     """Combine scores. Falls back to keyword alone if no LLM score available."""
     if llm is None:
@@ -41,15 +47,24 @@ def _blend(keyword: float, llm: float | None) -> float:
     return round(LLM_WEIGHT * llm + (1 - LLM_WEIGHT) * keyword, 3)
 
 
-def analyze(use_llm: bool = True, refresh: bool = False) -> list[dict]:
+def analyze(
+    use_llm: bool = True,
+    refresh: bool = False,
+    docs: list[FomcDoc] | None = None,
+) -> list[dict]:
     """Score every FOMC doc (cached). Returns list of dicts, oldest -> newest."""
     cache = _load_cache()
-    docs: list[FomcDoc] = load(extract=True)
+    docs = docs if docs is not None else load(extract=True)
     out = []
     for d in docs:
-        key = d.path.name
-        if not refresh and key in cache:
+        key = _cache_key(d)
+        cached = cache.get(key)
+        can_reuse = cached and (not use_llm or cached.get("llm_score") is not None)
+        if not refresh and can_reuse:
             rec = cache[key]
+            rec["cache_key"] = key
+            rec["file"] = d.path.name
+            rec["source"] = d.source
         else:
             kw = score_text(d.text)["score"]
             llm_res, llm_score = None, None
@@ -60,9 +75,11 @@ def analyze(use_llm: bool = True, refresh: bool = False) -> list[dict]:
                 except Exception as e:  # noqa: BLE001
                     print(f"[fomc] LLM scoring failed for {key}: {e}")
             rec = {
-                "file": key,
+                "cache_key": key,
+                "file": d.path.name,
                 "kind": d.kind,
                 "date": d.doc_date.isoformat(),
+                "source": d.source,
                 "keyword_score": kw,
                 "llm_score": llm_score,
                 "rationale": (llm_res or {}).get("rationale", ""),
@@ -84,14 +101,18 @@ def analyze(use_llm: bool = True, refresh: bool = False) -> list[dict]:
 
 def latest_statement_score(use_llm: bool = True) -> dict | None:
     """The newest STATEMENT's record."""
-    recs = [r for r in analyze(use_llm=use_llm) if r["kind"] == "statement"]
-    return recs[-1] if recs else None
+    docs = load(kind="statement", extract=False)
+    if not docs:
+        return None
+    return analyze(use_llm=use_llm, docs=[hydrate(docs[-1])])[0]
 
 
 def latest_minutes_score(use_llm: bool = True) -> dict | None:
     """The newest MINUTES record."""
-    recs = [r for r in analyze(use_llm=use_llm) if r["kind"] == "minutes"]
-    return recs[-1] if recs else None
+    docs = load(kind="minutes", extract=False)
+    if not docs:
+        return None
+    return analyze(use_llm=use_llm, docs=[hydrate(docs[-1])])[0]
 
 
 # Statement is the official current stance; minutes adds the detailed debate
@@ -105,14 +126,21 @@ def combined_fomc_score(use_llm: bool = True) -> dict | None:
     Returns a record carrying the blended hawkish score plus BOTH source docs
     (with their quotes) so the report can show the evidence trail.
     """
-    recs = analyze(use_llm=use_llm)
-    stmt = next((r for r in reversed(recs) if r["kind"] == "statement"), None)
-    mins = next((r for r in reversed(recs) if r["kind"] == "minutes"), None)
+    docs = load(extract=False)
+    stmt_doc = next((d for d in reversed(docs) if d.kind == "statement"), None)
+    mins_doc = next((d for d in reversed(docs) if d.kind == "minutes"), None)
+    latest_docs = [hydrate(d) for d in (stmt_doc, mins_doc) if d is not None]
+    recs = analyze(use_llm=use_llm, docs=latest_docs) if latest_docs else []
+    stmt = next((r for r in recs if r["kind"] == "statement"), None)
+    mins = next((r for r in recs if r["kind"] == "minutes"), None)
     if not stmt and not mins:
         return None
     if stmt and mins:
-        blended = round(STATEMENT_WEIGHT * stmt["blended"]
-                        + (1 - STATEMENT_WEIGHT) * mins["blended"], 3)
+        blended = round(
+            STATEMENT_WEIGHT * stmt["blended"]
+            + (1 - STATEMENT_WEIGHT) * mins["blended"],
+            3,
+        )
     else:
         src = stmt or mins
         blended = src["blended"]
@@ -121,7 +149,9 @@ def combined_fomc_score(use_llm: bool = True) -> dict | None:
 
 if __name__ == "__main__":
     for r in analyze(use_llm=True):
-        print(f"{r['date']} {r['kind']:9s} kw={r['keyword_score']:+.2f} "
-              f"llm={r['llm_score']} blend={r['blended']:+.2f}  {r['file']}")
+        print(
+            f"{r['date']} {r['kind']:9s} kw={r['keyword_score']:+.2f} "
+            f"llm={r['llm_score']} blend={r['blended']:+.2f}  {r['file']}"
+        )
         if r["rationale"]:
             print(f"    -> {r['rationale'][:140]}")
