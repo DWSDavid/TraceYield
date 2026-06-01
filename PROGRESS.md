@@ -4,6 +4,30 @@ Newest entry on top. One entry per meaningful update. Format: `## YYYY-MM-DD —
 
 ---
 
+## 2026-06-01 - Phase 1.4 FRED publication-lag backtest correction
+- Added `release_lag_days` to every configured FRED series in
+  `configs/fred_series.yaml`.
+  - CPI/PCE macro releases use 35 calendar days.
+  - WALCL/WRESBAL liquidity releases use 7 calendar days.
+  - Daily rates, breakevens, policy, VIX, and USD series use 1 calendar day.
+- `src/backtest/walk_forward.py` now builds a column-wise lagged history before
+  factor scoring, so each backtest date only sees data approximately available
+  by that date.
+- Added tests covering column-specific lag cutoffs and `_daily_factors()` using
+  lagged history before factor scoring.
+- Added `scripts/mvp_data_check.py` for a VS Code/terminal smoke check that
+  verifies configured FRED columns are present, applies release lags, computes
+  factor scores, and emits the current v0 predictions without LLM/API calls.
+- P1.4 lagged backtest, 2015-01-01 -> 2026-05-31:
+  - 1w: IC 0.051, DA 48.0%.
+  - 1m: IC 0.071, DA 49.3%.
+  - 3m: IC 0.097, DA 47.5%.
+  - At the configured +/-0.15 band, 3m threshold hit-rate is 53% at 66% coverage.
+- MVP data check passed on `fred_20260601.parquet`: 22 configured series present,
+  date range 2010-01-01 -> 2026-05-31, lagged 10Y as-of 2026-05-28, current 10Y
+  used 4.45%, and all five factor scores plus 1w/1m/3m predictions rendered.
+- Verification: `pytest tests --basetemp .codex-tmp/pytest` = 20 passed.
+
 ## 2026-06-01 - Phase 1.3 FOMC and political proxy wired into backtest
 - `src/backtest/walk_forward.py` now calls `fomc_factor_asof(d)` for each
   walk-forward date, so `fomc_nlp` is point-in-time instead of 0 over history.

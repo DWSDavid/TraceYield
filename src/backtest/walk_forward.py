@@ -18,22 +18,52 @@ so they don't contribute here — this is the macro-data baseline.
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 import numpy as np
 import pandas as pd
 
 from src.signals.factors import compute_all, political_risk_proxy
 from src.signals.fomc_series import fomc_factor_asof
-from src.utils.config import weights
+from src.utils.config import fred_series, weights
 
 HORIZON_DAYS = {"1w": 5, "1m": 21, "3m": 63}
+
+
+def fred_release_lags() -> dict[str, int]:
+    """Configured publication lag per FRED series, in calendar days."""
+    lags: dict[str, int] = {}
+    for group in fred_series().values():
+        for sid, meta in group.items():
+            if isinstance(meta, dict):
+                lags[sid] = int(meta.get("release_lag_days", 1))
+            else:
+                lags[sid] = 1
+    return lags
+
+
+def _lagged_history(
+    df: pd.DataFrame,
+    asof: pd.Timestamp,
+    release_lags: dict[str, int],
+) -> pd.DataFrame:
+    """Column-wise point-in-time view using approximate public release lags."""
+    asof = pd.Timestamp(asof)
+    lagged = {}
+    for col in df.columns:
+        lag_days = int(release_lags.get(col, 1))
+        cutoff = asof - timedelta(days=lag_days)
+        lagged[col] = df[col].loc[:cutoff]
+    return pd.DataFrame(lagged)
 
 
 def _daily_factors(df: pd.DataFrame, start: str) -> pd.DataFrame:
     """Walk forward computing factor scores per day (point-in-time)."""
     df = df.sort_index()
+    release_lags = fred_release_lags()
     rows = []
     for d in df.loc[start:].index:
-        hist = df.loc[:d]
+        hist = _lagged_history(df, pd.Timestamp(d), release_lags)
         cur = hist["DGS10"].dropna()
         if cur.empty:
             continue
