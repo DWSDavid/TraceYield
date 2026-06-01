@@ -4,6 +4,22 @@ Newest entry on top. One entry per meaningful update. Format: `## YYYY-MM-DD —
 
 ---
 
+## 2026-06-01 — First walk-forward backtest (honest baseline)
+- Rewrote `walk_forward.py` to measure IC (corr of score vs forward yield change)
+  + directional accuracy + a threshold sweep — all threshold-free metrics.
+- Runner: `scripts/backtest.py`. Ran 2015-01-01 → 2026-05-31 (4169 days).
+- **Result (macro-data factors only; fomc_nlp/political = 0 in history):**
+  - 1w: IC 0.004, DA 49.3% — noise.
+  - 1m: IC 0.046, DA 52.2% — very weak.
+  - 3m: IC 0.088, DA 52.6% — weak but best; focus on 3m.
+- The ±0.15 band is NOT validated — raising the threshold doesn't lift hit-rate
+  (3m sits ~51% across thresholds). Tuning it is premature until FOMC is in history.
+- **Known bias:** FRED series are indexed to reference date, not release date →
+  point-in-time backtest has look-ahead bias → true skill likely weaker. Fix with
+  release-date (ALFRED/vintage) data.
+- **Next, in order:** (1) score historical FOMC docs so fomc_nlp contributes in
+  backtest; (2) release-date correction; (3) only then tune weights/threshold.
+
 ## 2026-06-01 — FOMC NLP wired + key-quote evidence + HTML report
 - **FRED ingestion** live; current 10Y read = 4.45%.
 - **Factors working:** inflation +0.37, liquidity -0.41, global_rates -0.07.
