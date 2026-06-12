@@ -194,7 +194,251 @@ UST relative value improves
 -> long-end support
 ```
 
-## 7. 对 Nittan fixed income desk 的具体用途
+## 7. 事件时间轴：什么时间会改变 curve view
+
+固定收益市场不是每天被同一种信息驱动。TraceYield 把驱动分成不同时间层级，这样 desk 可以判断“今天应该看哪个因子”。
+
+### Daily / intraday：价格确认和风险情绪
+
+日频主要看 market confirmation，而不是重新发明宏观叙事：
+
+- 2Y / 5Y：最快反映 Fed path repricing。
+- 10Y real yield：反映实际贴现率和长期资金成本。
+- Breakevens：反映 inflation compensation。
+- DXY / USDJPY：反映美元和利差 channel。
+- Gold：通常对 real yield 和美元敏感。
+- Equities / credit：反映 discount-rate pressure 和 risk appetite。
+- MOVE / VIX：反映 volatility regime，影响仓位和 liquidity premium。
+
+典型变化：
+
+```text
+2Y up + DXY up + equities down
+-> market is pricing tighter Fed path
+-> front-end bearish / bear flattening risk
+```
+
+```text
+10Y down + gold up + equities down + VIX up
+-> risk-off duration bid
+-> bull flattening or safe-haven rally
+```
+
+### Weekly：claims、Fed speakers、auction cycle
+
+周频信息经常影响 tactical timing：
+
+- Initial jobless claims 连续上升：growth risk 上升，Fed cut pricing 更容易被激活。
+- Fed speakers 语气偏 hawkish：2Y / 5Y 先动，curve 容易 bear flatten。
+- Fed speakers 语气偏 dovish：front end rally，curve 可能 bull steepen。
+- 3Y / 10Y / 30Y auction tail 或 bid-to-cover 走弱：duration supply pressure 上升，10Y / 30Y 容易 underperform。
+
+对于 inter-dealer broker，weekly auction 和 speaker flow 很适合做 client color，因为它们常常解释“为什么今天曲线 move 不是由 CPI 这种大数据引起的”。
+
+### Monthly：NFP、CPI、PCE 是政策路径的核心触发器
+
+月度数据通常决定 3m core view 是否需要调整。
+
+#### NFP / labor market
+
+强 NFP、低 unemployment、claims 下降：
+
+```text
+labor market resilient
+-> Fed can stay restrictive longer
+-> 2Y / 5Y yields higher
+-> bear flattening bias
+-> USD support, equities valuation pressure
+```
+
+弱 NFP、unemployment 上升、claims 上升：
+
+```text
+labor market cooling
+-> cut probability rises
+-> 2Y rallies first
+-> bull steepening if long end falls less
+-> USD softens, gold/duration assets supported
+```
+
+#### CPI / Core CPI
+
+Hot CPI 或 core services inflation sticky：
+
+```text
+inflation surprise higher
+-> Fed easing path delayed
+-> 2Y / 5Y sell off
+-> breakevens and real yields may both push 10Y higher
+-> equities and credit face discount-rate pressure
+```
+
+Soft CPI：
+
+```text
+disinflation confirmation
+-> Fed has more room to cut
+-> front end rallies
+-> 10Y lower if real-yield channel dominates
+-> gold and long-duration assets can benefit
+```
+
+#### PCE / Core PCE
+
+PCE 是 Fed 更偏好的 inflation gauge。它的影响通常比 CPI 更“政策化”：
+
+- Core PCE sticky：policy path hawkish，front end 和 belly 更敏感。
+- Core PCE soft：cut path 更可信，bull steepening 或 bull flattening 取决于 growth/risk backdrop。
+- 如果 CPI hot 但 PCE soft，市场可能从 inflation scare 切回“Fed 可以等待”的 mixed regime。
+
+### FOMC：statement、SEP/dot plot、press conference
+
+FOMC 是改变 policy path 的最大离散事件。
+
+看三个层次：
+
+1. Decision：cut、hold、hike 是否符合市场定价。
+2. Statement / press conference：Powell 是否强调 inflation risk、labor cooling、financial conditions。
+3. SEP / dot plot：committee 对未来 policy rate、inflation、unemployment 的路径是否上移或下移。
+
+典型场景：
+
+```text
+hawkish hold
+-> no hike, but dots higher / inflation concern stronger
+-> 2Y sells off
+-> 2s10s bear flattening
+-> USD stronger, equities weaker
+```
+
+```text
+dovish hold
+-> no cut yet, but labor risk acknowledged / dots lower
+-> 2Y rallies
+-> bull steepening
+-> USD weaker, gold and duration supported
+```
+
+```text
+hawkish cut
+-> Fed cuts but says inflation risk remains
+-> front end may rally less than expected
+-> curve reaction can be mixed
+```
+
+### Quarterly：QRA、Treasury supply、TBAC、fiscal path
+
+QRA 是 long-end / term-premium 事件，不是传统 macro data。
+
+重点看：
+
+- coupon auction size 是否上调。
+- long-end issuance 比例是否增加。
+- Treasury bills vs coupons 的融资组合。
+- buyback schedule 是否支持 off-the-run liquidity。
+- deficit / cash balance / TGA 路径是否改变 funding needs。
+
+典型场景：
+
+```text
+larger coupon supply, especially 10Y/20Y/30Y
+-> duration supply pressure
+-> term premium higher
+-> 10Y / 30Y underperform
+-> bear steepening
+```
+
+```text
+more bill-heavy issuance or supportive buybacks
+-> less long-end supply pressure
+-> 10Y / 30Y supported
+-> curve flattening or long-end rally
+```
+
+### Overseas central banks：BOJ、ECB、Bund/JGB channel
+
+UST 不只由美国数据决定。跨市场 desk 要特别看：
+
+- BOJ hawkish / JGB yields higher：global duration repricing，UST long end may cheapen。
+- ECB hawkish / Bund yields higher：UST-Bund relative value changes，影响 cross-market rates flow。
+- Dollar funding stress：USD 上行，risk appetite 下降，可能同时推高美元并引发 UST safe-haven bid。
+- FX-hedged yield 变差：海外投资者买 UST 的吸引力下降，长端 demand 可能减弱。
+
+### Risk-off shock：正常宏观链条会被覆盖
+
+战争、银行压力、credit event、equity drawdown、流动性冲击可能让正常宏观逻辑短期失效。
+
+```text
+risk-off shock
+-> safe-haven demand for UST
+-> 10Y / 30Y yields lower
+-> gold and USD often supported
+-> equities/credit weaker
+```
+
+但如果 shock 同时带来 fiscal expansion 或 supply concern，长端可能不跌反升，形成 difficult regime：
+
+```text
+risk shock + fiscal/supply concern
+-> front end prices cuts
+-> long end prices term premium
+-> bull steepening or bear steepening depends on which force dominates
+```
+
+## 8. 近期事件雷达（as of 2026-06-12）
+
+这些日期是当前 TraceYield event overlay 最关注的近期节点。报告不会在数据公布前假装知道 surprise；它会先扩大 fan band，等 released data 或高置信 policy path 出现后再调整 central view。
+
+| 日期 | 事件 | 主要影响部位 | 如果偏 hawkish / hot | 如果偏 dovish / soft |
+|---|---|---|---|---|
+| 2026-06-17 | FOMC + SEP | 2Y / 5Y，2s10s | dots higher、inflation language hawkish -> bear flattening | dots lower、labor risk acknowledged -> bull steepening |
+| 2026-06-25 | Personal Income & Outlays / PCE | 2Y / 5Y / 10Y | core PCE sticky -> cut path delayed | core PCE soft -> disinflation confirmation |
+| 2026-07-02 | Employment Situation / NFP | 2Y / 5Y | strong payrolls / low unemployment -> restrictive Fed path | weak payrolls / unemployment up -> cuts priced |
+| 2026-07-14 | CPI | 2Y / 5Y / 10Y | hot CPI -> real yield / breakeven pressure | soft CPI -> front-end rally |
+| 2026-07-29 | FOMC | 2Y / 5Y | hawkish hold -> front-end selloff | dovish hold -> front-end rally |
+| 2026-08-05 | Treasury QRA | 10Y / 30Y，5s30s | larger coupon/long-end supply -> bear steepening | bill-heavy / buyback supportive -> long-end support |
+| 2026-09-16 | FOMC + SEP | Full curve | dots higher -> policy path repricing | dots lower -> easing path validation |
+| 2026-12-09 | FOMC + SEP | Full curve | higher terminal / inflation risk -> long-end pressure | lower dots / weaker growth -> bull curve |
+
+官方日历来源：
+
+- Fed FOMC calendar: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+- BLS CPI schedule: https://www.bls.gov/schedule/news_release/cpi.htm
+- BLS Employment Situation schedule: https://www.bls.gov/schedule/news_release/empsit.htm
+- BEA release schedule: https://www.bea.gov/news/schedule
+- U.S. Treasury Quarterly Refunding documents: https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding/most-recent-quarterly-refunding-documents
+
+## 9. 判断如何被“推翻”：desk 应该盯的 reversal triggers
+
+TraceYield 的 view 不是固定不变的。以下变化会触发重新评估：
+
+### 从 bull view 转向 bear view
+
+- CPI/PCE 连续 hot，尤其 core services sticky。
+- 2Y yield 突破近期 range 上沿，market prices fewer cuts。
+- Fed dots 上移，Powell 强调 inflation risk。
+- QRA 显示 long-end coupon supply 超预期。
+- 10Y real yield 上行并带动 equities/credit 承压。
+- Bund/JGB yields 同步上行，global duration 被重新定价。
+
+### 从 bear view 转向 bull view
+
+- Payrolls 明显转弱，unemployment 上升，claims trend 恶化。
+- CPI/PCE soft，disinflation path 被确认。
+- Fed statement / press conference 转向 labor-risk narrative。
+- 2Y yield 下破 range，cut probability 快速上升。
+- Equity/credit risk-off 触发 safe-haven UST demand。
+- Auction demand 强、QRA 不增加 long-end supply，term premium 压力缓解。
+
+### 从 directional view 转向 range-bound / mixed
+
+- Inflation hot 但 growth weak：stagflation-like conflict。
+- Fed dovish 但 QRA supply bearish：front-end rally 与 long-end pressure 对冲。
+- UST cheaper 但 FX hedge cost 太高：relative value signal mixed。
+- Polymarket / market-implied checks 与 model central path 不一致。
+- Event calendar 太密集，data before FOMC，市场等待确认。
+
+## 10. 对 Nittan fixed income desk 的具体用途
 
 ### Morning meeting
 
@@ -234,7 +478,7 @@ UST relative value improves
 - NFP / claims：growth 和 labor market repricing。
 - QRA / auction：Treasury supply 和 long-end term premium。
 
-## 8. 当前限制和后续增强
+## 11. 当前限制和后续增强
 
 当前限制：
 
@@ -252,6 +496,6 @@ UST relative value improves
 - 扩展 Japan / Bund / China rates read-through。
 - 做一个 manager-friendly dashboard 或 GitHub Pages 静态报告页。
 
-## 9. 给 boss 的一句话
+## 12. 给 boss 的一句话
 
 TraceYield 是一套面向 fixed income desk 的 UST curve intelligence workflow：它用 FADNS 把美国国债曲线拆成 level、slope、curvature，再用政策、通胀、增长、流动性/供给和全球相对价值解释曲线未来 12 个月的 central path、baseline 和不确定性，帮助 inter-dealer broker 在跨市场报价、客户沟通和事件风险管理中更快形成一致的 rates view。
