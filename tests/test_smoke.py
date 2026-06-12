@@ -1,4 +1,5 @@
 """Smoke tests: the prediction + report path works with no external deps."""
+
 import sys
 from pathlib import Path
 
@@ -17,18 +18,31 @@ def test_keyword_scorer_signs():
 
 
 def test_predict_shape_and_direction():
-    factors = {"fomc_nlp": 0.8, "inflation": 0.6, "liquidity": 0.4,
-               "global_rates": 0.2, "political_risk": 0.0}
+    factors = {
+        "fomc_nlp": 0.8,
+        "inflation": 0.6,
+        "liquidity": 0.4,
+        "global_rates": 0.2,
+        "political_risk": 0.0,
+        "yield_trend": 0.5,
+    }
     preds = predict(factors, current_10y=4.40)
-    assert len(preds) == 3                      # 1w/1m/3m
+    assert [p.horizon for p in preds] == ["1m", "3m", "6m", "12m"]
     assert all(p.direction == "Bear" for p in preds)  # all-positive -> yields up
     assert all(p.target_yield > 4.40 for p in preds)  # bear = higher target
+    assert all("yield_trend" in p.contributions for p in preds)
 
 
 def test_report_renders():
-    factors = {"fomc_nlp": -0.5, "inflation": -0.3, "liquidity": 0.0,
-               "global_rates": 0.0, "political_risk": 0.0}
+    factors = {
+        "fomc_nlp": -0.5,
+        "inflation": -0.3,
+        "liquidity": 0.0,
+        "global_rates": 0.0,
+        "political_risk": 0.0,
+        "yield_trend": -0.2,
+    }
     preds = predict(factors, current_10y=4.40)
     md = render.to_markdown(preds, 4.40)
     assert "UST 10Y Prediction" in md
-    assert "Bull" in md                          # negative score -> bull
+    assert "Bull" in md  # negative score -> bull

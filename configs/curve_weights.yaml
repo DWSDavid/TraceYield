@@ -1,0 +1,50 @@
+# TraceYield v2 curve driver weights.
+# Positive driver scores mean upward yield pressure.
+#
+# v3 strategic narrowing:
+# - These weights may still size context diagnostics.
+# - `context_only_factors` are excluded from the core 10Y/curve headline and
+#   shown only as low-confidence long-end context.
+
+context_only_factors:
+  - term_premium
+  - liquidity_supply
+  - global_relative_value
+
+horizons:
+  1m_tactical:
+    policy_path: 0.25
+    macro_surprise: 0.22
+    liquidity_supply: 0.22
+    term_premium: 0.08
+    growth_risk: 0.08
+    global_relative_value: 0.05
+    positioning_momentum: 0.08
+    risk_off_overlay: 0.02
+  3m_core:
+    policy_path: 0.23
+    macro_surprise: 0.22
+    liquidity_supply: 0.17
+    term_premium: 0.14
+    growth_risk: 0.10
+    global_relative_value: 0.07
+    positioning_momentum: 0.05
+    risk_off_overlay: 0.02
+  6m_core:
+    policy_path: 0.18
+    macro_surprise: 0.20
+    liquidity_supply: 0.12
+    term_premium: 0.22
+    growth_risk: 0.12
+    global_relative_value: 0.10
+    positioning_momentum: 0.04
+    risk_off_overlay: 0.02
+  12m_structural:
+    policy_path: 0.12
+    macro_surprise: 0.15
+    liquidity_supply: 0.08
+    term_premium: 0.28
+    growth_risk: 0.12
+    global_relative_value: 0.15
+    positioning_momentum: 0.03
+    risk_off_overlay: 0.07

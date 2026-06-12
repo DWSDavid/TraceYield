@@ -27,7 +27,7 @@ from src.signals.factors import compute_all, political_risk_proxy
 from src.signals.fomc_series import fomc_factor_asof
 from src.utils.config import fred_series, weights
 
-HORIZON_DAYS = {"1w": 5, "1m": 21, "3m": 63}
+HORIZON_DAYS = {"1m": 21, "3m": 63, "6m": 126, "12m": 252}
 
 
 def fred_release_lags() -> dict[str, int]:

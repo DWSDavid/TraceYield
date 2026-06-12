@@ -1,0 +1,26 @@
+# Event overlay magnitudes for scenario adjustments.
+#
+# Keep all bp magnitudes here; code may choose when to apply them, but must not
+# hide basis-point constants in implementation.
+
+fomc_policy_path:
+  cut_prob_high: 0.60
+  hike_prob_high: 0.60
+  front_end_cut_bp: -12.5
+  front_end_hike_bp: 12.5
+  targets:
+    2Y: 1.0
+  reason_template: >-
+    {source}: cut probability {cut_prob:.0%}, hike probability {hike_prob:.0%};
+    front-end scenario step {step_bp:+.1f}bp.
+  no_step_reason_template: >-
+    {source}: no high-conviction next-meeting cut/hike probability; overlay step
+    {step_bp:+.1f}bp.
+
+uncertainty_widen_bp:
+  fomc: {2Y: 18, 5Y: 14, 10Y: 12, 30Y: 10}
+  cpi: {2Y: 8, 5Y: 9, 10Y: 10, 30Y: 9}
+  nfp: {2Y: 10, 5Y: 10, 10Y: 9, 30Y: 8}
+  pce: {2Y: 7, 5Y: 8, 10Y: 9, 30Y: 8}
+  qra: {2Y: 3, 5Y: 6, 10Y: 9, 30Y: 10}
+combine: sqrt_sum_of_squares

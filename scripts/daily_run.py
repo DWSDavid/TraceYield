@@ -3,6 +3,7 @@
 Pipeline: ingest FRED -> compute factors -> (NLP tone) -> predict -> report.
 Run manually any time:  python scripts/daily_run.py
 """
+
 from __future__ import annotations
 
 import sys
@@ -18,7 +19,7 @@ except (AttributeError, ValueError):
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.ingestion.fred_client import fetch_all
-from src.signals.factors import compute_all
+from src.signals.factors import compute_all, political_risk_proxy
 from src.models.predictor import predict
 from src.nlp.fomc_analyzer import combined_fomc_score
 from src.report import render
@@ -44,7 +45,7 @@ def main(use_llm: bool = True) -> None:
         print("      no FOMC docs found; fomc_nlp=0")
 
     print("[3/5] Computing factor scores...")
-    factors = compute_all(df, hawkish=hawkish, political=0.0)
+    factors = compute_all(df, hawkish=hawkish, political=political_risk_proxy(df))
     for k, v in factors.items():
         print(f"      {k:14s} {v:+.3f}")
 

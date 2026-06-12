@@ -1,0 +1,8 @@
+ten_year:
+  source: manual_market_observed
+  low: 3.90
+  high: 4.80
+  as_of: 2026-06-02
+  reason: >-
+    Manually observed current market range for the 10Y outcome. Free-data
+    placeholder until an explicit free market/probability feed is wired.

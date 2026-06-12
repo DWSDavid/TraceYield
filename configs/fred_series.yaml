@@ -3,6 +3,15 @@
 # public availability for point-in-time backtests.
 
 treasury_yields:        # prediction targets + curve
+  DGS3MO:
+    description: "3-Month Treasury bill yield - front-end policy-path proxy"
+    release_lag_days: 1
+  DGS6MO:
+    description: "6-Month Treasury bill yield - front-end forward proxy"
+    release_lag_days: 1
+  DGS1:
+    description: "1-Year Treasury yield - short-rate path proxy"
+    release_lag_days: 1
   DGS2:
     description: "2-Year Treasury yield"
     release_lag_days: 1
@@ -26,6 +35,12 @@ inflation:
   CPIAUCSL:
     description: "CPI, all urban consumers"
     release_lag_days: 35
+  CPILFESL:
+    description: "Core CPI, all urban consumers less food and energy"
+    release_lag_days: 35
+  PCEPI:
+    description: "Personal consumption expenditures price index"
+    release_lag_days: 35
   PCEPILFE:
     description: "Core PCE price index (Fed preferred gauge)"
     release_lag_days: 35
@@ -38,6 +53,26 @@ inflation:
   T5YIFR:
     description: "5y5y forward inflation expectation"
     release_lag_days: 1
+
+growth:
+  PAYEMS:
+    description: "Total nonfarm payroll employment"
+    release_lag_days: 7
+  UNRATE:
+    description: "Civilian unemployment rate"
+    release_lag_days: 7
+  ICSA:
+    description: "Initial unemployment insurance claims"
+    release_lag_days: 7
+  IPMAN:
+    description: "Industrial production: manufacturing, free FRED growth/manufacturing proxy"
+    release_lag_days: 7
+  RSAFS:
+    description: "Advance retail sales"
+    release_lag_days: 20
+  JTSJOL:
+    description: "JOLTS job openings, total nonfarm"
+    release_lag_days: 45
 
 liquidity:
   WALCL:
@@ -71,6 +106,12 @@ policy:
     release_lag_days: 1
   SOFR:
     description: "Secured overnight financing rate"
+    release_lag_days: 1
+  FEDTARMD:
+    description: "FOMC SEP median fed funds rate projection"
+    release_lag_days: 1
+  FEDTARMDLR:
+    description: "FOMC SEP longer-run median fed funds rate projection"
     release_lag_days: 1
 
 cross_asset:            # impact map / market-implied context

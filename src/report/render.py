@@ -1,4 +1,5 @@
 """Render the daily prediction as a terminal + markdown report."""
+
 from __future__ import annotations
 
 from datetime import date
@@ -10,8 +11,9 @@ from src.models.predictor import HorizonPrediction
 _ARROW = {"Bull": "▼", "Bear": "▲", "Neutral": "▬"}
 
 
-def to_markdown(preds: list[HorizonPrediction], current_10y: float,
-                run_date: date | None = None) -> str:
+def to_markdown(
+    preds: list[HorizonPrediction], current_10y: float, run_date: date | None = None
+) -> str:
     run_date = run_date or date.today()
     lines = [
         f"# UST 10Y Prediction — {run_date:%Y-%m-%d}",
@@ -28,9 +30,10 @@ def to_markdown(preds: list[HorizonPrediction], current_10y: float,
         )
     # Driver attribution from the longest horizon (most factor-driven).
     longest = preds[-1]
-    lines += ["", "### Top drivers (3m view)", ""]
-    ranked = sorted(longest.contributions.items(),
-                    key=lambda kv: abs(kv[1]), reverse=True)
+    lines += ["", f"### Top drivers ({longest.horizon} view)", ""]
+    ranked = sorted(
+        longest.contributions.items(), key=lambda kv: abs(kv[1]), reverse=True
+    )
     for factor, contrib in ranked:
         sign = "+" if contrib >= 0 else ""
         lines.append(f"- `[{sign}{contrib:.3f}]` {factor}")
@@ -60,12 +63,19 @@ def _bar(value: float, scale: float = 0.5) -> str:
         left, width = 50, pct
     else:
         left, width = 50 + pct, -pct
-    return (f'<div class="track"><div class="fill" style="left:{left}%;'
-            f'width:{width}%;background:{color}"></div></div>')
+    return (
+        f'<div class="track"><div class="fill" style="left:{left}%;'
+        f'width:{width}%;background:{color}"></div></div>'
+    )
 
 
-def to_html(preds, current_10y: float, factors: dict,
-            fomc: dict | None = None, run_date: date | None = None) -> str:
+def to_html(
+    preds,
+    current_10y: float,
+    factors: dict,
+    fomc: dict | None = None,
+    run_date: date | None = None,
+) -> str:
     run_date = run_date or date.today()
     rows = ""
     for p in preds:
@@ -82,22 +92,27 @@ def to_html(preds, current_10y: float, factors: dict,
 
     longest = preds[-1]
     frows = ""
-    for f, contrib in sorted(longest.contributions.items(),
-                             key=lambda kv: abs(kv[1]), reverse=True):
+    for f, contrib in sorted(
+        longest.contributions.items(), key=lambda kv: abs(kv[1]), reverse=True
+    ):
         raw = factors.get(f, 0.0)
-        frows += (f"<tr><td class='fname'>{f}</td>"
-                  f"<td>{_bar(raw)}</td>"
-                  f"<td class='num'>{raw:+.2f}</td>"
-                  f"<td class='num'>{contrib:+.3f}</td></tr>")
+        frows += (
+            f"<tr><td class='fname'>{f}</td>"
+            f"<td>{_bar(raw)}</td>"
+            f"<td class='num'>{raw:+.2f}</td>"
+            f"<td class='num'>{contrib:+.3f}</td></tr>"
+        )
 
     def _doc_block(label: str, rec: dict | None) -> str:
         if not rec:
             return ""
-        col = '#dc2626' if rec.get('blended', 0) >= 0 else '#16a34a'
-        quotes = "".join(f"<blockquote>“{q}”</blockquote>"
-                         for q in rec.get("key_quotes", [])[:4])
-        phrases = "".join(f"<span class='chip'>{p}</span>"
-                          for p in rec.get("key_phrases", [])[:6])
+        col = "#dc2626" if rec.get("blended", 0) >= 0 else "#16a34a"
+        quotes = "".join(
+            f"<blockquote>“{q}”</blockquote>" for q in rec.get("key_quotes", [])[:4]
+        )
+        phrases = "".join(
+            f"<span class='chip'>{p}</span>" for p in rec.get("key_phrases", [])[:6]
+        )
         return f"""
           <div class="doc">
             <div class="dochead"><span class="badge">{label}</span>
@@ -112,8 +127,8 @@ def to_html(preds, current_10y: float, factors: dict,
 
     fomc_block = ""
     if fomc:
-        comb = fomc.get('blended', 0)
-        col = '#dc2626' if comb >= 0 else '#16a34a'
+        comb = fomc.get("blended", 0)
+        col = "#dc2626" if comb >= 0 else "#16a34a"
         fomc_block = f"""
         <div class="card">
           <h2>FOMC tone &amp; evidence</h2>
@@ -168,7 +183,7 @@ def to_html(preds, current_10y: float, factors: dict,
   <table><tr><th>Horizon</th><th>Direction</th><th>Conf</th><th>Target</th>
    <th>Move</th></tr>{rows}</table></div>
 
- <div class="card"><h2>Factor drivers (3m)</h2>
+ <div class="card"><h2>Factor drivers ({longest.horizon})</h2>
   <table><tr><th>Factor</th><th>Tilt (← dovish · hawkish →)</th>
    <th class='num'>Score</th><th class='num'>Contrib</th></tr>{frows}</table>
   <p class="muted">Red = upward yield pressure (bond bearish). Green = downward.</p>
@@ -184,6 +199,6 @@ def save_html(html: str, run_date: date | None = None) -> Path:
     rdir = DATA / "reports"
     rdir.mkdir(parents=True, exist_ok=True)
     (rdir / f"report_{run_date:%Y%m%d}.html").write_text(html, encoding="utf-8")
-    latest = rdir / "latest.html"            # stable path the daily job overwrites
+    latest = rdir / "latest.html"  # stable path the daily job overwrites
     latest.write_text(html, encoding="utf-8")
     return latest

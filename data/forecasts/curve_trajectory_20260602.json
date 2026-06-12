@@ -1,0 +1,4135 @@
+{
+  "as_of": "2026-06-02",
+  "tenors": {
+    "2Y": [
+      {
+        "month": 1,
+        "horizon_days": 21,
+        "current": 4.034008,
+        "central": 4.051539,
+        "delta_bp": 1.7531,
+        "p10": 3.043073,
+        "p25": 3.554555,
+        "p50": 4.051539,
+        "p75": 4.508296,
+        "p90": 4.88587,
+        "base_central": 4.051539,
+        "overlay_bp": 0.0,
+        "overlay_reasons": [
+          "atlanta_mpt_object_pod: no high-conviction next-meeting cut/hike probability; overlay step +0.0bp.",
+          "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+        ],
+        "uncertainty_widen_bp": 32.771939
+      },
+      {
+        "month": 2,
+        "horizon_days": 42,
+        "current": 4.034008,
+        "central": 4.060082,
+        "delta_bp": 2.6074,
+        "p10": 2.878552,
+        "p25": 3.553021,
+        "p50": 4.060082,
+        "p75": 4.531996,
+        "p90": 4.85314,
+        "uncertainty_widen_bp": 14.899664,
+        "overlay_reasons": [
+          "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 3,
+        "horizon_days": 63,
+        "current": 4.034008,
+        "central": 4.062167,
+        "delta_bp": 2.8159,
+        "p10": 2.587853,
+        "p25": 3.462748,
+        "p50": 4.062167,
+        "p75": 4.666768,
+        "p90": 5.048789,
+        "uncertainty_widen_bp": 23.17326,
+        "overlay_reasons": [
+          "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 4,
+        "horizon_days": 84,
+        "current": 4.034008,
+        "central": 4.059693,
+        "delta_bp": 2.5685,
+        "p10": 2.438862,
+        "p25": 3.460274,
+        "p50": 4.059693,
+        "p75": 4.737014,
+        "p90": 5.175791,
+        "uncertainty_widen_bp": 23.17326,
+        "overlay_reasons": [
+          "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 5,
+        "horizon_days": 105,
+        "current": 4.034008,
+        "central": 4.054085,
+        "delta_bp": 2.0077,
+        "p10": 2.448082,
+        "p25": 3.483478,
+        "p50": 4.054085,
+        "p75": 4.760218,
+        "p90": 5.196347,
+        "uncertainty_widen_bp": 14.899664,
+        "overlay_reasons": [
+          "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 6,
+        "horizon_days": 126,
+        "current": 4.034008,
+        "central": 4.046401,
+        "delta_bp": 1.2393,
+        "p10": 2.274828,
+        "p25": 3.443031,
+        "p50": 4.046401,
+        "p75": 4.781346,
+        "p90": 5.395339,
+        "uncertainty_widen_bp": 23.17326,
+        "overlay_reasons": [
+          "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 7,
+        "horizon_days": 147,
+        "current": 4.034008,
+        "central": 4.037422,
+        "delta_bp": 0.3414,
+        "p10": 2.267402,
+        "p25": 3.413851,
+        "p50": 4.037422,
+        "p75": 4.752166,
+        "p90": 5.387913,
+        "uncertainty_widen_bp": 14.59452,
+        "overlay_reasons": [
+          "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 8,
+        "horizon_days": 168,
+        "current": 4.034008,
+        "central": 4.027722,
+        "delta_bp": -0.6286,
+        "p10": 2.265394,
+        "p25": 3.425318,
+        "p50": 4.027722,
+        "p75": 4.808731,
+        "p90": 5.445622,
+        "uncertainty_widen_bp": 14.899664,
+        "overlay_reasons": [
+          "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 9,
+        "horizon_days": 189,
+        "current": 4.034008,
+        "central": 4.017713,
+        "delta_bp": -1.6295,
+        "p10": 2.258437,
+        "p25": 3.412331,
+        "p50": 4.017713,
+        "p75": 4.83105,
+        "p90": 5.493609,
+        "uncertainty_widen_bp": 14.59452,
+        "overlay_reasons": [
+          "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 10,
+        "horizon_days": 210,
+        "current": 4.034008,
+        "central": 4.007689,
+        "delta_bp": -2.6319,
+        "p10": 2.230395,
+        "p25": 3.326642,
+        "p50": 4.007689,
+        "p75": 4.895808,
+        "p90": 5.594884,
+        "uncertainty_widen_bp": 14.59452,
+        "overlay_reasons": [
+          "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 11,
+        "horizon_days": 231,
+        "current": 4.034008,
+        "central": 3.997854,
+        "delta_bp": -3.6154,
+        "p10": 2.192399,
+        "p25": 3.215013,
+        "p50": 3.997854,
+        "p75": 4.957568,
+        "p90": 5.74634,
+        "uncertainty_widen_bp": 14.899664,
+        "overlay_reasons": [
+          "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 12,
+        "horizon_days": 252,
+        "current": 4.034008,
+        "central": 3.988345,
+        "delta_bp": -4.5663,
+        "p10": 2.170113,
+        "p25": 3.202095,
+        "p50": 3.988345,
+        "p75": 4.94465,
+        "p90": 5.724054
+      }
+    ],
+    "5Y": [
+      {
+        "month": 1,
+        "horizon_days": 21,
+        "current": 4.211569,
+        "central": 4.226811,
+        "delta_bp": 1.5242,
+        "p10": 3.283624,
+        "p25": 3.774565,
+        "p50": 4.226811,
+        "p75": 4.692823,
+        "p90": 5.055589,
+        "uncertainty_widen_bp": 29.698485,
+        "overlay_reasons": [
+          "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 2,
+        "horizon_days": 42,
+        "current": 4.211569,
+        "central": 4.233424,
+        "delta_bp": 2.1855,
+        "p10": 3.09677,
+        "p25": 3.74867,
+        "p50": 4.233424,
+        "p75": 4.735373,
+        "p90": 5.043864,
+        "uncertainty_widen_bp": 16.763055,
+        "overlay_reasons": [
+          "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 3,
+        "horizon_days": 63,
+        "current": 4.211569,
+        "central": 4.233889,
+        "delta_bp": 2.232,
+        "p10": 2.91738,
+        "p25": 3.699835,
+        "p50": 4.233889,
+        "p75": 4.829905,
+        "p90": 5.231031,
+        "uncertainty_widen_bp": 21.0,
+        "overlay_reasons": [
+          "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 4,
+        "horizon_days": 84,
+        "current": 4.211569,
+        "central": 4.230065,
+        "delta_bp": 1.8496,
+        "p10": 2.84458,
+        "p25": 3.673429,
+        "p50": 4.230065,
+        "p75": 4.870543,
+        "p90": 5.332206,
+        "uncertainty_widen_bp": 21.0,
+        "overlay_reasons": [
+          "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 5,
+        "horizon_days": 105,
+        "current": 4.211569,
+        "central": 4.223341,
+        "delta_bp": 1.1772,
+        "p10": 2.793659,
+        "p25": 3.630075,
+        "p50": 4.223341,
+        "p75": 4.852276,
+        "p90": 5.312601,
+        "uncertainty_widen_bp": 16.763055,
+        "overlay_reasons": [
+          "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 6,
+        "horizon_days": 126,
+        "current": 4.211569,
+        "central": 4.214745,
+        "delta_bp": 0.3176,
+        "p10": 2.685322,
+        "p25": 3.558062,
+        "p50": 4.214745,
+        "p75": 4.864865,
+        "p90": 5.350078,
+        "uncertainty_widen_bp": 21.0,
+        "overlay_reasons": [
+          "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 7,
+        "horizon_days": 147,
+        "current": 4.211569,
+        "central": 4.205032,
+        "delta_bp": -0.6537,
+        "p10": 2.65139,
+        "p25": 3.527495,
+        "p50": 4.205032,
+        "p75": 4.834298,
+        "p90": 5.316145,
+        "uncertainty_widen_bp": 15.652476,
+        "overlay_reasons": [
+          "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 8,
+        "horizon_days": 168,
+        "current": 4.211569,
+        "central": 4.194753,
+        "delta_bp": -1.6816,
+        "p10": 2.630193,
+        "p25": 3.45494,
+        "p50": 4.194753,
+        "p75": 4.823688,
+        "p90": 5.354139,
+        "uncertainty_widen_bp": 16.763055,
+        "overlay_reasons": [
+          "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 9,
+        "horizon_days": 189,
+        "current": 4.211569,
+        "central": 4.184299,
+        "delta_bp": -2.727,
+        "p10": 2.606955,
+        "p25": 3.412519,
+        "p50": 4.184299,
+        "p75": 4.883636,
+        "p90": 5.417823,
+        "uncertainty_widen_bp": 15.652476,
+        "overlay_reasons": [
+          "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 10,
+        "horizon_days": 210,
+        "current": 4.211569,
+        "central": 4.173948,
+        "delta_bp": -3.7621,
+        "p10": 2.596604,
+        "p25": 3.329057,
+        "p50": 4.173948,
+        "p75": 4.876331,
+        "p90": 5.50841,
+        "uncertainty_widen_bp": 15.652476,
+        "overlay_reasons": [
+          "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 11,
+        "horizon_days": 231,
+        "current": 4.211569,
+        "central": 4.163887,
+        "delta_bp": -4.7682,
+        "p10": 2.52337,
+        "p25": 3.257306,
+        "p50": 4.163887,
+        "p75": 4.896026,
+        "p90": 5.575828,
+        "uncertainty_widen_bp": 16.763055,
+        "overlay_reasons": [
+          "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 12,
+        "horizon_days": 252,
+        "current": 4.211569,
+        "central": 4.154242,
+        "delta_bp": -5.7327,
+        "p10": 2.479239,
+        "p25": 3.204293,
+        "p50": 4.154242,
+        "p75": 4.843013,
+        "p90": 5.531696
+      }
+    ],
+    "10Y": [
+      {
+        "month": 1,
+        "horizon_days": 21,
+        "current": 4.452721,
+        "central": 4.458833,
+        "delta_bp": 0.6112,
+        "p10": 3.534697,
+        "p25": 4.033362,
+        "p50": 4.458833,
+        "p75": 4.88878,
+        "p90": 5.271966,
+        "uncertainty_widen_bp": 28.495614,
+        "overlay_reasons": [
+          "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 2,
+        "horizon_days": 42,
+        "current": 4.452721,
+        "central": 4.458181,
+        "delta_bp": 0.546,
+        "p10": 3.348271,
+        "p25": 4.001181,
+        "p50": 4.458181,
+        "p75": 4.975564,
+        "p90": 5.320686,
+        "uncertainty_widen_bp": 18.520259,
+        "overlay_reasons": [
+          "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 3,
+        "horizon_days": 63,
+        "current": 4.452721,
+        "central": 4.452861,
+        "delta_bp": 0.014,
+        "p10": 3.181507,
+        "p25": 3.904167,
+        "p50": 4.452861,
+        "p75": 5.045116,
+        "p90": 5.479318,
+        "uncertainty_widen_bp": 20.149442,
+        "overlay_reasons": [
+          "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 4,
+        "horizon_days": 84,
+        "current": 4.452721,
+        "central": 4.444431,
+        "delta_bp": -0.829,
+        "p10": 3.102208,
+        "p25": 3.803467,
+        "p50": 4.444431,
+        "p75": 5.063367,
+        "p90": 5.553854,
+        "uncertainty_widen_bp": 20.149442,
+        "overlay_reasons": [
+          "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 5,
+        "horizon_days": 105,
+        "current": 4.452721,
+        "central": 4.434042,
+        "delta_bp": -1.8679,
+        "p10": 3.013109,
+        "p25": 3.710599,
+        "p50": 4.434042,
+        "p75": 5.044832,
+        "p90": 5.576133,
+        "uncertainty_widen_bp": 18.520259,
+        "overlay_reasons": [
+          "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 6,
+        "horizon_days": 126,
+        "current": 4.452721,
+        "central": 4.422537,
+        "delta_bp": -3.0184,
+        "p10": 2.893617,
+        "p25": 3.62613,
+        "p50": 4.422537,
+        "p75": 5.072242,
+        "p90": 5.656814,
+        "uncertainty_widen_bp": 20.149442,
+        "overlay_reasons": [
+          "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 7,
+        "horizon_days": 147,
+        "current": 4.452721,
+        "central": 4.410524,
+        "delta_bp": -4.2197,
+        "p10": 2.774624,
+        "p25": 3.554204,
+        "p50": 4.410524,
+        "p75": 5.040414,
+        "p90": 5.647905,
+        "uncertainty_widen_bp": 16.186414,
+        "overlay_reasons": [
+          "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 8,
+        "horizon_days": 168,
+        "current": 4.452721,
+        "central": 4.398434,
+        "delta_bp": -5.4287,
+        "p10": 2.645972,
+        "p25": 3.48409,
+        "p50": 4.398434,
+        "p75": 5.039993,
+        "p90": 5.728701,
+        "uncertainty_widen_bp": 18.520259,
+        "overlay_reasons": [
+          "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 9,
+        "horizon_days": 189,
+        "current": 4.452721,
+        "central": 4.386567,
+        "delta_bp": -6.6154,
+        "p10": 2.657444,
+        "p25": 3.451669,
+        "p50": 4.386567,
+        "p75": 5.016457,
+        "p90": 5.743676,
+        "uncertainty_widen_bp": 16.186414,
+        "overlay_reasons": [
+          "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 10,
+        "horizon_days": 210,
+        "current": 4.452721,
+        "central": 4.375126,
+        "delta_bp": -7.7595,
+        "p10": 2.646003,
+        "p25": 3.440228,
+        "p50": 4.375126,
+        "p75": 5.028857,
+        "p90": 5.81925,
+        "uncertainty_widen_bp": 16.186414,
+        "overlay_reasons": [
+          "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 11,
+        "horizon_days": 231,
+        "current": 4.452721,
+        "central": 4.36424,
+        "delta_bp": -8.8481,
+        "p10": 2.611778,
+        "p25": 3.373585,
+        "p50": 4.36424,
+        "p75": 5.041798,
+        "p90": 5.860937,
+        "uncertainty_widen_bp": 18.520259,
+        "overlay_reasons": [
+          "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 12,
+        "horizon_days": 252,
+        "current": 4.452721,
+        "central": 4.353985,
+        "delta_bp": -9.8736,
+        "p10": 2.591673,
+        "p25": 3.3086,
+        "p50": 4.353985,
+        "p75": 4.976813,
+        "p90": 5.840832
+      }
+    ],
+    "30Y": [
+      {
+        "month": 1,
+        "horizon_days": 21,
+        "current": 4.991701,
+        "central": 4.935738,
+        "delta_bp": -5.5963,
+        "p10": 4.087794,
+        "p25": 4.535536,
+        "p50": 4.935738,
+        "p75": 5.29491,
+        "p90": 5.658617,
+        "uncertainty_widen_bp": 24.859606,
+        "overlay_reasons": [
+          "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 2,
+        "horizon_days": 42,
+        "current": 4.991701,
+        "central": 4.886712,
+        "delta_bp": -10.4989,
+        "p10": 3.851489,
+        "p25": 4.407239,
+        "p50": 4.886712,
+        "p75": 5.354545,
+        "p90": 5.678097,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 3,
+        "horizon_days": 63,
+        "current": 4.991701,
+        "central": 4.84365,
+        "delta_bp": -14.8051,
+        "p10": 3.695319,
+        "p25": 4.313675,
+        "p50": 4.84365,
+        "p75": 5.41168,
+        "p90": 5.794198,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 4,
+        "horizon_days": 84,
+        "current": 4.991701,
+        "central": 4.805738,
+        "delta_bp": -18.5963,
+        "p10": 3.538234,
+        "p25": 4.140738,
+        "p50": 4.805738,
+        "p75": 5.387983,
+        "p90": 5.902016,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 5,
+        "horizon_days": 105,
+        "current": 4.991701,
+        "central": 4.772289,
+        "delta_bp": -21.9412,
+        "p10": 3.438824,
+        "p25": 4.034221,
+        "p50": 4.772289,
+        "p75": 5.412221,
+        "p90": 5.961481,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 6,
+        "horizon_days": 126,
+        "current": 4.991701,
+        "central": 4.742721,
+        "delta_bp": -24.898,
+        "p10": 3.253786,
+        "p25": 3.95927,
+        "p50": 4.742721,
+        "p75": 5.395647,
+        "p90": 6.026733,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 7,
+        "horizon_days": 147,
+        "current": 4.991701,
+        "central": 4.716539,
+        "delta_bp": -27.5162,
+        "p10": 3.142243,
+        "p25": 3.913093,
+        "p50": 4.716539,
+        "p75": 5.358835,
+        "p90": 6.129415,
+        "uncertainty_widen_bp": 14.456832,
+        "overlay_reasons": [
+          "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 8,
+        "horizon_days": 168,
+        "current": 4.991701,
+        "central": 4.693318,
+        "delta_bp": -29.8383,
+        "p10": 3.087806,
+        "p25": 3.874264,
+        "p50": 4.693318,
+        "p75": 5.440477,
+        "p90": 6.278,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 9,
+        "horizon_days": 189,
+        "current": 4.991701,
+        "central": 4.672696,
+        "delta_bp": -31.9005,
+        "p10": 3.0984,
+        "p25": 3.86925,
+        "p50": 4.672696,
+        "p75": 5.508551,
+        "p90": 6.301075,
+        "uncertainty_widen_bp": 14.456832,
+        "overlay_reasons": [
+          "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 10,
+        "horizon_days": 210,
+        "current": 4.991701,
+        "central": 4.654358,
+        "delta_bp": -33.7343,
+        "p10": 3.080062,
+        "p25": 3.850912,
+        "p50": 4.654358,
+        "p75": 5.612954,
+        "p90": 6.337341,
+        "uncertainty_widen_bp": 14.456832,
+        "overlay_reasons": [
+          "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 11,
+        "horizon_days": 231,
+        "current": 4.991701,
+        "central": 4.638031,
+        "delta_bp": -35.367,
+        "p10": 3.003896,
+        "p25": 3.78361,
+        "p50": 4.638031,
+        "p75": 5.646979,
+        "p90": 6.35223,
+        "uncertainty_widen_bp": 17.578396,
+        "overlay_reasons": [
+          "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 12,
+        "horizon_days": 252,
+        "current": 4.991701,
+        "central": 4.623481,
+        "delta_bp": -36.822,
+        "p10": 2.980818,
+        "p25": 3.740467,
+        "p50": 4.623481,
+        "p75": 5.603836,
+        "p90": 6.329152
+      }
+    ],
+    "2s10s": [
+      {
+        "month": 1,
+        "horizon_days": 21,
+        "current": 0.418713,
+        "central": 0.407295,
+        "delta_bp": -1.1418,
+        "p10": -0.199566,
+        "p25": 0.104621,
+        "p50": 0.407295,
+        "p75": 0.71732,
+        "p90": 1.042255,
+        "base_central": 0.407295,
+        "overlay_bp": 0.0,
+        "overlay_reasons": [
+          "atlanta_mpt_object_pod: no high-conviction next-meeting cut/hike probability; overlay step +0.0bp.",
+          "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+        ],
+        "uncertainty_widen_bp": 43.428102
+      },
+      {
+        "month": 2,
+        "horizon_days": 42,
+        "current": 0.418713,
+        "central": 0.398099,
+        "delta_bp": -2.0614,
+        "p10": -0.201383,
+        "p25": 0.09599,
+        "p50": 0.398099,
+        "p75": 0.708689,
+        "p90": 1.040438,
+        "uncertainty_widen_bp": 23.769729,
+        "overlay_reasons": [
+          "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 3,
+        "horizon_days": 63,
+        "current": 0.418713,
+        "central": 0.390694,
+        "delta_bp": -2.8019,
+        "p10": -0.229872,
+        "p25": 0.077694,
+        "p50": 0.390694,
+        "p75": 0.729394,
+        "p90": 1.100047,
+        "uncertainty_widen_bp": 30.708305,
+        "overlay_reasons": [
+          "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 4,
+        "horizon_days": 84,
+        "current": 0.418713,
+        "central": 0.384737,
+        "delta_bp": -3.3976,
+        "p10": -0.258692,
+        "p25": 0.049691,
+        "p50": 0.384737,
+        "p75": 0.732361,
+        "p90": 1.195051,
+        "uncertainty_widen_bp": 30.708305,
+        "overlay_reasons": [
+          "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 5,
+        "horizon_days": 105,
+        "current": 0.418713,
+        "central": 0.379957,
+        "delta_bp": -3.8756,
+        "p10": -0.279897,
+        "p25": 0.044893,
+        "p50": 0.379957,
+        "p75": 0.727563,
+        "p90": 1.20297,
+        "uncertainty_widen_bp": 23.769729,
+        "overlay_reasons": [
+          "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 6,
+        "horizon_days": 126,
+        "current": 0.418713,
+        "central": 0.376137,
+        "delta_bp": -4.2576,
+        "p10": -0.407591,
+        "p25": -0.028029,
+        "p50": 0.376137,
+        "p75": 0.782049,
+        "p90": 1.327269,
+        "uncertainty_widen_bp": 30.708305,
+        "overlay_reasons": [
+          "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 7,
+        "horizon_days": 147,
+        "current": 0.418713,
+        "central": 0.373101,
+        "delta_bp": -4.5612,
+        "p10": -0.415115,
+        "p25": -0.036621,
+        "p50": 0.373101,
+        "p75": 0.773457,
+        "p90": 1.319745,
+        "uncertainty_widen_bp": 21.794495,
+        "overlay_reasons": [
+          "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 8,
+        "horizon_days": 168,
+        "current": 0.418713,
+        "central": 0.370711,
+        "delta_bp": -4.8002,
+        "p10": -0.501797,
+        "p25": -0.076872,
+        "p50": 0.370711,
+        "p75": 0.8089,
+        "p90": 1.32452,
+        "uncertainty_widen_bp": 23.769729,
+        "overlay_reasons": [
+          "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 9,
+        "horizon_days": 189,
+        "current": 0.418713,
+        "central": 0.368854,
+        "delta_bp": -4.9859,
+        "p10": -0.564602,
+        "p25": -0.093047,
+        "p50": 0.368854,
+        "p75": 0.815645,
+        "p90": 1.327644,
+        "uncertainty_widen_bp": 21.794495,
+        "overlay_reasons": [
+          "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 10,
+        "horizon_days": 210,
+        "current": 0.418713,
+        "central": 0.367437,
+        "delta_bp": -5.1276,
+        "p10": -0.611612,
+        "p25": -0.126731,
+        "p50": 0.367437,
+        "p75": 0.82642,
+        "p90": 1.362564,
+        "uncertainty_widen_bp": 21.794495,
+        "overlay_reasons": [
+          "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 11,
+        "horizon_days": 231,
+        "current": 0.418713,
+        "central": 0.366386,
+        "delta_bp": -5.2327,
+        "p10": -0.712114,
+        "p25": -0.165023,
+        "p50": 0.366386,
+        "p75": 0.868277,
+        "p90": 1.458511,
+        "uncertainty_widen_bp": 23.769729,
+        "overlay_reasons": [
+          "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 12,
+        "horizon_days": 252,
+        "current": 0.418713,
+        "central": 0.36564,
+        "delta_bp": -5.3073,
+        "p10": -0.714854,
+        "p25": -0.181225,
+        "p50": 0.36564,
+        "p75": 0.852075,
+        "p90": 1.45577
+      }
+    ],
+    "5s30s": [
+      {
+        "month": 1,
+        "horizon_days": 21,
+        "current": 0.780132,
+        "central": 0.708927,
+        "delta_bp": -7.1205,
+        "p10": 0.100457,
+        "p25": 0.408904,
+        "p50": 0.708927,
+        "p75": 1.004896,
+        "p90": 1.290408,
+        "uncertainty_widen_bp": 38.729833,
+        "overlay_reasons": [
+          "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 2,
+        "horizon_days": 42,
+        "current": 0.780132,
+        "central": 0.653288,
+        "delta_bp": -12.6844,
+        "p10": 0.043769,
+        "p25": 0.354306,
+        "p50": 0.653288,
+        "p75": 0.950298,
+        "p90": 1.233719,
+        "uncertainty_widen_bp": 24.289916,
+        "overlay_reasons": [
+          "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 3,
+        "horizon_days": 63,
+        "current": 0.780132,
+        "central": 0.609761,
+        "delta_bp": -17.0371,
+        "p10": -0.024237,
+        "p25": 0.257211,
+        "p50": 0.609761,
+        "p75": 0.928187,
+        "p90": 1.279435,
+        "uncertainty_widen_bp": 27.386128,
+        "overlay_reasons": [
+          "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 4,
+        "horizon_days": 84,
+        "current": 0.780132,
+        "central": 0.575673,
+        "delta_bp": -20.4459,
+        "p10": -0.091509,
+        "p25": 0.196708,
+        "p50": 0.575673,
+        "p75": 0.959911,
+        "p90": 1.293721,
+        "uncertainty_widen_bp": 27.386128,
+        "overlay_reasons": [
+          "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 5,
+        "horizon_days": 105,
+        "current": 0.780132,
+        "central": 0.548948,
+        "delta_bp": -23.1184,
+        "p10": -0.174088,
+        "p25": 0.173516,
+        "p50": 0.548948,
+        "p75": 0.970745,
+        "p90": 1.306392,
+        "uncertainty_widen_bp": 24.289916,
+        "overlay_reasons": [
+          "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 6,
+        "horizon_days": 126,
+        "current": 0.780132,
+        "central": 0.527976,
+        "delta_bp": -25.2156,
+        "p10": -0.300408,
+        "p25": 0.071355,
+        "p50": 0.527976,
+        "p75": 0.965254,
+        "p90": 1.31816,
+        "uncertainty_widen_bp": 27.386128,
+        "overlay_reasons": [
+          "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 7,
+        "horizon_days": 147,
+        "current": 0.780132,
+        "central": 0.511506,
+        "delta_bp": -26.8626,
+        "p10": -0.349486,
+        "p25": 0.041502,
+        "p50": 0.511506,
+        "p75": 0.94708,
+        "p90": 1.269083,
+        "uncertainty_widen_bp": 21.307276,
+        "overlay_reasons": [
+          "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 8,
+        "horizon_days": 168,
+        "current": 0.780132,
+        "central": 0.498566,
+        "delta_bp": -28.1566,
+        "p10": -0.480657,
+        "p25": -0.023369,
+        "p50": 0.498566,
+        "p75": 0.953131,
+        "p90": 1.269948,
+        "uncertainty_widen_bp": 24.289916,
+        "overlay_reasons": [
+          "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 9,
+        "horizon_days": 189,
+        "current": 0.780132,
+        "central": 0.488397,
+        "delta_bp": -29.1735,
+        "p10": -0.502278,
+        "p25": -0.03853,
+        "p50": 0.488397,
+        "p75": 0.963419,
+        "p90": 1.283462,
+        "uncertainty_widen_bp": 21.307276,
+        "overlay_reasons": [
+          "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 10,
+        "horizon_days": 210,
+        "current": 0.780132,
+        "central": 0.48041,
+        "delta_bp": -29.9722,
+        "p10": -0.5216,
+        "p25": -0.064112,
+        "p50": 0.48041,
+        "p75": 0.965715,
+        "p90": 1.347028,
+        "uncertainty_widen_bp": 21.307276,
+        "overlay_reasons": [
+          "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 11,
+        "horizon_days": 231,
+        "current": 0.780132,
+        "central": 0.474144,
+        "delta_bp": -30.5988,
+        "p10": -0.597666,
+        "p25": -0.11336,
+        "p50": 0.474144,
+        "p75": 0.988498,
+        "p90": 1.41595,
+        "uncertainty_widen_bp": 24.289916,
+        "overlay_reasons": [
+          "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+        ]
+      },
+      {
+        "month": 12,
+        "horizon_days": 252,
+        "current": 0.780132,
+        "central": 0.46924,
+        "delta_bp": -31.0892,
+        "p10": -0.540455,
+        "p25": -0.1017,
+        "p50": 0.46924,
+        "p75": 1.000158,
+        "p90": 1.473161
+      }
+    ]
+  },
+  "metadata": {
+    "model": "fadns",
+    "month_trading_days": 21,
+    "error_definition": "realized_change_minus_predicted_change",
+    "uncertainty": "empirical historical FADNS forecast-error quantiles, recentered around the macro-adjusted central path",
+    "fan_center": "central_fadns_macro_adjusted",
+    "fan_quantiles": [
+      "p10",
+      "p25",
+      "p50",
+      "p75",
+      "p90"
+    ],
+    "baselines": {
+      "10Y": {
+        "random_walk": {
+          "level": 4.452721,
+          "path": [
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721,
+            4.452721
+          ],
+          "reason": "Random-walk baseline holds the current 10Y level flat."
+        },
+        "market_range": {
+          "low": 3.9,
+          "high": 4.8,
+          "source": "manual_market_observed",
+          "as_of": "2026-06-02",
+          "reason": "Manually observed current market range for the 10Y outcome. Free-data placeholder until an explicit free market/probability feed is wired."
+        }
+      }
+    },
+    "realized_macro_data_audit": {
+      "central_path_role": "already released macro data can move central/p50",
+      "future_event_role": "scheduled unknown future events widen fan only",
+      "central_overlay_exception": "FOMC policy-path surprise can move central only when high-confidence cut/hike probabilities clear the configured threshold.",
+      "central_path": {
+        "inflation_regime": {
+          "available_series": [
+            "CPIAUCSL",
+            "CPILFESL",
+            "PCEPI",
+            "PCEPILFE",
+            "T5YIE",
+            "T10YIE",
+            "T5YIFR"
+          ],
+          "latest_dates": {
+            "CPIAUCSL": "2026-05-06",
+            "CPILFESL": "2026-05-06",
+            "PCEPI": "2026-05-06",
+            "PCEPILFE": "2026-05-06",
+            "T5YIE": "2026-06-02",
+            "T10YIE": "2026-06-02",
+            "T5YIFR": "2026-06-02"
+          },
+          "missing_or_proxy": [],
+          "role": "already released values feed the FADNS macro block and can move central/p50"
+        },
+        "policy_path": {
+          "available_series": [
+            "DFEDTARU",
+            "EFFR",
+            "DGS2",
+            "DGS3MO",
+            "DGS6MO",
+            "FEDTARMD",
+            "fomc_tone"
+          ],
+          "latest_dates": {
+            "DFEDTARU": "2026-06-02",
+            "EFFR": "2026-06-02",
+            "DGS2": "2026-06-02",
+            "DGS3MO": "2026-06-02",
+            "DGS6MO": "2026-06-02",
+            "FEDTARMD": "2026-01-02",
+            "fomc_tone": "2026-06-02"
+          },
+          "missing_or_proxy": [],
+          "role": "already released values feed the FADNS macro block and can move central/p50"
+        },
+        "growth_risk": {
+          "available_series": [
+            "PAYEMS",
+            "UNRATE",
+            "ICSA",
+            "IPMAN",
+            "RSAFS",
+            "JTSJOL"
+          ],
+          "latest_dates": {
+            "PAYEMS": "2026-04-08",
+            "UNRATE": "2026-04-08",
+            "ICSA": "2026-05-30",
+            "IPMAN": "2026-04-08",
+            "RSAFS": "2026-04-21",
+            "JTSJOL": "2026-05-16"
+          },
+          "missing_or_proxy": [],
+          "role": "already released values feed the FADNS macro block and can move central/p50"
+        },
+        "liquidity_supply": {
+          "available_series": [
+            "WALCL",
+            "WRESBAL",
+            "RRPONTSYD",
+            "WTREGEN",
+            "treasury_auction_stress"
+          ],
+          "latest_dates": {
+            "WALCL": "2026-05-27",
+            "WRESBAL": "2026-05-27",
+            "RRPONTSYD": "2026-06-02",
+            "WTREGEN": "2026-05-28",
+            "treasury_auction_stress": "2026-06-02"
+          },
+          "missing_or_proxy": [],
+          "role": "already released values feed the FADNS macro block and can move central/p50"
+        },
+        "global_relative_value": {
+          "available_series": [
+            "IRLTLT01DEM156N",
+            "IRLTLT01JPM156N",
+            "DTWEXBGS"
+          ],
+          "latest_dates": {
+            "IRLTLT01DEM156N": "2026-04-02",
+            "IRLTLT01JPM156N": "2026-04-02",
+            "DTWEXBGS": "2026-05-30"
+          },
+          "missing_or_proxy": [],
+          "role": "already released values feed the FADNS macro block and can move central/p50"
+        }
+      },
+      "fan_only_future_events": [
+        "cpi",
+        "fomc",
+        "nfp",
+        "pce",
+        "qra"
+      ],
+      "free_data_only": true,
+      "point_in_time_release_lagged": true
+    },
+    "base_vs_adjusted": {
+      "macro_blocks": [
+        "inflation_regime",
+        "policy_path",
+        "growth_risk",
+        "liquidity_supply",
+        "global_relative_value"
+      ],
+      "linearity_assertion": "passed",
+      "horizons": {
+        "1": {
+          "ns_factors": {
+            "level": {
+              "base": 5.424549289052589,
+              "adjusted": 5.227854577962343,
+              "total_delta": -0.19669471109024617,
+              "contributions": {
+                "inflation_regime": 0.04838092691163656,
+                "policy_path": -0.08082727407769294,
+                "growth_risk": -0.15102472891684235,
+                "liquidity_supply": -0.0051676734121027575,
+                "global_relative_value": -0.008055961595236466
+              }
+            },
+            "slope": {
+              "base": -1.6564178978745916,
+              "adjusted": -1.3114336781805156,
+              "total_delta": 0.344984219694076,
+              "contributions": {
+                "inflation_regime": -0.021746680871000106,
+                "policy_path": 0.21584849722126287,
+                "growth_risk": 0.13124497243715963,
+                "liquidity_supply": 0.004531657841520976,
+                "global_relative_value": 0.01510577306513207
+              }
+            },
+            "curvature": {
+              "base": 0.5981913749754397,
+              "adjusted": 1.0395956362438943,
+              "total_delta": 0.44140426126845456,
+              "contributions": {
+                "inflation_regime": -0.09276697498531884,
+                "policy_path": 0.0934396305378976,
+                "growth_risk": 0.30358348384825595,
+                "liquidity_supply": 0.01043760273886496,
+                "global_relative_value": 0.12671051912875383
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.898635996713118,
+              "adjusted": 4.051538881100474,
+              "total_delta_bp": 15.290288438735633,
+              "contributions_bp": {
+                "inflation_regime": 2.269538958001338,
+                "policy_path": 12.764272418526351,
+                "growth_risk": -1.0404325112157677,
+                "liquidity_supply": -0.031480380299921715,
+                "global_relative_value": 1.3283899537243984
+              }
+            },
+            "5Y": {
+              "base": 4.071095970555568,
+              "adjusted": 4.226810827364335,
+              "total_delta_bp": 15.571485680876673,
+              "contributions_bp": {
+                "inflation_regime": 1.807416465435783,
+                "policy_path": 11.68975367414041,
+                "growth_risk": -0.0051626925901881926,
+                "liquidity_supply": 0.003960465024524436,
+                "global_relative_value": 2.0755177688669324
+              }
+            },
+            "10Y": {
+              "base": 4.306646301597345,
+              "adjusted": 4.458833386752776,
+              "total_delta_bp": 15.218708515543078,
+              "contributions_bp": {
+                "inflation_regime": 1.3072319085807296,
+                "policy_path": 9.999020835646748,
+                "growth_risk": 0.9519058978064022,
+                "liquidity_supply": 0.036647573769803675,
+                "global_relative_value": 2.9239022997401336
+              }
+            },
+            "30Y": {
+              "base": 4.8422807454065975,
+              "adjusted": 4.935738523627582,
+              "total_delta_bp": 9.345777822098444,
+              "contributions_bp": {
+                "inflation_regime": 1.0712892462849077,
+                "policy_path": 4.618854284626212,
+                "growth_risk": -0.016196304234852216,
+                "liquidity_supply": 0.002804420547050862,
+                "global_relative_value": 3.6690261748758557
+              }
+            },
+            "2s10s": {
+              "base": 0.4080103048842272,
+              "adjusted": 0.40729450565230163,
+              "total_delta_bp": -0.07157992319255513,
+              "contributions_bp": {
+                "inflation_regime": -0.9623070494206085,
+                "policy_path": -2.7652515828796034,
+                "growth_risk": 1.99233840902217,
+                "liquidity_supply": 0.06812795406972538,
+                "global_relative_value": 1.5955123460157352
+              }
+            },
+            "5s30s": {
+              "base": 0.7711847748510294,
+              "adjusted": 0.7089276962632471,
+              "total_delta_bp": -6.225707858778229,
+              "contributions_bp": {
+                "inflation_regime": -0.736127219150875,
+                "policy_path": -7.0708993895141985,
+                "growth_risk": -0.011033611644664022,
+                "liquidity_supply": -0.0011560444774735743,
+                "global_relative_value": 1.5935084060089235
+              }
+            }
+          }
+        },
+        "2": {
+          "ns_factors": {
+            "level": {
+              "base": 5.317059127096012,
+              "adjusted": 4.9840792874951445,
+              "total_delta": -0.33297983960086786,
+              "contributions": {
+                "inflation_regime": 0.0949586432937887,
+                "policy_path": -0.11643470123206706,
+                "growth_risk": -0.2832240118619087,
+                "liquidity_supply": -0.009684631828774309,
+                "global_relative_value": -0.01859513797189314
+              }
+            },
+            "slope": {
+              "base": -1.666440812069542,
+              "adjusted": -1.0592151005786439,
+              "total_delta": 0.6072257114908981,
+              "contributions": {
+                "inflation_regime": -0.04282713854906542,
+                "policy_path": 0.37081897877930653,
+                "growth_risk": 0.24057973854110756,
+                "liquidity_supply": 0.008302278435504422,
+                "global_relative_value": 0.0303518542840441
+              }
+            },
+            "curvature": {
+              "base": 0.525149376487209,
+              "adjusted": 1.3040527948465135,
+              "total_delta": 0.7789034183593044,
+              "contributions": {
+                "inflation_regime": -0.18342949392268845,
+                "policy_path": 0.11791218733913136,
+                "growth_risk": 0.5770731114204661,
+                "liquidity_supply": 0.019829842165490573,
+                "global_relative_value": 0.2475177713569039
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.7776062361815876,
+              "adjusted": 4.060082660782266,
+              "total_delta_bp": 28.247642460067812,
+              "contributions_bp": {
+                "inflation_regime": 4.433303207395859,
+                "policy_path": 23.931457039639753,
+                "growth_risk": -2.4302123899471764,
+                "liquidity_supply": -0.07541303098338381,
+                "global_relative_value": 2.3885076339640454
+              }
+            },
+            "5Y": {
+              "base": 3.9458638422355694,
+              "adjusted": 4.233424134530885,
+              "total_delta_bp": 28.7560292295316,
+              "contributions_bp": {
+                "inflation_regime": 3.5181688343044226,
+                "policy_path": 21.793876627571343,
+                "growth_risk": -0.39162786926039755,
+                "liquidity_supply": -0.0056417747871531,
+                "global_relative_value": 3.841253411704616
+              }
+            },
+            "10Y": {
+              "base": 4.17667250159485,
+              "adjusted": 4.458181319671254,
+              "total_delta_bp": 28.15088180764036,
+              "contributions_bp": {
+                "inflation_regime": 2.527190286952862,
+                "policy_path": 18.54646703894644,
+                "growth_risk": 1.5283434423977444,
+                "liquidity_supply": 0.059934507353747835,
+                "global_relative_value": 5.488946531990822
+              }
+            },
+            "30Y": {
+              "base": 4.7083926656296295,
+              "adjusted": 4.88671206455555,
+              "total_delta_bp": 17.831939892592086,
+              "contributions_bp": {
+                "inflation_regime": 2.0556494246438466,
+                "policy_path": 8.905818038269754,
+                "growth_risk": -0.0540936408860063,
+                "liquidity_supply": 0.004535413258856669,
+                "global_relative_value": 6.920030657306812
+              }
+            },
+            "2s10s": {
+              "base": 0.3990662654132624,
+              "adjusted": 0.3980986588889879,
+              "total_delta_bp": -0.09676065242745224,
+              "contributions_bp": {
+                "inflation_regime": -1.9061129204429972,
+                "policy_path": -5.384990000693316,
+                "growth_risk": 3.9585558323449206,
+                "liquidity_supply": 0.13534753833713165,
+                "global_relative_value": 3.100438898026777
+              }
+            },
+            "5s30s": {
+              "base": 0.7625288233940601,
+              "adjusted": 0.653287930024665,
+              "total_delta_bp": -10.924089336939513,
+              "contributions_bp": {
+                "inflation_regime": -1.4625194096605763,
+                "policy_path": -12.888058589301588,
+                "growth_risk": 0.33753422837439123,
+                "liquidity_supply": 0.010177188046009769,
+                "global_relative_value": 3.078777245602196
+              }
+            }
+          }
+        },
+        "3": {
+          "ns_factors": {
+            "level": {
+              "base": 5.214098663510811,
+              "adjusted": 4.790261282632228,
+              "total_delta": -0.4238373808785827,
+              "contributions": {
+                "inflation_regime": 0.13983319229240312,
+                "policy_path": -0.11822476256794803,
+                "growth_risk": -0.4005276902139382,
+                "liquidity_supply": -0.013687276513108792,
+                "global_relative_value": -0.031230843875972577
+              }
+            },
+            "slope": {
+              "base": -1.669102827123104,
+              "adjusted": -0.8632919151591874,
+              "total_delta": 0.8058109119639167,
+              "contributions": {
+                "inflation_regime": -0.06326777241666906,
+                "policy_path": 0.47917049650654503,
+                "growth_risk": 0.3327900146132336,
+                "liquidity_supply": 0.011478286844156216,
+                "global_relative_value": 0.04563988641665089
+              }
+            },
+            "curvature": {
+              "base": 0.4722478147700513,
+              "adjusted": 1.5077250929803807,
+              "total_delta": 1.0354772782103294,
+              "contributions": {
+                "inflation_regime": -0.2719967556865259,
+                "policy_path": 0.090124292709614,
+                "growth_risk": 0.8261744589414826,
+                "liquidity_supply": 0.02837535892789443,
+                "global_relative_value": 0.3627999233178622
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.669167815057889,
+              "adjusted": 4.06216716146111,
+              "total_delta_bp": 39.299934640322085,
+              "contributions_bp": {
+                "inflation_regime": 6.498759890010734,
+                "policy_path": 33.79764129281399,
+                "growth_risk": -4.079698745274139,
+                "liquidity_supply": -0.12865333790629271,
+                "global_relative_value": 3.2118855406795883
+              }
+            },
+            "5Y": {
+              "base": 3.8340167689044597,
+              "adjusted": 4.233888759905422,
+              "total_delta_bp": 39.987199100096184,
+              "contributions_bp": {
+                "inflation_regime": 5.139870922410853,
+                "policy_path": 30.60955640765496,
+                "growth_risk": -1.0687121305621008,
+                "liquidity_supply": -0.025624297531581318,
+                "global_relative_value": 5.332108198125847
+              }
+            },
+            "10Y": {
+              "base": 4.06087102520049,
+              "adjusted": 4.452860803027902,
+              "total_delta_bp": 39.198977782741196,
+              "contributions_bp": {
+                "inflation_regime": 3.6677136694444354,
+                "policy_path": 25.91257504382313,
+                "growth_risk": 1.8117420161862612,
+                "liquidity_supply": 0.07275801315513829,
+                "global_relative_value": 7.734189040133965
+              }
+            },
+            "30Y": {
+              "base": 4.58842459014108,
+              "adjusted": 4.843650290891373,
+              "total_delta_bp": 25.52257007502927,
+              "contributions_bp": {
+                "inflation_regime": 2.9615978988849165,
+                "policy_path": 12.874032391116828,
+                "growth_risk": -0.11663228864440021,
+                "liquidity_supply": 0.005123548690246034,
+                "global_relative_value": 9.79844852498342
+              }
+            },
+            "2s10s": {
+              "base": 0.39170321014260123,
+              "adjusted": 0.3906936415667923,
+              "total_delta_bp": -0.10095685758089168,
+              "contributions_bp": {
+                "inflation_regime": -2.8310462205662987,
+                "policy_path": -7.885066248990869,
+                "growth_risk": 5.8914407614604,
+                "liquidity_supply": 0.20141135106143102,
+                "global_relative_value": 4.5223034994543765
+              }
+            },
+            "5s30s": {
+              "base": 0.7544078212366201,
+              "adjusted": 0.609761530985951,
+              "total_delta_bp": -14.46462902506691,
+              "contributions_bp": {
+                "inflation_regime": -2.1782730235259367,
+                "policy_path": -17.735524016538132,
+                "growth_risk": 0.9520798419177006,
+                "liquidity_supply": 0.030747846221827357,
+                "global_relative_value": 4.466340326857574
+              }
+            }
+          }
+        },
+        "4": {
+          "ns_factors": {
+            "level": {
+              "base": 5.116182952460728,
+              "adjusted": 4.635468210784565,
+              "total_delta": -0.480714741676163,
+              "contributions": {
+                "inflation_regime": 0.18309625790077985,
+                "policy_path": -0.09493104465513577,
+                "growth_risk": -0.5059714308314726,
+                "liquidity_supply": -0.017280932152066806,
+                "global_relative_value": -0.04562759193823998
+              }
+            },
+            "slope": {
+              "base": -1.6663364689773377,
+              "adjusted": -0.7108823156710549,
+              "total_delta": 0.9554541533062828,
+              "contributions": {
+                "inflation_regime": -0.08309310139381317,
+                "policy_path": 0.5518926235517325,
+                "growth_risk": 0.4115741129160234,
+                "liquidity_supply": 0.01418828497989145,
+                "global_relative_value": 0.06089223325244754
+              }
+            },
+            "curvature": {
+              "base": 0.43587775276385876,
+              "adjusted": 1.664846094223953,
+              "total_delta": 1.228968341460094,
+              "contributions": {
+                "inflation_regime": -0.3584826179360105,
+                "policy_path": 0.022980470746583388,
+                "growth_risk": 1.0553307605911408,
+                "liquidity_supply": 0.03622885482164655,
+                "global_relative_value": 0.4729108732367296
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.5718135890649974,
+              "adjusted": 4.059693639945524,
+              "total_delta_bp": 48.7880050880527,
+              "contributions_bp": {
+                "inflation_regime": 8.472691107684781,
+                "policy_path": 42.59662318718301,
+                "growth_risk": -5.919303254904447,
+                "liquidity_supply": -0.1887568957614634,
+                "global_relative_value": 3.8267509438534804
+              }
+            },
+            "5Y": {
+              "base": 3.7339540986857926,
+              "adjusted": 4.230065030406883,
+              "total_delta_bp": 49.61109317210904,
+              "contributions_bp": {
+                "inflation_regime": 6.679404694141724,
+                "policy_path": 38.371634516302485,
+                "growth_risk": -1.965788374696729,
+                "liquidity_supply": -0.05350523087151718,
+                "global_relative_value": 6.5793475672356285
+              }
+            },
+            "10Y": {
+              "base": 3.9575695747263966,
+              "adjusted": 4.4444308649885,
+              "total_delta_bp": 48.686129026210345,
+              "contributions_bp": {
+                "inflation_regime": 4.73584998370792,
+                "policy_path": 32.31164486794037,
+                "growth_risk": 1.8666242544195588,
+                "liquidity_supply": 0.07738927370287764,
+                "global_relative_value": 9.694620646442205
+              }
+            },
+            "30Y": {
+              "base": 4.48092715209811,
+              "adjusted": 4.805738350983966,
+              "total_delta_bp": 32.481119888585575,
+              "contributions_bp": {
+                "inflation_regime": 3.796763472544044,
+                "policy_path": 16.539918639634898,
+                "growth_risk": -0.20494368124038131,
+                "liquidity_supply": 0.004558846677999229,
+                "global_relative_value": 12.344822610971617
+              }
+            },
+            "2s10s": {
+              "base": 0.38575598566139924,
+              "adjusted": 0.3847372250429757,
+              "total_delta_bp": -0.1018760618423542,
+              "contributions_bp": {
+                "inflation_regime": -3.7368411239768604,
+                "policy_path": -10.284978319242638,
+                "growth_risk": 7.785927509324006,
+                "liquidity_supply": 0.26614616946434105,
+                "global_relative_value": 5.867869702588725
+              }
+            },
+            "5s30s": {
+              "base": 0.7469730534123178,
+              "adjusted": 0.5756733205770832,
+              "total_delta_bp": -17.12997328352346,
+              "contributions_bp": {
+                "inflation_regime": -2.8826412215976807,
+                "policy_path": -21.83171587666759,
+                "growth_risk": 1.7608446934563478,
+                "liquidity_supply": 0.05806407754951641,
+                "global_relative_value": 5.7654750437359885
+              }
+            }
+          }
+        },
+        "5": {
+          "ns_factors": {
+            "level": {
+              "base": 5.02356045423444,
+              "adjusted": 4.5112169214247695,
+              "total_delta": -0.5123435328096706,
+              "contributions": {
+                "inflation_regime": 0.2248320505776202,
+                "policy_path": -0.05323319779346997,
+                "growth_risk": -0.6019015585047037,
+                "liquidity_supply": -0.020546969301762728,
+                "global_relative_value": -0.06149385778732165
+              }
+            },
+            "slope": {
+              "base": -1.6596142139224288,
+              "adjusted": -0.5921169871302845,
+              "total_delta": 1.0674972267921443,
+              "contributions": {
+                "inflation_regime": -0.1023260086610721,
+                "policy_path": 0.5974527232817,
+                "growth_risk": 0.47979114758158364,
+                "liquidity_supply": 0.01653168544985112,
+                "global_relative_value": 0.07604767914007948
+              }
+            },
+            "curvature": {
+              "base": 0.4131108249578831,
+              "adjusted": 1.7863530391685598,
+              "total_delta": 1.3732422142106766,
+              "contributions": {
+                "inflation_regime": -0.4429050235688564,
+                "policy_path": -0.07355328807499668,
+                "growth_risk": 1.2680091523889296,
+                "liquidity_supply": 0.04351105326234607,
+                "global_relative_value": 0.578180320203244
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.4842411865366225,
+              "adjusted": 4.054085280911809,
+              "total_delta_bp": 56.98440943751866,
+              "contributions_bp": {
+                "inflation_regime": 10.36126266523955,
+                "policy_path": 50.513621737028394,
+                "growth_risk": -7.894996911800598,
+                "liquidity_supply": -0.25382292537526413,
+                "global_relative_value": 4.258344872429616
+              }
+            },
+            "5Y": {
+              "base": 3.6442899937360473,
+              "adjusted": 4.2233408983142375,
+              "total_delta_bp": 57.90509045781902,
+              "contributions_bp": {
+                "inflation_regime": 8.142994873380225,
+                "policy_path": 45.26629255664646,
+                "growth_risk": -3.02780464379214,
+                "liquidity_supply": -0.08734706642841039,
+                "global_relative_value": 7.610954738015814
+              }
+            },
+            "10Y": {
+              "base": 3.865313358298557,
+              "adjusted": 4.434042547661057,
+              "total_delta_bp": 56.872918936249974,
+              "contributions_bp": {
+                "inflation_regime": 5.737938544601792,
+                "policy_path": 37.91421752455511,
+                "growth_risk": 1.7435813275881094,
+                "liquidity_supply": 0.07561205848884431,
+                "global_relative_value": 11.40156948101906
+              }
+            },
+            "30Y": {
+              "base": 4.384598754310408,
+              "adjusted": 4.772289374980224,
+              "total_delta_bp": 38.769062066981604,
+              "contributions_bp": {
+                "inflation_regime": 4.567980824776864,
+                "policy_path": 19.92177040420703,
+                "growth_risk": -0.31889298137414795,
+                "liquidity_supply": 0.0028722719594349313,
+                "global_relative_value": 14.595331547415258
+              }
+            },
+            "2s10s": {
+              "base": 0.38107217176193453,
+              "adjusted": 0.3799572667492477,
+              "total_delta_bp": -0.1114905012686851,
+              "contributions_bp": {
+                "inflation_regime": -4.6233241206377595,
+                "policy_path": -12.599404212473274,
+                "growth_risk": 9.638578239388707,
+                "liquidity_supply": 0.3294349838641084,
+                "global_relative_value": 7.143224608589444
+              }
+            },
+            "5s30s": {
+              "base": 0.740308760574361,
+              "adjusted": 0.5489484766659869,
+              "total_delta_bp": -19.13602839083741,
+              "contributions_bp": {
+                "inflation_regime": -3.5750140486033604,
+                "policy_path": -25.34452215243943,
+                "growth_risk": 2.708911662417992,
+                "liquidity_supply": 0.09021933838784531,
+                "global_relative_value": 6.984376809399444
+              }
+            }
+          }
+        },
+        "6": {
+          "ns_factors": {
+            "level": {
+              "base": 4.93628934684235,
+              "adjusted": 4.410919173978786,
+              "total_delta": -0.525370172863564,
+              "contributions": {
+                "inflation_regime": 0.2651180852766072,
+                "policy_path": 0.00176906863143177,
+                "growth_risk": -0.6901330220821489,
+                "liquidity_supply": -0.02354829683286448,
+                "global_relative_value": -0.07857600785655712
+              }
+            },
+            "slope": {
+              "base": -1.6500553083246055,
+              "adjusted": -0.4993747136467561,
+              "total_delta": 1.1506805946778493,
+              "contributions": {
+                "inflation_regime": -0.12098794303195981,
+                "policy_path": 0.6223725411311932,
+                "growth_risk": 0.5396525650644635,
+                "liquidity_supply": 0.018585373901113374,
+                "global_relative_value": 0.09105805761303531
+              }
+            },
+            "curvature": {
+              "base": 0.4015602084519764,
+              "adjusted": 1.88064465004971,
+              "total_delta": 1.4790844415977338,
+              "contributions": {
+                "inflation_regime": -0.5252854721154666,
+                "policy_path": -0.19178255467666078,
+                "growth_risk": 1.4669217079135584,
+                "liquidity_supply": 0.050316391065787835,
+                "global_relative_value": 0.6789143694105003
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.405320939581252,
+              "adjusted": 4.046400998033807,
+              "total_delta_bp": 64.10800584525549,
+              "contributions_bp": {
+                "inflation_regime": 12.170085883619189,
+                "policy_path": 57.695910119295405,
+                "growth_risk": -9.964832425003465,
+                "liquidity_supply": -0.3223730515564078,
+                "global_relative_value": 4.5292153189036055
+              }
+            },
+            "5Y": {
+              "base": 3.563820329633417,
+              "adjusted": 4.214744843244631,
+              "total_delta_bp": 65.09245136112139,
+              "contributions_bp": {
+                "inflation_regime": 9.5362759728437,
+                "policy_path": 51.44167108276493,
+                "growth_risk": -4.211814815247647,
+                "liquidity_supply": -0.12563570479753197,
+                "global_relative_value": 8.451954825560657
+              }
+            },
+            "10Y": {
+              "base": 3.7828328922039858,
+              "adjusted": 4.4225375917456455,
+              "total_delta_bp": 63.97046995416598,
+              "contributions_bp": {
+                "inflation_regime": 6.679683614448257,
+                "policy_path": 42.85653493690909,
+                "growth_risk": 1.4823531196545812,
+                "liquidity_supply": 0.06883016807837707,
+                "global_relative_value": 12.883068115078306
+              }
+            },
+            "30Y": {
+              "base": 4.298271336608536,
+              "adjusted": 4.742721441815634,
+              "total_delta_bp": 44.44501052070979,
+              "contributions_bp": {
+                "inflation_regime": 5.281374837462504,
+                "policy_path": 23.038737213177672,
+                "growth_risk": -0.4574837222224535,
+                "liquidity_supply": 0.00012198852576902517,
+                "global_relative_value": 16.582260203768907
+              }
+            },
+            "2s10s": {
+              "base": 0.37751195262273374,
+              "adjusted": 0.3761365937118386,
+              "total_delta_bp": -0.13753589108951303,
+              "contributions_bp": {
+                "inflation_regime": -5.490402269170931,
+                "policy_path": -14.839375182386311,
+                "growth_risk": 11.447185544658044,
+                "liquidity_supply": 0.3912032196347849,
+                "global_relative_value": 8.3538527961747
+              }
+            },
+            "5s30s": {
+              "base": 0.7344510069751191,
+              "adjusted": 0.5279765985710032,
+              "total_delta_bp": -20.64744084041159,
+              "contributions_bp": {
+                "inflation_regime": -4.254901135381195,
+                "policy_path": -28.402933869587255,
+                "growth_risk": 3.7543310930251925,
+                "liquidity_supply": 0.125757693323301,
+                "global_relative_value": 8.13030537820825
+              }
+            }
+          }
+        },
+        "7": {
+          "ns_factors": {
+            "level": {
+              "base": 4.854294779398194,
+              "adjusted": 4.3294533778582,
+              "total_delta": -0.5248414015399945,
+              "contributions": {
+                "inflation_regime": 0.3040258667604949,
+                "policy_path": 0.0661907115575961,
+                "growth_risk": -0.7720712058916087,
+                "liquidity_supply": -0.02633359696162701,
+                "global_relative_value": -0.09665317700481124
+              }
+            },
+            "slope": {
+              "base": -1.638508016005263,
+              "adjusted": -0.42676961554906145,
+              "total_delta": 1.2117384004562015,
+              "contributions": {
+                "inflation_regime": -0.13909908573555255,
+                "policy_path": 0.6316730934448203,
+                "growth_risk": 0.5928699399137927,
+                "liquidity_supply": 0.020408850025712445,
+                "global_relative_value": 0.10588560280742212
+              }
+            },
+            "curvature": {
+              "base": 0.3992715615546467,
+              "adjusted": 1.9541653570247208,
+              "total_delta": 1.5548937954700741,
+              "contributions": {
+                "inflation_regime": -0.6056485359285587,
+                "policy_path": -0.3257692605669001,
+                "growth_risk": 1.654196139970372,
+                "liquidity_supply": 0.056718958988502134,
+                "global_relative_value": 0.7753964930066392
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.3340695752594316,
+              "adjusted": 4.037422757886659,
+              "total_delta_bp": 70.3353182627227,
+              "contributions_bp": {
+                "inflation_regime": 13.904273146469967,
+                "policy_path": 64.26106852678296,
+                "growth_risk": -12.096251510565596,
+                "liquidity_supply": -0.39325741089163824,
+                "global_relative_value": 4.659485510930086
+              }
+            },
+            "5Y": {
+              "base": 3.491495454302513,
+              "adjusted": 4.205032458986376,
+              "total_delta_bp": 71.35370046838632,
+              "contributions_bp": {
+                "inflation_regime": 10.864352475671742,
+                "policy_path": 57.01611535439294,
+                "growth_risk": -5.4842913460771685,
+                "liquidity_supply": -0.16718673411753535,
+                "global_relative_value": 9.124710718519346
+              }
+            },
+            "10Y": {
+              "base": 3.7090172930403096,
+              "adjusted": 4.410524000056745,
+              "total_delta_bp": 70.15067070164358,
+              "contributions_bp": {
+                "inflation_regime": 7.566220363793437,
+                "policy_path": 47.24789611054945,
+                "growth_risk": 1.114216318356561,
+                "liquidity_supply": 0.05815077145976392,
+                "global_relative_value": 14.164187137487408
+              }
+            },
+            "30Y": {
+              "base": 4.220897312430289,
+              "adjusted": 4.716539144972793,
+              "total_delta_bp": 49.56418325425042,
+              "contributions_bp": {
+                "inflation_regime": 5.9424359027688,
+                "policy_path": 25.91010268573764,
+                "growth_risk": -0.6191575142612814,
+                "liquidity_supply": -0.0036167709545408874,
+                "global_relative_value": 18.334418950962714
+              }
+            },
+            "2s10s": {
+              "base": 0.374947717780878,
+              "adjusted": 0.3731012421700868,
+              "total_delta_bp": -0.18464756107912095,
+              "contributions_bp": {
+                "inflation_regime": -6.33805278267653,
+                "policy_path": -17.013172416233513,
+                "growth_risk": 13.210467828922157,
+                "liquidity_supply": 0.4514081823514021,
+                "global_relative_value": 9.50470162655732
+              }
+            },
+            "5s30s": {
+              "base": 0.7294018581277757,
+              "adjusted": 0.5115066859864168,
+              "total_delta_bp": -21.78951721413589,
+              "contributions_bp": {
+                "inflation_regime": -4.9219165729029415,
+                "policy_path": -31.106012668655296,
+                "growth_risk": 4.8651338318158865,
+                "liquidity_supply": 0.16356996316299446,
+                "global_relative_value": 9.209708232443369
+              }
+            }
+          }
+        },
+        "8": {
+          "ns_factors": {
+            "level": {
+              "base": 4.777411592637378,
+              "adjusted": 4.262833645439103,
+              "total_delta": -0.5145779471982754,
+              "contributions": {
+                "inflation_regime": 0.3416214946998172,
+                "policy_path": 0.13707992574172634,
+                "growth_risk": -0.848805851247155,
+                "liquidity_supply": -0.02894059033930479,
+                "global_relative_value": -0.11553292605331203
+              }
+            },
+            "slope": {
+              "base": -1.625612922884473,
+              "adjusted": -0.36975540345589175,
+              "total_delta": 1.2558575194285813,
+              "contributions": {
+                "inflation_regime": -0.15667848948579643,
+                "policy_path": 0.6292179284775845,
+                "growth_risk": 0.6407690219903905,
+                "liquidity_supply": 0.022048194603394813,
+                "global_relative_value": 0.12050086384299982
+              }
+            },
+            "curvature": {
+              "base": 0.4046372781534995,
+              "adjusted": 2.011855636165363,
+              "total_delta": 1.6072183580118633,
+              "contributions": {
+                "inflation_regime": -0.6840214199509518,
+                "policy_path": -0.47093367378297446,
+                "growth_risk": 1.8315076478054109,
+                "liquidity_supply": 0.06277709039461413,
+                "global_relative_value": 0.8678887135457419
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.2696285181969555,
+              "adjusted": 4.027722524461934,
+              "total_delta_bp": 75.80940062649786,
+              "contributions_bp": {
+                "inflation_regime": 15.568487789593288,
+                "policy_path": 70.30339515391518,
+                "growth_risk": -14.26399887391186,
+                "liquidity_supply": -0.4655818877802257,
+                "global_relative_value": 4.667098444685337
+              }
+            },
+            "5Y": {
+              "base": 3.42639764973412,
+              "adjusted": 4.194752790639318,
+              "total_delta_bp": 76.83551409051978,
+              "contributions_bp": {
+                "inflation_regime": 12.13185284163014,
+                "policy_path": 62.084584354475744,
+                "growth_risk": -6.819042611000997,
+                "liquidity_supply": -0.21107276596212962,
+                "global_relative_value": 9.649192271380748
+              }
+            },
+            "10Y": {
+              "base": 3.6428920048416247,
+              "adjusted": 4.39843382169688,
+              "total_delta_bp": 75.55418168552555,
+              "contributions_bp": {
+                "inflation_regime": 8.402173992637119,
+                "policy_path": 51.17638390433788,
+                "growth_risk": 0.6638372270148563,
+                "liquidity_supply": 0.044449094828752055,
+                "global_relative_value": 15.267337466710657
+              }
+            },
+            "30Y": {
+              "base": 4.151537629625649,
+              "adjusted": 4.693318777470974,
+              "total_delta_bp": 54.17811478453256,
+              "contributions_bp": {
+                "inflation_regime": 6.556087181692016,
+                "policy_path": 28.554783388687877,
+                "growth_risk": -0.8020141205080288,
+                "liquidity_supply": -0.008259097087583402,
+                "global_relative_value": 19.877517431751954
+              }
+            },
+            "2s10s": {
+              "base": 0.37326348664466913,
+              "adjusted": 0.370711297234946,
+              "total_delta_bp": -0.2552189409723127,
+              "contributions_bp": {
+                "inflation_regime": -7.166313796956169,
+                "policy_path": -19.127011249577297,
+                "growth_risk": 14.927836100926717,
+                "liquidity_supply": 0.5100309826089777,
+                "global_relative_value": 10.60023902202532
+              }
+            },
+            "5s30s": {
+              "base": 0.7251399798915288,
+              "adjusted": 0.49856598683165654,
+              "total_delta_bp": -22.657399305987227,
+              "contributions_bp": {
+                "inflation_regime": -5.575765659938124,
+                "policy_path": -33.52980096578787,
+                "growth_risk": 6.017028490492969,
+                "liquidity_supply": 0.2028136688745462,
+                "global_relative_value": 10.228325160371206
+              }
+            }
+          }
+        },
+        "9": {
+          "ns_factors": {
+            "level": {
+              "base": 4.705415980164881,
+              "adjusted": 4.2079539897888205,
+              "total_delta": -0.49746199037606065,
+              "contributions": {
+                "inflation_regime": 0.37796619911637513,
+                "policy_path": 0.2122013713906691,
+                "growth_risk": -0.9211834647765971,
+                "liquidity_supply": -0.031398552997142844,
+                "global_relative_value": -0.13504754310931383
+              }
+            },
+            "slope": {
+              "base": -1.611851641128233,
+              "adjusted": -0.32481993864045083,
+              "total_delta": 1.2870317024877822,
+              "contributions": {
+                "inflation_regime": -0.17374419524749293,
+                "policy_path": 0.6179779676228181,
+                "growth_risk": 0.6843777411969593,
+                "liquidity_supply": 0.023539130645429188,
+                "global_relative_value": 0.13488105827005864
+              }
+            },
+            "curvature": {
+              "base": 0.4163289044489623,
+              "adjusted": 2.0574990811386593,
+              "total_delta": 1.641170176689697,
+              "contributions": {
+                "inflation_regime": -0.760433563135336,
+                "policy_path": -0.6237468491617043,
+                "growth_risk": 2.0001807698053113,
+                "liquidity_supply": 0.06853690628303999,
+                "global_relative_value": 0.9566329128983615
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.211245900526899,
+              "adjusted": 4.017713524297806,
+              "total_delta_bp": 80.64676237709065,
+              "contributions_bp": {
+                "inflation_regime": 17.166988890758038,
+                "policy_path": 75.89889135485414,
+                "growth_risk": -16.448505261995553,
+                "liquidity_supply": -0.5386516888290312,
+                "global_relative_value": 4.568039082307076
+              }
+            },
+            "5Y": {
+              "base": 3.367722384538562,
+              "adjusted": 4.184299096581911,
+              "total_delta_bp": 81.65767120433487,
+              "contributions_bp": {
+                "inflation_regime": 13.342977951554658,
+                "policy_path": 66.72363755149851,
+                "growth_risk": -8.195597773735805,
+                "liquidity_supply": -0.2565670579735011,
+                "global_relative_value": 10.043220532994942
+              }
+            },
+            "10Y": {
+              "base": 3.583600125997013,
+              "adjusted": 4.38656727235641,
+              "total_delta_bp": 80.29671463593968,
+              "contributions_bp": {
+                "inflation_regime": 9.191712702466921,
+                "policy_path": 54.7133290801046,
+                "growth_risk": 0.15071043459291728,
+                "liquidity_supply": 0.028418678721421467,
+                "global_relative_value": 16.21254374005768
+              }
+            },
+            "30Y": {
+              "base": 4.089350897072719,
+              "adjusted": 4.672696372675323,
+              "total_delta_bp": 58.3345475602604,
+              "contributions_bp": {
+                "inflation_regime": 7.126744678591063,
+                "policy_path": 30.99099203091182,
+                "growth_risk": -1.003971282589106,
+                "liquidity_supply": -0.013715727967392746,
+                "global_relative_value": 21.234497861317948
+              }
+            },
+            "2s10s": {
+              "base": 0.37235422547011376,
+              "adjusted": 0.36885374805860405,
+              "total_delta_bp": -0.3500477411509717,
+              "contributions_bp": {
+                "inflation_regime": -7.975276188291115,
+                "policy_path": -21.185562274749536,
+                "growth_risk": 16.59921569658847,
+                "liquidity_supply": 0.5670703675504527,
+                "global_relative_value": 11.644504657750606
+              }
+            },
+            "5s30s": {
+              "base": 0.7216285125341568,
+              "adjusted": 0.4883972760934121,
+              "total_delta_bp": -23.32312364407447,
+              "contributions_bp": {
+                "inflation_regime": -6.216233272963595,
+                "policy_path": -35.7326455205867,
+                "growth_risk": 7.1916264911467,
+                "liquidity_supply": 0.24285133000610834,
+                "global_relative_value": 11.191277328323004
+              }
+            }
+          }
+        },
+        "10": {
+          "ns_factors": {
+            "level": {
+              "base": 4.638048754375608,
+              "adjusted": 4.162390554906244,
+              "total_delta": -0.47565819946936383,
+              "contributions": {
+                "inflation_regime": 0.41311681513741827,
+                "policy_path": 0.28986925423289045,
+                "growth_risk": -0.9898631334296618,
+                "liquidity_supply": -0.03373025626756454,
+                "global_relative_value": -0.15505087914239238
+              }
+            },
+            "slope": {
+              "base": -1.597584261806938,
+              "adjusted": -0.2892494867636577,
+              "total_delta": 1.3083347750432803,
+              "contributions": {
+                "inflation_regime": -0.1903133309664143,
+                "policy_path": 0.6002358357343572,
+                "growth_risk": 0.724494116305878,
+                "liquidity_supply": 0.02490938549702249,
+                "global_relative_value": 0.14900876847242636
+              }
+            },
+            "curvature": {
+              "base": 0.4332437230755287,
+              "adjusted": 2.093989833480744,
+              "total_delta": 1.6607461104052152,
+              "contributions": {
+                "inflation_regime": -0.8349162791488152,
+                "policy_path": -0.781492941529306,
+                "growth_risk": 2.1612680799258763,
+                "liquidity_supply": 0.07403505457845011,
+                "global_relative_value": 1.0418521965789915
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.158261565603698,
+              "adjusted": 4.007689454135252,
+              "total_delta_bp": 84.9427888531554,
+              "contributions_bp": {
+                "inflation_regime": 18.70367146798074,
+                "policy_path": 81.10914250419786,
+                "growth_risk": -18.63463328801297,
+                "liquidity_supply": -0.6119275556611005,
+                "global_relative_value": 4.376535724655116
+              }
+            },
+            "5Y": {
+              "base": 3.3147626363260034,
+              "adjusted": 4.173947637069429,
+              "total_delta_bp": 85.91850007434259,
+              "contributions_bp": {
+                "inflation_regime": 14.50154454822719,
+                "policy_path": 70.99531977625858,
+                "growth_risk": -9.597953318705075,
+                "liquidity_supply": -0.30309973785924577,
+                "global_relative_value": 10.322688806425376
+              }
+            },
+            "10Y": {
+              "base": 3.5303866725344295,
+              "adjusted": 4.375126360605486,
+              "total_delta_bp": 84.47396880710562,
+              "contributions_bp": {
+                "inflation_regime": 9.938595144619953,
+                "policy_path": 57.916795162311075,
+                "growth_risk": -0.40972306121708896,
+                "liquidity_supply": 0.010610462002657858,
+                "global_relative_value": 17.017691099393176
+              }
+            },
+            "30Y": {
+              "base": 4.0335835108770075,
+              "adjusted": 4.654358005097763,
+              "total_delta_bp": 62.07744942207558,
+              "contributions_bp": {
+                "inflation_regime": 7.658370902945985,
+                "policy_path": 33.236022156619256,
+                "growth_risk": -1.2228791264411327,
+                "liquidity_supply": -0.019896818492457884,
+                "global_relative_value": 22.4258323074483
+              }
+            },
+            "2s10s": {
+              "base": 0.3721251069307314,
+              "adjusted": 0.36743690647023364,
+              "total_delta_bp": -0.4688200460497782,
+              "contributions_bp": {
+                "inflation_regime": -8.765076323360786,
+                "policy_path": -23.192347341886787,
+                "growth_risk": 18.22491022679588,
+                "liquidity_supply": 0.6225380176637584,
+                "global_relative_value": 12.64115537473806
+              }
+            },
+            "5s30s": {
+              "base": 0.7188208745510041,
+              "adjusted": 0.48041036802833403,
+              "total_delta_bp": -23.841050652267004,
+              "contributions_bp": {
+                "inflation_regime": -6.8431736452812055,
+                "policy_path": -37.75929761963933,
+                "growth_risk": 8.375074192263943,
+                "liquidity_supply": 0.2832029193667878,
+                "global_relative_value": 12.103143501022922
+              }
+            }
+          }
+        },
+        "11": {
+          "ns_factors": {
+            "level": {
+              "base": 4.575032257961834,
+              "adjusted": 4.124248668438738,
+              "total_delta": -0.4507835895230965,
+              "contributions": {
+                "inflation_regime": 0.4471262047092971,
+                "policy_path": 0.36881883862796006,
+                "growth_risk": -1.0553595418795476,
+                "liquidity_supply": -0.03595346169965259,
+                "global_relative_value": -0.17541562928110135
+              }
+            },
+            "slope": {
+              "base": -1.5830781388035058,
+              "adjusted": -0.260946757669522,
+              "total_delta": 1.3221313811339837,
+              "contributions": {
+                "inflation_regime": -0.20640219563958978,
+                "policy_path": 0.577743500129638,
+                "growth_risk": 0.7617386567056322,
+                "liquidity_supply": 0.026180513524489503,
+                "global_relative_value": 0.162870906413802
+              }
+            },
+            "curvature": {
+              "base": 0.45446240552238526,
+              "adjusted": 2.1235385974176006,
+              "total_delta": 1.6690761918952153,
+              "contributions": {
+                "inflation_regime": -0.9075024337493625,
+                "policy_path": -0.942085471352662,
+                "growth_risk": 2.3156110058517028,
+                "liquidity_supply": 0.07930082731156024,
+                "global_relative_value": 1.1237522638339643
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.1100945006711056,
+              "adjusted": 3.9978544215953846,
+              "total_delta_bp": 88.7759920924279,
+              "contributions_bp": {
+                "inflation_regime": 20.182102547975095,
+                "policy_path": 85.98434310765494,
+                "growth_risk": -20.8107039144218,
+                "liquidity_supply": -0.6849917576693448,
+                "global_relative_value": 4.105242108892977
+              }
+            },
+            "5Y": {
+              "base": 3.2668957121060402,
+              "adjusted": 4.163887264048774,
+              "total_delta_bp": 89.69915519427336,
+              "contributions_bp": {
+                "inflation_regime": 15.611024180072402,
+                "policy_path": 74.95019190200061,
+                "growth_risk": -11.013599448847083,
+                "liquidity_supply": -0.3502237812380397,
+                "global_relative_value": 10.501762342289483
+              }
+            },
+            "10Y": {
+              "base": 3.4825852489046207,
+              "adjusted": 4.364240460968079,
+              "total_delta_bp": 88.16552120634586,
+              "contributions_bp": {
+                "inflation_regime": 10.646212910579976,
+                "policy_path": 60.834303413550536,
+                "growth_risk": -1.005205949218273,
+                "liquidity_supply": -0.00853678883998712,
+                "global_relative_value": 17.698747620277718
+              }
+            },
+            "30Y": {
+              "base": 3.9835607101491126,
+              "adjusted": 4.638031885400233,
+              "total_delta_bp": 65.44711752511203,
+              "contributions_bp": {
+                "inflation_regime": 8.154522806127408,
+                "policy_path": 35.306121846334584,
+                "growth_risk": -1.4566004761944162,
+                "liquidity_supply": -0.026714546185451594,
+                "global_relative_value": 23.469787895034173
+              }
+            },
+            "2s10s": {
+              "base": 0.37249074823351513,
+              "adjusted": 0.36638603937269476,
+              "total_delta_bp": -0.6104708860820374,
+              "contributions_bp": {
+                "inflation_regime": -9.535889637395119,
+                "policy_path": -25.150039694104397,
+                "growth_risk": 19.80549796520353,
+                "liquidity_supply": 0.6764549688293577,
+                "global_relative_value": 13.593505511384743
+              }
+            },
+            "5s30s": {
+              "base": 0.7166649980430724,
+              "adjusted": 0.4741446213514591,
+              "total_delta_bp": -24.252037669161332,
+              "contributions_bp": {
+                "inflation_regime": -7.456501373944994,
+                "policy_path": -39.64407005566602,
+                "growth_risk": 9.556998972652666,
+                "liquidity_supply": 0.3235092350525881,
+                "global_relative_value": 12.968025552744688
+              }
+            }
+          }
+        },
+        "12": {
+          "ns_factors": {
+            "level": {
+              "base": 4.516082482719387,
+              "adjusted": 4.092044518625658,
+              "total_delta": -0.4240379640937286,
+              "contributions": {
+                "inflation_regime": 0.48004363182536747,
+                "policy_path": 0.4481075854622579,
+                "growth_risk": -1.1180761206332515,
+                "liquidity_supply": -0.038082072815644005,
+                "global_relative_value": -0.19603098793240809
+              }
+            },
+            "slope": {
+              "base": -1.5685299955641745,
+              "adjusted": -0.2382904552687225,
+              "total_delta": 1.330239540295452,
+              "contributions": {
+                "inflation_regime": -0.22202633140519823,
+                "policy_path": 0.5518438822581688,
+                "growth_risk": 0.796594798125461,
+                "liquidity_supply": 0.027369302565737663,
+                "global_relative_value": 0.17645788875127097
+              }
+            },
+            "curvature": {
+              "base": 0.4792153268425047,
+              "adjusted": 2.1478312994203677,
+              "total_delta": 1.668615972577863,
+              "contributions": {
+                "inflation_regime": -0.9782261561162938,
+                "policy_path": -1.1039252605896455,
+                "growth_risk": 2.46388684276241,
+                "liquidity_supply": 0.08435779742463306,
+                "global_relative_value": 1.2025227490967552
+              }
+            }
+          },
+          "targets": {
+            "2Y": {
+              "base": 3.0662322499583716,
+              "adjusted": 3.9883457682575374,
+              "total_delta_bp": 92.21135182991658,
+              "contributions_bp": {
+                "inflation_regime": 21.605553523247433,
+                "policy_path": 90.56565834456828,
+                "growth_risk": -22.96774015094164,
+                "liquidity_supply": -0.7575216559555947,
+                "global_relative_value": 3.7654017690019783
+              }
+            },
+            "5Y": {
+              "base": 3.2235721116790916,
+              "adjusted": 4.15424194894068,
+              "total_delta_bp": 93.06698372615881,
+              "contributions_bp": {
+                "inflation_regime": 16.67457810602581,
+                "policy_path": 78.62969888047661,
+                "growth_risk": -12.43276314627374,
+                "liquidity_supply": -0.3975885427688568,
+                "global_relative_value": 10.59305842870296
+              }
+            },
+            "10Y": {
+              "base": 3.4396067030437245,
+              "adjusted": 4.353985712519724,
+              "total_delta_bp": 91.43790094759994,
+              "contributions_bp": {
+                "inflation_regime": 11.317628574743702,
+                "policy_path": 63.504967615382554,
+                "growth_risk": -1.625987011367746,
+                "liquidity_supply": -0.028672758157733656,
+                "global_relative_value": 18.269964527003214
+              }
+            },
+            "30Y": {
+              "base": 3.9386784914575372,
+              "adjusted": 4.62348188479991,
+              "total_delta_bp": 68.48033933423724,
+              "contributions_bp": {
+                "inflation_regime": 8.618394606691664,
+                "policy_path": 37.21643185944845,
+                "growth_risk": -1.7030657159130071,
+                "liquidity_supply": -0.0340848516659933,
+                "global_relative_value": 24.382663435680527
+              }
+            },
+            "2s10s": {
+              "base": 0.3733744530853529,
+              "adjusted": 0.3656399442621865,
+              "total_delta_bp": -0.7734508823166397,
+              "contributions_bp": {
+                "inflation_regime": -10.287924948503731,
+                "policy_path": -27.060690729185723,
+                "growth_risk": 21.341753139573893,
+                "liquidity_supply": 0.7288488977978611,
+                "global_relative_value": 14.504562758001235
+              }
+            },
+            "5s30s": {
+              "base": 0.7151063797784456,
+              "adjusted": 0.4692399358592301,
+              "total_delta_bp": -24.586644391921553,
+              "contributions_bp": {
+                "inflation_regime": -8.056183499334145,
+                "policy_path": -41.41326702102817,
+                "growth_risk": 10.729697430360732,
+                "liquidity_supply": 0.36350369110286346,
+                "global_relative_value": 13.789605006977567
+              }
+            }
+          }
+        }
+      },
+      "bounded_gpt_regime": {
+        "available": true,
+        "source": "bounded_gpt",
+        "numeric_bp_allowed": false,
+        "regime": {
+          "inflation": "neutral",
+          "policy": "hawkish",
+          "growth": "neutral",
+          "liquidity_supply": "tight",
+          "global_relative_value": "neutral"
+        },
+        "rationale": "The Federal Reserve remains in a hawkish stance due to concerns about potential future inflation pressures even as current inflation appears to be stabilizing. Economic growth is maintaining a steady pace, neither accelerating nor decelerating significantly. Monetary policy is focused on tightening liquidity conditions to ensure inflation is kept in check, though the global market appears balanced, with no significant shifts in relative value.",
+        "key_quotes": [
+          "Current inflation is stabilizing, but pressures remain.",
+          "Policy is focused on tightening liquidity to manage inflation.",
+          "Growth is maintaining a steady pace."
+        ]
+      },
+      "magnitude_source": "fitted ridge transition B matrix; GPT categories do not inject bp",
+      "macro_block_sanity": {
+        "inflation_regime": {
+          "ic_3m": 0.0921314597017839,
+          "ic_6m": 0.14857588766343924,
+          "signed_ic_3m": 0.0921314597017839,
+          "signed_ic_6m": 0.14857588766343924,
+          "dir_acc_3m": 0.5225183823529411,
+          "dir_acc_6m": 0.5025833724753406,
+          "nw_t_3m": 1.1559450247636243,
+          "nw_t_6m": 1.2749199127986834,
+          "noise_band_3m": 0.15,
+          "noise_band_6m": 0.22,
+          "aligned_target": "10Y",
+          "expected_sign": "+",
+          "verdict": "explanation-only",
+          "note": "Does not clear the correct positive sign plus IC noise-band/NW-t gate; kept for attribution and narrative only."
+        },
+        "policy_path": {
+          "ic_3m": -0.2602119545454767,
+          "ic_6m": -0.3594673597825697,
+          "signed_ic_3m": 0.2602119545454767,
+          "signed_ic_6m": 0.3594673597825697,
+          "dir_acc_3m": 0.5758272058823529,
+          "dir_acc_6m": 0.5894786284640676,
+          "nw_t_3m": 2.5757918063802467,
+          "nw_t_6m": 2.9481191051182156,
+          "noise_band_3m": 0.15,
+          "noise_band_6m": 0.22,
+          "aligned_target": "2s10s",
+          "expected_sign": "-",
+          "verdict": "signal",
+          "note": "Correct negative sign and clears the 3m/6m IC noise band or Newey-West |t| >= 2."
+        },
+        "growth_risk": {
+          "ic_3m": 0.2286803870776569,
+          "ic_6m": 0.3953638983517036,
+          "signed_ic_3m": 0.2286803870776569,
+          "signed_ic_6m": 0.3953638983517036,
+          "dir_acc_3m": 0.6098345588235294,
+          "dir_acc_6m": 0.6627524659464538,
+          "nw_t_3m": 1.2963193955521373,
+          "nw_t_6m": 2.603933358502859,
+          "noise_band_3m": 0.15,
+          "noise_band_6m": 0.22,
+          "aligned_target": "2s10s",
+          "expected_sign": "+",
+          "verdict": "signal",
+          "note": "Correct positive sign and clears the 3m/6m IC noise band or Newey-West |t| >= 2."
+        },
+        "liquidity_supply": {
+          "ic_3m": 0.09561496527998428,
+          "ic_6m": 0.19894774687304478,
+          "signed_ic_3m": 0.09561496527998428,
+          "signed_ic_6m": 0.19894774687304478,
+          "dir_acc_3m": 0.5307904411764706,
+          "dir_acc_6m": 0.5627054955378111,
+          "nw_t_3m": 1.41066073384183,
+          "nw_t_6m": 1.7776633675787878,
+          "noise_band_3m": 0.15,
+          "noise_band_6m": 0.22,
+          "aligned_target": "10Y",
+          "expected_sign": "+",
+          "verdict": "explanation-only",
+          "note": "Does not clear the correct positive sign plus IC noise-band/NW-t gate; kept for attribution and narrative only."
+        },
+        "global_relative_value": {
+          "ic_3m": -0.09557876973756116,
+          "ic_6m": -0.1083168770912553,
+          "signed_ic_3m": -0.09557876973756116,
+          "signed_ic_6m": -0.1083168770912553,
+          "dir_acc_3m": 0.4834558823529412,
+          "dir_acc_6m": 0.44668858619069984,
+          "nw_t_3m": -0.4241179990460958,
+          "nw_t_6m": -0.19619424286632056,
+          "noise_band_3m": 0.15,
+          "noise_band_6m": 0.22,
+          "aligned_target": "10Y",
+          "expected_sign": "+",
+          "verdict": "explanation-only",
+          "note": "Does not clear the correct positive sign plus IC noise-band/NW-t gate; kept for attribution and narrative only."
+        }
+      }
+    },
+    "event_overlays": [
+      {
+        "type": "FOMC",
+        "event_date": "2026-06-17",
+        "month": 1,
+        "source": "atlanta_mpt_object_pod",
+        "direction": "HOLD",
+        "step_bp": 0.0,
+        "targets": [
+          {
+            "target": "2Y",
+            "step_bp": 0.0
+          },
+          {
+            "target": "2s10s",
+            "step_bp": -0.0
+          }
+        ],
+        "reason": "atlanta_mpt_object_pod: no high-conviction next-meeting cut/hike probability; overlay step +0.0bp."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 1,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-06-05",
+            "reference_month": "2026-05",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-06-10",
+            "reference_month": "2026-05",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-06-17",
+            "precision": "confirmed",
+            "has_sep": true
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-06-25",
+            "reference_month": "2026-05",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2026-07-02",
+            "reference_month": "2026-06",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-07-14",
+            "reference_month": "2026-06",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-07-29",
+            "precision": "confirmed",
+            "has_sep": false
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-07-30",
+            "reference_month": "2026-06",
+            "precision": "confirmed"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 32.771939,
+          "5Y": 29.698485,
+          "10Y": 28.495614,
+          "30Y": 24.859606,
+          "2s10s": 43.428102,
+          "5s30s": 38.729833
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 2,
+        "events": [
+          {
+            "event_type": "qra",
+            "release_date": "2026-08-05",
+            "reference_month": "2026-08",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2026-08-07",
+            "reference_month": "2026-07",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-08-12",
+            "reference_month": "2026-07",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-08-26",
+            "reference_month": "2026-07",
+            "precision": "confirmed"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 3,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-09-04",
+            "reference_month": "2026-08",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-09-11",
+            "reference_month": "2026-08",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-09-16",
+            "precision": "confirmed",
+            "has_sep": true
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-09-30",
+            "reference_month": "2026-08",
+            "precision": "confirmed"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 23.17326,
+          "5Y": 21.0,
+          "10Y": 20.149442,
+          "30Y": 17.578396,
+          "2s10s": 30.708305,
+          "5s30s": 27.386128
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 4,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-10-02",
+            "reference_month": "2026-09",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-10-14",
+            "reference_month": "2026-09",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-10-28",
+            "precision": "confirmed",
+            "has_sep": false
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-10-29",
+            "reference_month": "2026-09",
+            "precision": "confirmed"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 23.17326,
+          "5Y": 21.0,
+          "10Y": 20.149442,
+          "30Y": 17.578396,
+          "2s10s": 30.708305,
+          "5s30s": 27.386128
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 5,
+        "events": [
+          {
+            "event_type": "qra",
+            "release_date": "2026-11-04",
+            "reference_month": "2026-11",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2026-11-06",
+            "reference_month": "2026-10",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-11-10",
+            "reference_month": "2026-10",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-11-25",
+            "reference_month": "2026-10",
+            "precision": "confirmed"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 6,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-12-04",
+            "reference_month": "2026-11",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-12-09",
+            "precision": "confirmed",
+            "has_sep": true
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-12-10",
+            "reference_month": "2026-11",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-12-23",
+            "reference_month": "2026-11",
+            "precision": "confirmed"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 23.17326,
+          "5Y": 21.0,
+          "10Y": 20.149442,
+          "30Y": 17.578396,
+          "2s10s": 30.708305,
+          "5s30s": 27.386128
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 7,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2027-01-08",
+            "reference_month": "2026-12",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-01-13",
+            "reference_month": "2026-12",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-01-29",
+            "reference_month": "2026-12",
+            "precision": "estimated"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.59452,
+          "5Y": 15.652476,
+          "10Y": 16.186414,
+          "30Y": 14.456832,
+          "2s10s": 21.794495,
+          "5s30s": 21.307276
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 8,
+        "events": [
+          {
+            "event_type": "qra",
+            "release_date": "2027-02-03",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2027-02-05",
+            "reference_month": "2027-01",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-02-11",
+            "reference_month": "2027-01",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-02-26",
+            "reference_month": "2027-01",
+            "precision": "estimated"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 9,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2027-03-05",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-03-11",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-03-26",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.59452,
+          "5Y": 15.652476,
+          "10Y": 16.186414,
+          "30Y": 14.456832,
+          "2s10s": 21.794495,
+          "5s30s": 21.307276
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 10,
+        "events": [
+          {
+            "event_type": "nfp",
+            "release_date": "2027-04-02",
+            "reference_month": "2027-03",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-04-14",
+            "reference_month": "2027-03",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-04-30",
+            "reference_month": "2027-03",
+            "precision": "estimated"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.59452,
+          "5Y": 15.652476,
+          "10Y": 16.186414,
+          "30Y": 14.456832,
+          "2s10s": 21.794495,
+          "5s30s": 21.307276
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty."
+      },
+      {
+        "type": "UNCERTAINTY",
+        "month": 11,
+        "events": [
+          {
+            "event_type": "qra",
+            "release_date": "2027-05-05",
+            "reference_month": "2027-05",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2027-05-07",
+            "reference_month": "2027-04",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-05-12",
+            "reference_month": "2027-04",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-05-28",
+            "reference_month": "2027-04",
+            "precision": "estimated"
+          }
+        ],
+        "widen_bp": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "combine": "sqrt_sum_of_squares",
+        "reason": "May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty."
+      }
+    ],
+    "policy_path": {
+      "as_of": "2026-06-02",
+      "source": "atlanta_mpt_object_pod",
+      "next_meeting_date": "2026-06-17",
+      "next_meeting_cut_prob": 0.0105,
+      "next_meeting_hike_prob": null,
+      "next_meeting_hold_prob": null,
+      "expected_target_rate_after_meeting": null,
+      "implied_policy_rate_3m": 3.78,
+      "implied_policy_rate_6m": 3.8,
+      "implied_policy_rate_12m": 3.87,
+      "fed_dot_median_path": {
+        "2026": 3.4,
+        "2027": 3.1,
+        "2028": 3.1,
+        "longer_run": 3.1
+      },
+      "market_vs_fed_gap_bp": 40.0,
+      "direction": "HOLD",
+      "confidence": "low",
+      "reason": "Atlanta Fed MPT probability source; FRED proxy supplies short-rate path. FRED proxy (3m=DGS3MO; 6m=2*DGS6MO-DGS3MO; 12m=2*DGS1-DGS6MO) says hold: 6m 3.8 vs current policy 3.75. This is a Treasury/front-end proxy, not futures pricing; the +/-25bp HOLD band allows for bill-vs-funds basis and term premium."
+    },
+    "event_uncertainty": {
+      "combine": "sqrt_sum_of_squares",
+      "month_events": {
+        "1": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-06-05",
+            "reference_month": "2026-05",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-06-10",
+            "reference_month": "2026-05",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-06-17",
+            "precision": "confirmed",
+            "has_sep": true
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-06-25",
+            "reference_month": "2026-05",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2026-07-02",
+            "reference_month": "2026-06",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-07-14",
+            "reference_month": "2026-06",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-07-29",
+            "precision": "confirmed",
+            "has_sep": false
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-07-30",
+            "reference_month": "2026-06",
+            "precision": "confirmed"
+          }
+        ],
+        "2": [
+          {
+            "event_type": "qra",
+            "release_date": "2026-08-05",
+            "reference_month": "2026-08",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2026-08-07",
+            "reference_month": "2026-07",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-08-12",
+            "reference_month": "2026-07",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-08-26",
+            "reference_month": "2026-07",
+            "precision": "confirmed"
+          }
+        ],
+        "3": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-09-04",
+            "reference_month": "2026-08",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-09-11",
+            "reference_month": "2026-08",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-09-16",
+            "precision": "confirmed",
+            "has_sep": true
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-09-30",
+            "reference_month": "2026-08",
+            "precision": "confirmed"
+          }
+        ],
+        "4": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-10-02",
+            "reference_month": "2026-09",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-10-14",
+            "reference_month": "2026-09",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-10-28",
+            "precision": "confirmed",
+            "has_sep": false
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-10-29",
+            "reference_month": "2026-09",
+            "precision": "confirmed"
+          }
+        ],
+        "5": [
+          {
+            "event_type": "qra",
+            "release_date": "2026-11-04",
+            "reference_month": "2026-11",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2026-11-06",
+            "reference_month": "2026-10",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-11-10",
+            "reference_month": "2026-10",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-11-25",
+            "reference_month": "2026-10",
+            "precision": "confirmed"
+          }
+        ],
+        "6": [
+          {
+            "event_type": "nfp",
+            "release_date": "2026-12-04",
+            "reference_month": "2026-11",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "fomc",
+            "release_date": "2026-12-09",
+            "precision": "confirmed",
+            "has_sep": true
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2026-12-10",
+            "reference_month": "2026-11",
+            "precision": "confirmed"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2026-12-23",
+            "reference_month": "2026-11",
+            "precision": "confirmed"
+          }
+        ],
+        "7": [
+          {
+            "event_type": "nfp",
+            "release_date": "2027-01-08",
+            "reference_month": "2026-12",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-01-13",
+            "reference_month": "2026-12",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-01-29",
+            "reference_month": "2026-12",
+            "precision": "estimated"
+          }
+        ],
+        "8": [
+          {
+            "event_type": "qra",
+            "release_date": "2027-02-03",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2027-02-05",
+            "reference_month": "2027-01",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-02-11",
+            "reference_month": "2027-01",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-02-26",
+            "reference_month": "2027-01",
+            "precision": "estimated"
+          }
+        ],
+        "9": [
+          {
+            "event_type": "nfp",
+            "release_date": "2027-03-05",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-03-11",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-03-26",
+            "reference_month": "2027-02",
+            "precision": "estimated"
+          }
+        ],
+        "10": [
+          {
+            "event_type": "nfp",
+            "release_date": "2027-04-02",
+            "reference_month": "2027-03",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-04-14",
+            "reference_month": "2027-03",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-04-30",
+            "reference_month": "2027-03",
+            "precision": "estimated"
+          }
+        ],
+        "11": [
+          {
+            "event_type": "qra",
+            "release_date": "2027-05-05",
+            "reference_month": "2027-05",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "nfp",
+            "release_date": "2027-05-07",
+            "reference_month": "2027-04",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "cpi",
+            "release_date": "2027-05-12",
+            "reference_month": "2027-04",
+            "precision": "estimated"
+          },
+          {
+            "event_type": "pce",
+            "release_date": "2027-05-28",
+            "reference_month": "2027-04",
+            "precision": "estimated"
+          }
+        ]
+      },
+      "widen_bp": {
+        "1": {
+          "2Y": 32.771939,
+          "5Y": 29.698485,
+          "10Y": 28.495614,
+          "30Y": 24.859606,
+          "2s10s": 43.428102,
+          "5s30s": 38.729833
+        },
+        "2": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "3": {
+          "2Y": 23.17326,
+          "5Y": 21.0,
+          "10Y": 20.149442,
+          "30Y": 17.578396,
+          "2s10s": 30.708305,
+          "5s30s": 27.386128
+        },
+        "4": {
+          "2Y": 23.17326,
+          "5Y": 21.0,
+          "10Y": 20.149442,
+          "30Y": 17.578396,
+          "2s10s": 30.708305,
+          "5s30s": 27.386128
+        },
+        "5": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "6": {
+          "2Y": 23.17326,
+          "5Y": 21.0,
+          "10Y": 20.149442,
+          "30Y": 17.578396,
+          "2s10s": 30.708305,
+          "5s30s": 27.386128
+        },
+        "7": {
+          "2Y": 14.59452,
+          "5Y": 15.652476,
+          "10Y": 16.186414,
+          "30Y": 14.456832,
+          "2s10s": 21.794495,
+          "5s30s": 21.307276
+        },
+        "8": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        },
+        "9": {
+          "2Y": 14.59452,
+          "5Y": 15.652476,
+          "10Y": 16.186414,
+          "30Y": 14.456832,
+          "2s10s": 21.794495,
+          "5s30s": 21.307276
+        },
+        "10": {
+          "2Y": 14.59452,
+          "5Y": 15.652476,
+          "10Y": 16.186414,
+          "30Y": 14.456832,
+          "2s10s": 21.794495,
+          "5s30s": 21.307276
+        },
+        "11": {
+          "2Y": 14.899664,
+          "5Y": 16.763055,
+          "10Y": 18.520259,
+          "30Y": 17.578396,
+          "2s10s": 23.769729,
+          "5s30s": 24.289916
+        }
+      }
+    },
+    "polymarket_check": {
+      "as_of": "2026-06-02",
+      "source": "polymarket_gamma",
+      "status": "available",
+      "query_terms": [
+        "10Y Treasury",
+        "Treasury yield",
+        "US 10 year yield",
+        "rates"
+      ],
+      "markets": [
+        {
+          "id": "677024",
+          "slug": "will-the-10-year-treasury-yield-hit-5pt0-before-2027-735-167",
+          "question": "Will the 10-year Treasury yield hit 5.0% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.135,
+            0.865
+          ],
+          "yes_price": 0.135,
+          "no_price": 0.865,
+          "volume": 57494.576053000004,
+          "liquidity": 6166.6524,
+          "spread": 0.03,
+          "last_trade_price": 0.15,
+          "best_bid": 0.12,
+          "best_ask": 0.15,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "med",
+          "risk_flags": []
+        },
+        {
+          "id": "677023",
+          "slug": "will-the-10-year-treasury-yield-hit-4pt8-before-2027-692-434",
+          "question": "Will the 10-year Treasury yield hit 4.8% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.22,
+            0.78
+          ],
+          "yes_price": 0.22,
+          "no_price": 0.78,
+          "volume": 50012.46265499994,
+          "liquidity": 1107.4696,
+          "spread": 0.08,
+          "last_trade_price": 0.18,
+          "best_bid": 0.18,
+          "best_ask": 0.26,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "med",
+          "risk_flags": []
+        },
+        {
+          "id": "677146",
+          "slug": "will-the-10-year-treasury-yield-dip-below-3pt9-before-2027-794",
+          "question": "Will the 10-year Treasury yield dip below 3.9% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.485,
+            0.515
+          ],
+          "yes_price": 0.485,
+          "no_price": 0.515,
+          "volume": 40813.32429400001,
+          "liquidity": 5699.63699,
+          "spread": 0.03,
+          "last_trade_price": 0.47,
+          "best_bid": 0.47,
+          "best_ask": 0.5,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "med",
+          "risk_flags": []
+        },
+        {
+          "id": "677142",
+          "slug": "will-the-10-year-treasury-yield-dip-below-1pt0-before-2027-748",
+          "question": "Will the 10-year Treasury yield dip below 1.0% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.0385,
+            0.9615
+          ],
+          "yes_price": 0.0385,
+          "no_price": 0.9615,
+          "volume": 39661.32744500002,
+          "liquidity": 5565.55018,
+          "spread": 0.001,
+          "last_trade_price": 0.038,
+          "best_bid": 0.038,
+          "best_ask": 0.039,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "med",
+          "risk_flags": []
+        },
+        {
+          "id": "677139",
+          "slug": "will-the-10-year-treasury-yield-dip-below-3pt5-before-2027-431",
+          "question": "Will the 10-year Treasury yield dip below 3.5% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.225,
+            0.775
+          ],
+          "yes_price": 0.225,
+          "no_price": 0.775,
+          "volume": 31778.04287000001,
+          "liquidity": 1945.548,
+          "spread": 0.07,
+          "last_trade_price": 0.26,
+          "best_bid": 0.19,
+          "best_ask": 0.26,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "med",
+          "risk_flags": []
+        },
+        {
+          "id": "677025",
+          "slug": "will-the-10-year-treasury-yield-hit-5pt2-before-2027-457-991",
+          "question": "Will the 10-year Treasury yield hit 5.2% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.054,
+            0.946
+          ],
+          "yes_price": 0.054,
+          "no_price": 0.946,
+          "volume": 13889.222947999999,
+          "liquidity": 2582.6333,
+          "spread": 0.056,
+          "last_trade_price": 0.081,
+          "best_bid": 0.026,
+          "best_ask": 0.082,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "med",
+          "risk_flags": []
+        },
+        {
+          "id": "677022",
+          "slug": "will-the-10-year-treasury-yield-hit-4pt6-before-2027-181-442",
+          "question": "Will the 10-year Treasury yield hit 4.6% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": true,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            1.0,
+            0.0
+          ],
+          "yes_price": 1.0,
+          "no_price": 0.0,
+          "volume": 41896.08860399998,
+          "liquidity": null,
+          "spread": 0.001,
+          "last_trade_price": 0.998,
+          "best_bid": 0.999,
+          "best_ask": 1.0,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "low",
+          "risk_flags": [
+            "closed_or_resolved"
+          ]
+        },
+        {
+          "id": "677145",
+          "slug": "will-the-10-year-treasury-yield-dip-below-3pt8-before-2027-914",
+          "question": "Will the 10-year Treasury yield dip below 3.8% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.375,
+            0.625
+          ],
+          "yes_price": 0.375,
+          "no_price": 0.625,
+          "volume": 39789.18184199997,
+          "liquidity": 4077.15,
+          "spread": 0.11,
+          "last_trade_price": 0.34,
+          "best_bid": 0.32,
+          "best_ask": 0.43,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "low",
+          "risk_flags": [
+            "wide_spread"
+          ]
+        },
+        {
+          "id": "677021",
+          "slug": "will-the-10-year-treasury-yield-hit-4pt5-before-2027-372-618",
+          "question": "Will the 10-year Treasury yield hit 4.5% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": true,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            1.0,
+            0.0
+          ],
+          "yes_price": 1.0,
+          "no_price": 0.0,
+          "volume": 37423.046862,
+          "liquidity": null,
+          "spread": 0.001,
+          "last_trade_price": 0.998,
+          "best_bid": 0.999,
+          "best_ask": 1.0,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "low",
+          "risk_flags": [
+            "closed_or_resolved"
+          ]
+        },
+        {
+          "id": "677138",
+          "slug": "will-the-10-year-treasury-yield-dip-below-4pt0-before-2027",
+          "question": "Will the 10-year Treasury yield dip below 4.0% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": true,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            1.0,
+            0.0
+          ],
+          "yes_price": 1.0,
+          "no_price": 0.0,
+          "volume": 31759.25017,
+          "liquidity": null,
+          "spread": 0.001,
+          "last_trade_price": 0.999,
+          "best_bid": 0.999,
+          "best_ask": 1.0,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "low",
+          "risk_flags": [
+            "closed_or_resolved"
+          ]
+        },
+        {
+          "id": "677144",
+          "slug": "will-the-10-year-treasury-yield-dip-below-3pt7-before-2027-737",
+          "question": "Will the 10-year Treasury yield dip below 3.7% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": false,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            0.445,
+            0.555
+          ],
+          "yes_price": 0.445,
+          "no_price": 0.555,
+          "volume": 26443.33932799999,
+          "liquidity": 835.3485,
+          "spread": 0.23,
+          "last_trade_price": 0.46,
+          "best_bid": 0.33,
+          "best_ask": 0.56,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield is lower than the listed value for any date between November 11, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "low",
+          "risk_flags": [
+            "low_liquidity",
+            "wide_spread"
+          ]
+        },
+        {
+          "id": "902298",
+          "slug": "will-the-10-year-treasury-yield-hit-4pt4-before-2027-698-317",
+          "question": "Will the 10-year Treasury yield hit 4.4% before 2027?",
+          "description": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between December 9, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "end_date": "2026-12-31T00:00:00Z",
+          "active": true,
+          "closed": true,
+          "outcomes": [
+            "Yes",
+            "No"
+          ],
+          "outcome_prices": [
+            1.0,
+            0.0
+          ],
+          "yes_price": 1.0,
+          "no_price": 0.0,
+          "volume": 20930.093690999995,
+          "liquidity": null,
+          "spread": 0.001,
+          "last_trade_price": 0.999,
+          "best_bid": 0.999,
+          "best_ask": 1.0,
+          "resolution_note": "This market will resolve to \"Yes\" if the Treasury 10-year yield reaches or is higher than the listed value for any date between December 9, 2025 and December 31, 2026. Otherwise this market will resolve to \"No\".\n\nThe resolution source for this market is the Department of the treasury, specially the data listed under \"Daily Treasury Par Yield Curve Rates\" for the column \"10 Yr\" (see: https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve&field_tdr_date_value=2025).",
+          "relevance_score": 1.0,
+          "confidence": "low",
+          "risk_flags": [
+            "closed_or_resolved"
+          ]
+        }
+      ],
+      "traceyield_alignment": "mixed",
+      "alignment_reason": "TraceYield is range-bound while Polymarket leans lower: lower-threshold Yes 0.48 vs higher-threshold Yes 0.22. External check only; no central, p50, fan, overlay, or bp magnitude changed.",
+      "model_usage": "external_check_only_no_central_shift"
+    },
+    "grounded_macro_analysis": {
+      "available": true,
+      "source": "grounded_gpt",
+      "model_usage": "narrative_and_regime_only_no_bp_or_central_shift",
+      "documents_used": [
+        {
+          "kind": "statement",
+          "date": "2026-04-29",
+          "char_count": 2235
+        },
+        {
+          "kind": "minutes",
+          "date": "2026-04-29",
+          "char_count": 46051
+        }
+      ],
+      "executive_summary": "The current U.S. yield curve reflects a delicate balancing act between heightened inflation pressures and stable economic expansion. Inflation remains elevated due to recent global energy price increases, as highlighted by recent CPI growth of 3.779% year-over-year. The FOMC’s decision to maintain the federal funds rate at 3.5%-3.75% is driven by a cautious approach to risks from the Middle East conflict and uncertainties associated with AI technology. Despite stable unemployment, the slow pace of job gains raises concerns about potential labor market weakness. Global factors, such as rising yields in advanced foreign economies, add pressure on U.S. yields, with relative value dynamics suggesting some richening of U.S. assets. In this context, liquidity conditions remain favorable, yet with an awareness of broader market risks.",
+      "factor_notes": {
+        "inflation_regime": {
+          "stance": "hot",
+          "reason": "Inflation pressures are driven by elevated energy prices and recent increases in core goods prices due to tariffs.",
+          "data_points": [
+            "CPIAUCSL yoy pct: 3.779",
+            "PCEPI yoy pct: 3.767"
+          ],
+          "quotes": [
+            "Inflation is elevated, in part reflecting the recent increase in global energy prices.",
+            "Participants observed that overall inflation had moved up, in part because of recent global energy price increases."
+          ]
+        },
+        "policy_path": {
+          "stance": "neutral",
+          "reason": "The FOMC decided to hold rates steady, citing elevated inflation readings and geopolitical uncertainties.",
+          "data_points": [
+            "Federal funds rate: 3.5%-3.75%"
+          ],
+          "quotes": [
+            "The Committee decided to maintain the target range for the federal funds rate at 3‑1/2 to 3‑3/4 percent.",
+            "Participants generally judged that the continued elevated inflation readings together with uncertainty related to the duration and economic implications of the Middle East conflict could necessitate maintaining the current policy stance for longer."
+          ]
+        },
+        "growth_risk": {
+          "stance": "neutral",
+          "reason": "Despite solid GDP growth, job gains have been low on average, suggesting mixed signals for future growth momentum.",
+          "data_points": [
+            "PAYEMS change 3m pct: 0.091",
+            "UNRATE: 4.3"
+          ],
+          "quotes": [
+            "Recent indicators suggest that economic activity has been expanding at a solid pace.",
+            "Job gains have remained low, on average, and the unemployment rate has been little changed in recent months."
+          ]
+        },
+        "liquidity_supply": {
+          "stance": "neutral",
+          "reason": "Despite increased reserves, the stability in money market rates suggests adequate liquidity.",
+          "data_points": [
+            "WALCL change 3m pct: 1.37",
+            "WRESBAL change 3m pct: 3.399"
+          ],
+          "quotes": [
+            "The effective federal funds rate had remained 1 basis point below the interest on reserve balances rate.",
+            "Liquidity conditions in Treasury securities markets had remained favorable even at times of increased volatility."
+          ]
+        },
+        "global_relative_value": {
+          "stance": "rich",
+          "reason": "U.S. assets appear rich as foreign yields rise and the U.S. dollar appreciates amidst geopolitical tensions.",
+          "data_points": [
+            "IRLTLT01DEM156N change 3m bp: 19.0",
+            "DTWEXBGS change 3m pct: 0.896"
+          ],
+          "quotes": [
+            "Equity prices had more than reversed their earlier declines, while 2-year and 10-year Treasury yields rose a bit further over the intermeeting period."
+          ]
+        }
+      },
+      "logic_chain": [
+        "Inflation remains elevated primarily due to higher energy prices affecting consumer and producer price indexes.",
+        "The FOMC maintains a neutral policy stance amidst uncertainties from the Middle East and potential AI impacts.",
+        "Economic expansion continues with stable GDP growth, yet the labor market shows subdued job creation.",
+        "Despite a rise in reserves, liquidity supply is stable, supported by favorable market conditions.",
+        "Foreign yield increases and geopolitical tensions contribute to the relative richness of U.S. assets."
+      ],
+      "key_quotes": [
+        {
+          "source": "statement 2026-04-29",
+          "quote": "Inflation is elevated, in part reflecting the recent increase in global energy prices."
+        },
+        {
+          "source": "minutes 2026-04-29",
+          "quote": "Participants generally judged that the continued elevated inflation readings together with uncertainty related to the duration and economic implications of the Middle East conflict could necessitate maintaining the current policy stance for longer."
+        }
+      ]
+    }
+  }
+}

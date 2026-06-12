@@ -1,0 +1,47 @@
+# 2026 FOMC meeting calendar (deterministic event-calendar input).
+#
+# decision_date = day the policy decision + statement are released (2nd day of the
+#                 two-day meeting). Use THIS date for event-overlay alignment.
+# has_sep       = meeting publishes the Summary of Economic Projections + dot plot
+#                 (only the Mar / Jun / Sep / Dec meetings).
+# Source: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
+#
+# NOTE (as of 2026-06-02): upcoming meetings within the 12-month forecast window are
+# 2026-06-17 (SEP), 07-29, 09-16 (SEP), 10-28, 12-09 (SEP), then the first 2027 meeting.
+# Maintain by hand once a year when the Fed publishes the next year's schedule.
+
+timezone: America/New_York
+
+meetings:
+  - meeting: "2026-01"
+    start_date: 2026-01-27
+    decision_date: 2026-01-28
+    has_sep: false
+  - meeting: "2026-03"
+    start_date: 2026-03-17
+    decision_date: 2026-03-18
+    has_sep: true
+  - meeting: "2026-04"
+    start_date: 2026-04-28
+    decision_date: 2026-04-29
+    has_sep: false
+  - meeting: "2026-06"
+    start_date: 2026-06-16
+    decision_date: 2026-06-17
+    has_sep: true
+  - meeting: "2026-07"
+    start_date: 2026-07-28
+    decision_date: 2026-07-29
+    has_sep: false
+  - meeting: "2026-09"
+    start_date: 2026-09-15
+    decision_date: 2026-09-16
+    has_sep: true
+  - meeting: "2026-10"
+    start_date: 2026-10-27
+    decision_date: 2026-10-28
+    has_sep: false
+  - meeting: "2026-12"
+    start_date: 2026-12-08
+    decision_date: 2026-12-09
+    has_sep: true

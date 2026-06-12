@@ -14,27 +14,39 @@ factors:
     description: "Global rate differentials & safe-haven flows"
   political_risk:  # elections, chair transition, fiscal/geopolitical shocks
     description: "Political/geopolitical risk premium"
+  yield_trend:     # Treasury yield history and curve shape
+    description: "Treasury historical pattern: 10Y momentum, range position, curve trend"
 
 # Weights per horizon (must each sum to 1.0)
 horizons:
-  1w:
-    fomc_nlp:       0.35
+  1m:
+    fomc_nlp:       0.20
     inflation:      0.20
     liquidity:      0.15
-    global_rates:   0.20
-    political_risk: 0.10
-  1m:
-    fomc_nlp:       0.30
+    global_rates:   0.15
+    political_risk: 0.05
+    yield_trend:    0.25
+  3m:
+    fomc_nlp:       0.15
     inflation:      0.25
     liquidity:      0.20
     global_rates:   0.15
-    political_risk: 0.10
-  3m:
-    fomc_nlp:       0.20
+    political_risk: 0.05
+    yield_trend:    0.20
+  6m:
+    fomc_nlp:       0.10
     inflation:      0.30
     liquidity:      0.25
     global_rates:   0.15
-    political_risk: 0.10
+    political_risk: 0.05
+    yield_trend:    0.15
+  12m:
+    fomc_nlp:       0.05
+    inflation:      0.35
+    liquidity:      0.25
+    global_rates:   0.15
+    political_risk: 0.05
+    yield_trend:    0.15
 
 # Direction thresholds on the blended signal score (range roughly [-1, +1])
 # score = sum(weight_i * factor_score_i); positive = yields UP = bond BEAR

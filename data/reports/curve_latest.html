@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TraceYield Curve View - 2026-06-02</title>
+  <style>
+    :root {
+      --ink: #1d2228;
+      --muted: #64717f;
+      --line: #cfd7df;
+      --paper: #f4f1ea;
+      --panel: #ffffff;
+      --accent: #0f6b63;
+      --accent-2: #b44d2a;
+      --band: rgba(15, 107, 99, 0.16);
+      --band-2: rgba(15, 107, 99, 0.28);
+      --event: rgba(180, 77, 42, 0.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+    main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+    .headline {
+      border-top: 5px solid var(--ink);
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0 18px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 20px;
+    }
+    .headline h1 {
+      margin: 0;
+      font-family: "Bahnschrift", "Aptos Display", sans-serif;
+      font-size: 36px;
+      line-height: 1.05;
+      font-weight: 700;
+    }
+    .headline .readouts { display: grid; gap: 8px; align-content: center; }
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.72);
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .disclaimer { color: var(--accent-2); font-weight: 700; }
+    .panel, .chart-card, .methodology {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+    .section-kicker {
+      color: var(--accent-2);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h2, h3 { margin: 6px 0 12px; letter-spacing: 0; }
+    .chart-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .featured-chart-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .chart-grid-secondary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .chart-card-featured { padding: 20px; }
+    .chart-card-featured .fan-svg { min-height: 420px; }
+    .chart-card-featured h3 { font-size: 30px; }
+    .chart-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+    .chart-head span { color: var(--muted); font-size: 13px; }
+    .fan-svg { width: 100%; height: auto; display: block; background: #fbfaf6; border: 1px solid #ece5da; }
+    .grid { stroke: #e2e6ea; stroke-width: 1; }
+    .axis-label { fill: var(--muted); font-size: 11px; }
+    .month-label { text-anchor: middle; }
+    .band-outer { fill: var(--band); stroke: none; }
+    .band-inner { fill: var(--band-2); stroke: none; }
+    .central-line { fill: none; stroke: var(--muted); stroke-width: 1.2; stroke-dasharray: 3 3; opacity: 0.7; }
+    .p50-line { fill: none; stroke: var(--accent); stroke-width: 2.8; }
+    .today-line { stroke: var(--accent-2); stroke-width: 1.3; stroke-dasharray: 6 5; }
+    .event-band { fill: var(--event); stroke: rgba(180, 77, 42, 0.20); }
+    .event-marker { fill: var(--accent-2); font-size: 12px; font-weight: 800; text-anchor: middle; }
+    .legend { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: 12px; margin-top: 8px; }
+    .swatch, .stroke { display: inline-block; width: 18px; height: 10px; margin-right: 4px; vertical-align: middle; }
+    .swatch.outer { background: var(--band); }
+    .swatch.inner { background: var(--band-2); }
+    .stroke { border-top: 2px solid var(--ink); height: 4px; }
+    .stroke.p50 { border-color: var(--accent); border-top-width: 3px; }
+    .stroke.central { border-top-style: dashed; border-color: var(--muted); }
+    .stroke.today { border-top-style: dashed; border-color: var(--accent-2); }
+    details { margin-top: 14px; }
+    summary { cursor: pointer; font-weight: 800; color: var(--accent); }
+    .metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
+    .metric-grid div, .market-row span {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 10px;
+      background: #fbfaf6;
+    }
+    .metric-grid span { display: block; color: var(--muted); font-size: 12px; }
+    .metric-grid b { font-size: 22px; }
+    .quality-note, .plain-label { font-weight: 800; color: var(--accent-2); }
+    .source-line { color: var(--muted); }
+    .market-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: left; }
+    td:nth-child(2), td:nth-child(3) { font-size: 22px; color: var(--accent); }
+    .value-table td { text-align: right; font-variant-numeric: tabular-nums; }
+    .value-table td b { font-size: 16px; }
+    .value-table .range { display: block; color: var(--muted); font-size: 11px; }
+    .value-table tbody th { color: var(--muted); font-weight: 700; }
+    .bva-table td, .bva-table th { text-align: right; font-variant-numeric: tabular-nums; }
+    .bva-table tbody th { text-align: left; color: var(--muted); }
+    .bva-table td:nth-child(3) { color: var(--accent); }
+    .regime-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 4px; }
+    .regime-chip { border: 1px solid var(--line); border-radius: 4px; padding: 6px 10px; background: #fbfaf6; font-size: 13px; }
+    .timeline { padding-left: 0; list-style: none; display: grid; gap: 8px; }
+    .timeline li { display: grid; grid-template-columns: 190px 1fr; gap: 14px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+    .timeline time { font-weight: 800; }
+    .attrib-bars { display: grid; gap: 8px; margin-top: 14px; }
+    .attrib-row { display: grid; grid-template-columns: 210px 1fr 80px; gap: 10px; align-items: center; font-size: 13px; }
+    .attrib-track { height: 10px; background: #ece5da; border-radius: 2px; overflow: hidden; }
+    .attrib-track i { display: block; height: 100%; }
+    .factor-explorer { border-color: #a9c3bd; }
+    .plain-english-box {
+      border-left: 4px solid var(--accent);
+      background: #fbfaf6;
+      padding: 12px 14px;
+      margin: 10px 0 14px;
+    }
+    .plain-english-box h3 { margin: 0 0 8px; }
+    .plain-english-box p { margin: 6px 0; color: var(--muted); }
+    .factor-toolbar {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 14px;
+      align-items: center;
+      margin: 12px 0 16px;
+    }
+    .factor-checks { display: flex; flex-wrap: wrap; gap: 8px; }
+    .factor-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px 10px;
+      background: #fbfaf6;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .factor-chip input { accent-color: var(--accent); }
+    .random-walk-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px 10px;
+      background: #fbfaf6;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .random-walk-toggle input { accent-color: var(--accent-2); }
+    .factor-breakdown {
+      border: 1px solid #d7dedc;
+      border-radius: 6px;
+      padding: 12px;
+      background: #fcfbf7;
+      margin-bottom: 14px;
+    }
+    .factor-breakdown summary { color: var(--ink); font-size: 18px; }
+    .factor-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .factor-detail-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: white;
+    }
+    .factor-detail-card h3 { margin-top: 0; }
+    .factor-detail-card p { margin: 8px 0; }
+    .subfactor-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .subfactor-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #d5ddd9;
+      border-radius: 4px;
+      padding: 6px 8px;
+      background: #f8faf8;
+      font-size: 12px;
+    }
+    .subfactor-chip input { accent-color: var(--accent-2); }
+    .target-picker {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .target-picker select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+    }
+    .factor-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 220px;
+      gap: 14px;
+      align-items: stretch;
+    }
+    .factor-chart-shell {
+      border: 1px solid #d7dedc;
+      background: #fbfaf6;
+      min-height: 360px;
+    }
+    #factor-scenario-svg { width: 100%; height: 360px; display: block; }
+    .factor-path-selected { fill: none; stroke: var(--accent); stroke-width: 4; }
+    .factor-path-official { fill: none; stroke: var(--muted); stroke-width: 2; stroke-dasharray: 6 5; }
+    .factor-path-base { fill: none; stroke: var(--accent-2); stroke-width: 2; stroke-dasharray: 3 5; }
+    .factor-path-random-walk { fill: none; stroke: #252b31; stroke-width: 1.7; opacity: 0.62; }
+    .factor-axis { stroke: #dfe6e3; stroke-width: 1; }
+    .factor-axis-label { fill: var(--muted); font-size: 12px; }
+    .factor-summary {
+      border: 1px solid var(--line);
+      background: #fbfaf6;
+      border-radius: 4px;
+      padding: 14px;
+      display: grid;
+      align-content: center;
+      gap: 8px;
+    }
+    .factor-summary span { color: var(--muted); font-size: 12px; font-weight: 800; }
+    .factor-summary b { font-size: 30px; color: var(--accent); }
+    .factor-summary strong { color: var(--accent-2); font-size: 18px; }
+    .factor-table { margin-top: 14px; font-variant-numeric: tabular-nums; }
+    .factor-table th, .factor-table td { text-align: right; }
+    .factor-table th:first-child, .factor-table td:first-child { text-align: left; }
+    .mapping-controls {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .mapping-controls label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .mapping-controls input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 8px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+    }
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .logic-grid article {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fbfaf6;
+    }
+    .logic-grid h3 { font-size: 16px; margin-top: 0; }
+    .logic-grid p { color: var(--muted); font-size: 13px; }
+    .grounded-analysis { border-color: #98b5ad; }
+    .analysis-docs {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 12px;
+      background: #fbfaf6;
+      margin: 12px 0;
+    }
+    .analysis-docs ul { margin: 6px 0 0; padding-left: 20px; }
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .analysis-factor-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: white;
+    }
+    .analysis-factor-card h3 { margin-top: 0; }
+    .analysis-chain { display: grid; gap: 6px; }
+    .quote-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    blockquote {
+      margin: 0;
+      border-left: 4px solid var(--accent-2);
+      background: #fbfaf6;
+      padding: 10px 12px;
+    }
+    blockquote p { margin: 0 0 8px; }
+    blockquote cite { color: var(--muted); font-size: 12px; }
+    .methodology { margin-bottom: 26px; color: var(--muted); }
+    @media (max-width: 980px) {
+      .headline, .chart-grid, .chart-grid-secondary, .metric-grid, .market-row, .factor-toolbar, .factor-layout, .factor-detail-grid, .mapping-controls, .logic-grid, .analysis-grid, .quote-grid { grid-template-columns: 1fr; }
+      main { padding: 14px; }
+    }
+    </style>
+</head>
+<body>
+<main>
+  <section class="headline">
+    <div>
+      <div class="section-kicker">TraceYield Curve View</div>
+      <h1>10Y range-bound over 12m (-9.9bp)</h1>
+      <p class="disclaimer">Scenario view with uncertainty; not a trading signal.</p>
+    </div>
+    <div class="readouts">
+      <div class="pill">As of 2026-06-02</div>
+      <div class="pill">3m core: 10Y +0.0bp, 2s10s -2.8bp</div>
+      <div class="pill">6m core: 10Y -3.0bp, 2s10s -4.3bp</div>
+    </div>
+  </section>
+
+
+  <section id="fan-charts">
+    <div class="section-kicker">Range</div>
+    <h2>Fan Charts</h2>
+    <div class="featured-chart-grid">
+
+    <article class="chart-card chart-card-featured" id="chart-10Y-featured">
+      <div class="chart-head">
+        <h3>10Y</h3>
+        <span>+0.0bp at 3m / -9.9bp at 12m</span>
+      </div>
+
+    <svg class="fan-svg" viewBox="0 0 760 310" role="img" aria-label="10Y fan chart">
+      <title>10Y 12-month fan chart</title>
+      <rect x="30.00" y="28" width="48" height="228" class="event-band"><title>Jun 05 NFP | Jun 10 CPI | Jun 17 FOMC SEP | Jun 25 PCE | Jul 02 NFP | Jul 14 CPI | Jul 29 FOMC | Jul 30 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title></rect><rect x="92.00" y="28" width="48" height="228" class="event-band"><title>Aug 05 QRA (estimated) | Aug 07 NFP | Aug 12 CPI | Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title></rect><rect x="154.00" y="28" width="48" height="228" class="event-band"><title>Sep 04 NFP | Sep 11 CPI | Sep 16 FOMC SEP | Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title></rect><rect x="216.00" y="28" width="48" height="228" class="event-band"><title>Oct 02 NFP | Oct 14 CPI | Oct 28 FOMC | Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title></rect><rect x="278.00" y="28" width="48" height="228" class="event-band"><title>Nov 04 QRA (estimated) | Nov 06 NFP | Nov 10 CPI | Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title></rect><rect x="340.00" y="28" width="48" height="228" class="event-band"><title>Dec 04 NFP | Dec 09 FOMC SEP | Dec 10 CPI | Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title></rect><rect x="402.00" y="28" width="48" height="228" class="event-band"><title>Jan 08 NFP (estimated) | Jan 13 CPI (estimated) | Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="464.00" y="28" width="48" height="228" class="event-band"><title>Feb 03 QRA (estimated) | Feb 05 NFP (estimated) | Feb 11 CPI (estimated) | Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="526.00" y="28" width="48" height="228" class="event-band"><title>Mar 05 NFP (estimated) | Mar 11 CPI (estimated) | Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="588.00" y="28" width="48" height="228" class="event-band"><title>Apr 02 NFP (estimated) | Apr 14 CPI (estimated) | Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="650.00" y="28" width="48" height="228" class="event-band"><title>May 05 QRA (estimated) | May 07 NFP (estimated) | May 12 CPI (estimated) | May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title></rect>
+      <line x1="54" x2="736" y1="256.00" y2="256.00" class="grid" /><text x="10" y="260.00" class="axis-label">2.33</text><line x1="54" x2="736" y1="142.00" y2="142.00" class="grid" /><text x="10" y="146.00" class="axis-label">4.23</text><line x1="54" x2="736" y1="28.00" y2="28.00" class="grid" /><text x="10" y="32.00" class="axis-label">6.12</text>
+      <polygon points="54.00,79.13 116.00,76.20 178.00,66.67 240.00,62.19 302.00,60.85 364.00,56.00 426.00,56.53 488.00,51.67 550.00,50.77 612.00,46.23 674.00,43.72 736.00,44.93 736.00,240.28 674.00,239.07 612.00,237.01 550.00,236.32 488.00,237.01 426.00,229.28 364.00,222.12 302.00,214.94 240.00,209.58 178.00,204.81 116.00,194.79 54.00,183.58" class="band-outer" />
+      <polygon points="54.00,102.17 116.00,96.95 178.00,92.77 240.00,91.67 302.00,92.79 364.00,91.14 426.00,93.05 488.00,93.08 550.00,94.50 612.00,93.75 674.00,92.97 736.00,96.88 736.00,197.17 674.00,193.27 612.00,189.26 550.00,188.57 488.00,186.62 426.00,182.41 364.00,178.08 302.00,173.00 240.00,167.42 178.00,161.37 116.00,155.53 54.00,153.60" class="band-inner" />
+      <line x1="54" x2="736" y1="128.39" y2="128.39" class="today-line" />
+      <polyline points="54.00,128.02 116.00,128.06 178.00,128.38 240.00,128.89 302.00,129.51 364.00,130.20 426.00,130.92 488.00,131.65 550.00,132.36 612.00,133.05 674.00,133.71 736.00,134.32" class="p50-line" />
+      <polyline points="54.00,128.02 116.00,128.06 178.00,128.38 240.00,128.89 302.00,129.51 364.00,130.20 426.00,130.92 488.00,131.65 550.00,132.36 612.00,133.05 674.00,133.71 736.00,134.32" class="central-line" />
+      <text x="54.00" y="273.00" class="event-marker"><title>Jun 05 NFP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>N</text><text x="54.00" y="285.00" class="event-marker"><title>Jun 10 CPI | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>C</text><text x="54.00" y="297.00" class="event-marker"><title>Jun 17 FOMC SEP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>★</text><text x="54.00" y="309.00" class="event-marker"><title>Jun 25 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>P</text><text x="116.00" y="273.00" class="event-marker"><title>Aug 05 QRA (estimated) | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>Q</text><text x="116.00" y="285.00" class="event-marker"><title>Aug 07 NFP | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>N</text><text x="116.00" y="297.00" class="event-marker"><title>Aug 12 CPI | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>C</text><text x="116.00" y="309.00" class="event-marker"><title>Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>P</text><text x="178.00" y="273.00" class="event-marker"><title>Sep 04 NFP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>N</text><text x="178.00" y="285.00" class="event-marker"><title>Sep 11 CPI | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>C</text><text x="178.00" y="297.00" class="event-marker"><title>Sep 16 FOMC SEP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>★</text><text x="178.00" y="309.00" class="event-marker"><title>Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>P</text><text x="240.00" y="273.00" class="event-marker"><title>Oct 02 NFP | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>N</text><text x="240.00" y="285.00" class="event-marker"><title>Oct 14 CPI | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>C</text><text x="240.00" y="297.00" class="event-marker"><title>Oct 28 FOMC | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>F</text><text x="240.00" y="309.00" class="event-marker"><title>Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>P</text><text x="302.00" y="273.00" class="event-marker"><title>Nov 04 QRA (estimated) | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>Q</text><text x="302.00" y="285.00" class="event-marker"><title>Nov 06 NFP | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>N</text><text x="302.00" y="297.00" class="event-marker"><title>Nov 10 CPI | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>C</text><text x="302.00" y="309.00" class="event-marker"><title>Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>P</text><text x="364.00" y="273.00" class="event-marker"><title>Dec 04 NFP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>N</text><text x="364.00" y="285.00" class="event-marker"><title>Dec 09 FOMC SEP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>★</text><text x="364.00" y="297.00" class="event-marker"><title>Dec 10 CPI | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>C</text><text x="364.00" y="309.00" class="event-marker"><title>Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>P</text><text x="426.00" y="273.00" class="event-marker"><title>Jan 08 NFP (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="426.00" y="285.00" class="event-marker"><title>Jan 13 CPI (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="426.00" y="297.00" class="event-marker"><title>Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="488.00" y="273.00" class="event-marker"><title>Feb 03 QRA (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="488.00" y="285.00" class="event-marker"><title>Feb 05 NFP (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="488.00" y="297.00" class="event-marker"><title>Feb 11 CPI (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="488.00" y="309.00" class="event-marker"><title>Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="550.00" y="273.00" class="event-marker"><title>Mar 05 NFP (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="550.00" y="285.00" class="event-marker"><title>Mar 11 CPI (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="550.00" y="297.00" class="event-marker"><title>Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="612.00" y="273.00" class="event-marker"><title>Apr 02 NFP (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="612.00" y="285.00" class="event-marker"><title>Apr 14 CPI (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="612.00" y="297.00" class="event-marker"><title>Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="674.00" y="273.00" class="event-marker"><title>May 05 QRA (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="674.00" y="285.00" class="event-marker"><title>May 07 NFP (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="674.00" y="297.00" class="event-marker"><title>May 12 CPI (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="674.00" y="309.00" class="event-marker"><title>May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>P</text>
+      <text x="54.00" y="302" class="axis-label month-label">1</text><text x="116.00" y="302" class="axis-label month-label">2</text><text x="178.00" y="302" class="axis-label month-label">3</text><text x="240.00" y="302" class="axis-label month-label">4</text><text x="302.00" y="302" class="axis-label month-label">5</text><text x="364.00" y="302" class="axis-label month-label">6</text><text x="426.00" y="302" class="axis-label month-label">7</text><text x="488.00" y="302" class="axis-label month-label">8</text><text x="550.00" y="302" class="axis-label month-label">9</text><text x="612.00" y="302" class="axis-label month-label">10</text><text x="674.00" y="302" class="axis-label month-label">11</text><text x="736.00" y="302" class="axis-label month-label">12</text>
+    </svg>
+
+      <div class="legend">
+        <span><i class="swatch outer"></i>p10-p90</span>
+        <span><i class="swatch inner"></i>p25-p75</span>
+        <span><i class="stroke p50"></i>p50 (fan median)</span>
+        <span><i class="stroke central"></i>central (FADNS macro)</span>
+        <span><i class="stroke today"></i>today</span>
+      </div>
+    </article>
+
+    </div>
+    <div class="chart-grid chart-grid-secondary">
+
+    <article class="chart-card">
+      <div class="chart-head">
+        <h3>2Y</h3>
+        <span>+2.8bp at 3m / -4.6bp at 12m</span>
+      </div>
+
+    <svg class="fan-svg" viewBox="0 0 760 310" role="img" aria-label="2Y fan chart">
+      <title>2Y 12-month fan chart</title>
+      <rect x="30.00" y="28" width="48" height="228" class="event-band"><title>Jun 05 NFP | Jun 10 CPI | Jun 17 FOMC SEP | Jun 25 PCE | Jul 02 NFP | Jul 14 CPI | Jul 29 FOMC | Jul 30 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title></rect><rect x="92.00" y="28" width="48" height="228" class="event-band"><title>Aug 05 QRA (estimated) | Aug 07 NFP | Aug 12 CPI | Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title></rect><rect x="154.00" y="28" width="48" height="228" class="event-band"><title>Sep 04 NFP | Sep 11 CPI | Sep 16 FOMC SEP | Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title></rect><rect x="216.00" y="28" width="48" height="228" class="event-band"><title>Oct 02 NFP | Oct 14 CPI | Oct 28 FOMC | Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title></rect><rect x="278.00" y="28" width="48" height="228" class="event-band"><title>Nov 04 QRA (estimated) | Nov 06 NFP | Nov 10 CPI | Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title></rect><rect x="340.00" y="28" width="48" height="228" class="event-band"><title>Dec 04 NFP | Dec 09 FOMC SEP | Dec 10 CPI | Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title></rect><rect x="402.00" y="28" width="48" height="228" class="event-band"><title>Jan 08 NFP (estimated) | Jan 13 CPI (estimated) | Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="464.00" y="28" width="48" height="228" class="event-band"><title>Feb 03 QRA (estimated) | Feb 05 NFP (estimated) | Feb 11 CPI (estimated) | Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="526.00" y="28" width="48" height="228" class="event-band"><title>Mar 05 NFP (estimated) | Mar 11 CPI (estimated) | Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="588.00" y="28" width="48" height="228" class="event-band"><title>Apr 02 NFP (estimated) | Apr 14 CPI (estimated) | Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="650.00" y="28" width="48" height="228" class="event-band"><title>May 05 QRA (estimated) | May 07 NFP (estimated) | May 12 CPI (estimated) | May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title></rect>
+      <line x1="54" x2="736" y1="256.00" y2="256.00" class="grid" /><text x="10" y="260.00" class="axis-label">1.88</text><line x1="54" x2="736" y1="142.00" y2="142.00" class="grid" /><text x="10" y="146.00" class="axis-label">3.96</text><line x1="54" x2="736" y1="28.00" y2="28.00" class="grid" /><text x="10" y="32.00" class="axis-label">6.03</text>
+      <polygon points="54.00,91.02 116.00,92.81 178.00,82.06 240.00,75.08 302.00,73.95 364.00,63.02 426.00,63.42 488.00,60.25 550.00,57.61 612.00,52.05 674.00,43.72 736.00,44.95 736.00,240.28 674.00,239.05 612.00,236.96 550.00,235.42 488.00,235.04 426.00,234.93 364.00,234.52 302.00,225.00 240.00,225.51 178.00,217.32 116.00,201.34 54.00,192.30" class="band-outer" />
+      <polygon points="54.00,111.77 116.00,110.47 178.00,103.06 240.00,99.20 302.00,97.92 364.00,96.76 426.00,98.36 488.00,95.26 550.00,94.03 612.00,90.47 674.00,87.08 736.00,87.79 736.00,183.56 674.00,182.85 612.00,176.71 550.00,172.00 488.00,171.29 426.00,171.92 364.00,170.32 302.00,168.09 240.00,169.37 178.00,169.23 116.00,164.27 54.00,164.19" class="band-inner" />
+      <line x1="54" x2="736" y1="137.84" y2="137.84" class="today-line" />
+      <polyline points="54.00,136.87 116.00,136.40 178.00,136.29 240.00,136.42 302.00,136.73 364.00,137.15 426.00,137.65 488.00,138.18 550.00,138.73 612.00,139.28 674.00,139.82 736.00,140.34" class="p50-line" />
+      <polyline points="54.00,136.87 116.00,136.40 178.00,136.29 240.00,136.42 302.00,136.73 364.00,137.15 426.00,137.65 488.00,138.18 550.00,138.73 612.00,139.28 674.00,139.82 736.00,140.34" class="central-line" />
+      <text x="54.00" y="273.00" class="event-marker"><title>Jun 05 NFP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>N</text><text x="54.00" y="285.00" class="event-marker"><title>Jun 10 CPI | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>C</text><text x="54.00" y="297.00" class="event-marker"><title>Jun 17 FOMC SEP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>★</text><text x="54.00" y="309.00" class="event-marker"><title>Jun 25 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>P</text><text x="116.00" y="273.00" class="event-marker"><title>Aug 05 QRA (estimated) | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>Q</text><text x="116.00" y="285.00" class="event-marker"><title>Aug 07 NFP | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>N</text><text x="116.00" y="297.00" class="event-marker"><title>Aug 12 CPI | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>C</text><text x="116.00" y="309.00" class="event-marker"><title>Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>P</text><text x="178.00" y="273.00" class="event-marker"><title>Sep 04 NFP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>N</text><text x="178.00" y="285.00" class="event-marker"><title>Sep 11 CPI | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>C</text><text x="178.00" y="297.00" class="event-marker"><title>Sep 16 FOMC SEP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>★</text><text x="178.00" y="309.00" class="event-marker"><title>Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>P</text><text x="240.00" y="273.00" class="event-marker"><title>Oct 02 NFP | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>N</text><text x="240.00" y="285.00" class="event-marker"><title>Oct 14 CPI | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>C</text><text x="240.00" y="297.00" class="event-marker"><title>Oct 28 FOMC | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>F</text><text x="240.00" y="309.00" class="event-marker"><title>Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>P</text><text x="302.00" y="273.00" class="event-marker"><title>Nov 04 QRA (estimated) | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>Q</text><text x="302.00" y="285.00" class="event-marker"><title>Nov 06 NFP | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>N</text><text x="302.00" y="297.00" class="event-marker"><title>Nov 10 CPI | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>C</text><text x="302.00" y="309.00" class="event-marker"><title>Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>P</text><text x="364.00" y="273.00" class="event-marker"><title>Dec 04 NFP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>N</text><text x="364.00" y="285.00" class="event-marker"><title>Dec 09 FOMC SEP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>★</text><text x="364.00" y="297.00" class="event-marker"><title>Dec 10 CPI | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>C</text><text x="364.00" y="309.00" class="event-marker"><title>Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>P</text><text x="426.00" y="273.00" class="event-marker"><title>Jan 08 NFP (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="426.00" y="285.00" class="event-marker"><title>Jan 13 CPI (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="426.00" y="297.00" class="event-marker"><title>Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="488.00" y="273.00" class="event-marker"><title>Feb 03 QRA (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="488.00" y="285.00" class="event-marker"><title>Feb 05 NFP (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="488.00" y="297.00" class="event-marker"><title>Feb 11 CPI (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="488.00" y="309.00" class="event-marker"><title>Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="550.00" y="273.00" class="event-marker"><title>Mar 05 NFP (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="550.00" y="285.00" class="event-marker"><title>Mar 11 CPI (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="550.00" y="297.00" class="event-marker"><title>Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="612.00" y="273.00" class="event-marker"><title>Apr 02 NFP (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="612.00" y="285.00" class="event-marker"><title>Apr 14 CPI (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="612.00" y="297.00" class="event-marker"><title>Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="674.00" y="273.00" class="event-marker"><title>May 05 QRA (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="674.00" y="285.00" class="event-marker"><title>May 07 NFP (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="674.00" y="297.00" class="event-marker"><title>May 12 CPI (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="674.00" y="309.00" class="event-marker"><title>May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>P</text>
+      <text x="54.00" y="302" class="axis-label month-label">1</text><text x="116.00" y="302" class="axis-label month-label">2</text><text x="178.00" y="302" class="axis-label month-label">3</text><text x="240.00" y="302" class="axis-label month-label">4</text><text x="302.00" y="302" class="axis-label month-label">5</text><text x="364.00" y="302" class="axis-label month-label">6</text><text x="426.00" y="302" class="axis-label month-label">7</text><text x="488.00" y="302" class="axis-label month-label">8</text><text x="550.00" y="302" class="axis-label month-label">9</text><text x="612.00" y="302" class="axis-label month-label">10</text><text x="674.00" y="302" class="axis-label month-label">11</text><text x="736.00" y="302" class="axis-label month-label">12</text>
+    </svg>
+
+      <div class="legend">
+        <span><i class="swatch outer"></i>p10-p90</span>
+        <span><i class="swatch inner"></i>p25-p75</span>
+        <span><i class="stroke p50"></i>p50 (fan median)</span>
+        <span><i class="stroke central"></i>central (FADNS macro)</span>
+        <span><i class="stroke today"></i>today</span>
+      </div>
+    </article>
+
+
+    <article class="chart-card">
+      <div class="chart-head">
+        <h3>2s10s</h3>
+        <span>-2.8bp at 3m / -5.3bp at 12m</span>
+      </div>
+
+    <svg class="fan-svg" viewBox="0 0 760 310" role="img" aria-label="2s10s fan chart">
+      <title>2s10s 12-month fan chart</title>
+      <rect x="30.00" y="28" width="48" height="228" class="event-band"><title>Jun 05 NFP | Jun 10 CPI | Jun 17 FOMC SEP | Jun 25 PCE | Jul 02 NFP | Jul 14 CPI | Jul 29 FOMC | Jul 30 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title></rect><rect x="92.00" y="28" width="48" height="228" class="event-band"><title>Aug 05 QRA (estimated) | Aug 07 NFP | Aug 12 CPI | Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title></rect><rect x="154.00" y="28" width="48" height="228" class="event-band"><title>Sep 04 NFP | Sep 11 CPI | Sep 16 FOMC SEP | Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title></rect><rect x="216.00" y="28" width="48" height="228" class="event-band"><title>Oct 02 NFP | Oct 14 CPI | Oct 28 FOMC | Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title></rect><rect x="278.00" y="28" width="48" height="228" class="event-band"><title>Nov 04 QRA (estimated) | Nov 06 NFP | Nov 10 CPI | Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title></rect><rect x="340.00" y="28" width="48" height="228" class="event-band"><title>Dec 04 NFP | Dec 09 FOMC SEP | Dec 10 CPI | Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title></rect><rect x="402.00" y="28" width="48" height="228" class="event-band"><title>Jan 08 NFP (estimated) | Jan 13 CPI (estimated) | Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="464.00" y="28" width="48" height="228" class="event-band"><title>Feb 03 QRA (estimated) | Feb 05 NFP (estimated) | Feb 11 CPI (estimated) | Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="526.00" y="28" width="48" height="228" class="event-band"><title>Mar 05 NFP (estimated) | Mar 11 CPI (estimated) | Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="588.00" y="28" width="48" height="228" class="event-band"><title>Apr 02 NFP (estimated) | Apr 14 CPI (estimated) | Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="650.00" y="28" width="48" height="228" class="event-band"><title>May 05 QRA (estimated) | May 07 NFP (estimated) | May 12 CPI (estimated) | May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title></rect>
+      <line x1="54" x2="736" y1="256.00" y2="256.00" class="grid" /><text x="10" y="260.00" class="axis-label">-0.89</text><line x1="54" x2="736" y1="142.00" y2="142.00" class="grid" /><text x="10" y="146.00" class="axis-label">0.37</text><line x1="54" x2="736" y1="28.00" y2="28.00" class="grid" /><text x="10" y="32.00" class="axis-label">1.63</text>
+      <polygon points="54.00,81.37 116.00,81.53 178.00,76.14 240.00,67.55 302.00,66.83 364.00,55.59 426.00,56.27 488.00,55.84 550.00,55.56 612.00,52.40 674.00,43.72 736.00,43.97 736.00,240.28 674.00,240.03 612.00,230.94 550.00,226.69 488.00,221.01 426.00,213.17 364.00,212.49 302.00,200.94 240.00,199.02 178.00,196.42 116.00,193.84 54.00,193.67" class="band-outer" />
+      <polygon points="54.00,110.75 116.00,111.54 178.00,109.66 240.00,109.39 302.00,109.83 364.00,104.90 426.00,105.68 488.00,102.47 550.00,101.86 612.00,100.89 674.00,97.10 736.00,98.57 736.00,192.02 674.00,190.55 612.00,187.09 550.00,184.04 488.00,182.58 426.00,178.94 364.00,178.16 302.00,171.57 240.00,171.13 178.00,168.60 116.00,166.95 54.00,166.17" class="band-inner" />
+      <line x1="54" x2="736" y1="137.76" y2="137.76" class="today-line" />
+      <polyline points="54.00,138.79 116.00,139.62 178.00,140.29 240.00,140.83 302.00,141.26 364.00,141.61 426.00,141.88 488.00,142.10 550.00,142.27 612.00,142.40 674.00,142.49 736.00,142.56" class="p50-line" />
+      <polyline points="54.00,138.79 116.00,139.62 178.00,140.29 240.00,140.83 302.00,141.26 364.00,141.61 426.00,141.88 488.00,142.10 550.00,142.27 612.00,142.40 674.00,142.49 736.00,142.56" class="central-line" />
+      <text x="54.00" y="273.00" class="event-marker"><title>Jun 05 NFP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>N</text><text x="54.00" y="285.00" class="event-marker"><title>Jun 10 CPI | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>C</text><text x="54.00" y="297.00" class="event-marker"><title>Jun 17 FOMC SEP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>★</text><text x="54.00" y="309.00" class="event-marker"><title>Jun 25 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>P</text><text x="116.00" y="273.00" class="event-marker"><title>Aug 05 QRA (estimated) | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>Q</text><text x="116.00" y="285.00" class="event-marker"><title>Aug 07 NFP | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>N</text><text x="116.00" y="297.00" class="event-marker"><title>Aug 12 CPI | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>C</text><text x="116.00" y="309.00" class="event-marker"><title>Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>P</text><text x="178.00" y="273.00" class="event-marker"><title>Sep 04 NFP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>N</text><text x="178.00" y="285.00" class="event-marker"><title>Sep 11 CPI | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>C</text><text x="178.00" y="297.00" class="event-marker"><title>Sep 16 FOMC SEP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>★</text><text x="178.00" y="309.00" class="event-marker"><title>Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>P</text><text x="240.00" y="273.00" class="event-marker"><title>Oct 02 NFP | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>N</text><text x="240.00" y="285.00" class="event-marker"><title>Oct 14 CPI | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>C</text><text x="240.00" y="297.00" class="event-marker"><title>Oct 28 FOMC | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>F</text><text x="240.00" y="309.00" class="event-marker"><title>Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>P</text><text x="302.00" y="273.00" class="event-marker"><title>Nov 04 QRA (estimated) | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>Q</text><text x="302.00" y="285.00" class="event-marker"><title>Nov 06 NFP | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>N</text><text x="302.00" y="297.00" class="event-marker"><title>Nov 10 CPI | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>C</text><text x="302.00" y="309.00" class="event-marker"><title>Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>P</text><text x="364.00" y="273.00" class="event-marker"><title>Dec 04 NFP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>N</text><text x="364.00" y="285.00" class="event-marker"><title>Dec 09 FOMC SEP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>★</text><text x="364.00" y="297.00" class="event-marker"><title>Dec 10 CPI | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>C</text><text x="364.00" y="309.00" class="event-marker"><title>Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>P</text><text x="426.00" y="273.00" class="event-marker"><title>Jan 08 NFP (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="426.00" y="285.00" class="event-marker"><title>Jan 13 CPI (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="426.00" y="297.00" class="event-marker"><title>Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="488.00" y="273.00" class="event-marker"><title>Feb 03 QRA (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="488.00" y="285.00" class="event-marker"><title>Feb 05 NFP (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="488.00" y="297.00" class="event-marker"><title>Feb 11 CPI (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="488.00" y="309.00" class="event-marker"><title>Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="550.00" y="273.00" class="event-marker"><title>Mar 05 NFP (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="550.00" y="285.00" class="event-marker"><title>Mar 11 CPI (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="550.00" y="297.00" class="event-marker"><title>Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="612.00" y="273.00" class="event-marker"><title>Apr 02 NFP (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="612.00" y="285.00" class="event-marker"><title>Apr 14 CPI (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="612.00" y="297.00" class="event-marker"><title>Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="674.00" y="273.00" class="event-marker"><title>May 05 QRA (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="674.00" y="285.00" class="event-marker"><title>May 07 NFP (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="674.00" y="297.00" class="event-marker"><title>May 12 CPI (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="674.00" y="309.00" class="event-marker"><title>May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>P</text>
+      <text x="54.00" y="302" class="axis-label month-label">1</text><text x="116.00" y="302" class="axis-label month-label">2</text><text x="178.00" y="302" class="axis-label month-label">3</text><text x="240.00" y="302" class="axis-label month-label">4</text><text x="302.00" y="302" class="axis-label month-label">5</text><text x="364.00" y="302" class="axis-label month-label">6</text><text x="426.00" y="302" class="axis-label month-label">7</text><text x="488.00" y="302" class="axis-label month-label">8</text><text x="550.00" y="302" class="axis-label month-label">9</text><text x="612.00" y="302" class="axis-label month-label">10</text><text x="674.00" y="302" class="axis-label month-label">11</text><text x="736.00" y="302" class="axis-label month-label">12</text>
+    </svg>
+
+      <div class="legend">
+        <span><i class="swatch outer"></i>p10-p90</span>
+        <span><i class="swatch inner"></i>p25-p75</span>
+        <span><i class="stroke p50"></i>p50 (fan median)</span>
+        <span><i class="stroke central"></i>central (FADNS macro)</span>
+        <span><i class="stroke today"></i>today</span>
+      </div>
+    </article>
+
+    </div>
+    <details>
+      <summary>Show 5Y / 30Y supporting charts</summary>
+      <div class="chart-grid">
+
+    <article class="chart-card">
+      <div class="chart-head">
+        <h3>5Y</h3>
+        <span>+2.2bp at 3m / -5.7bp at 12m</span>
+      </div>
+
+    <svg class="fan-svg" viewBox="0 0 760 310" role="img" aria-label="5Y fan chart">
+      <title>5Y 12-month fan chart</title>
+      <rect x="30.00" y="28" width="48" height="228" class="event-band"><title>Jun 05 NFP | Jun 10 CPI | Jun 17 FOMC SEP | Jun 25 PCE | Jul 02 NFP | Jul 14 CPI | Jul 29 FOMC | Jul 30 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title></rect><rect x="92.00" y="28" width="48" height="228" class="event-band"><title>Aug 05 QRA (estimated) | Aug 07 NFP | Aug 12 CPI | Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title></rect><rect x="154.00" y="28" width="48" height="228" class="event-band"><title>Sep 04 NFP | Sep 11 CPI | Sep 16 FOMC SEP | Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title></rect><rect x="216.00" y="28" width="48" height="228" class="event-band"><title>Oct 02 NFP | Oct 14 CPI | Oct 28 FOMC | Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title></rect><rect x="278.00" y="28" width="48" height="228" class="event-band"><title>Nov 04 QRA (estimated) | Nov 06 NFP | Nov 10 CPI | Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title></rect><rect x="340.00" y="28" width="48" height="228" class="event-band"><title>Dec 04 NFP | Dec 09 FOMC SEP | Dec 10 CPI | Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title></rect><rect x="402.00" y="28" width="48" height="228" class="event-band"><title>Jan 08 NFP (estimated) | Jan 13 CPI (estimated) | Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="464.00" y="28" width="48" height="228" class="event-band"><title>Feb 03 QRA (estimated) | Feb 05 NFP (estimated) | Feb 11 CPI (estimated) | Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="526.00" y="28" width="48" height="228" class="event-band"><title>Mar 05 NFP (estimated) | Mar 11 CPI (estimated) | Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="588.00" y="28" width="48" height="228" class="event-band"><title>Apr 02 NFP (estimated) | Apr 14 CPI (estimated) | Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="650.00" y="28" width="48" height="228" class="event-band"><title>May 05 QRA (estimated) | May 07 NFP (estimated) | May 12 CPI (estimated) | May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title></rect>
+      <line x1="54" x2="736" y1="256.00" y2="256.00" class="grid" /><text x="10" y="260.00" class="axis-label">2.23</text><line x1="54" x2="736" y1="142.00" y2="142.00" class="grid" /><text x="10" y="146.00" class="axis-label">4.03</text><line x1="54" x2="736" y1="28.00" y2="28.00" class="grid" /><text x="10" y="32.00" class="axis-label">5.82</text>
+      <polygon points="54.00,76.75 116.00,77.49 178.00,65.61 240.00,59.19 302.00,60.43 364.00,58.05 426.00,60.21 488.00,57.80 550.00,53.75 612.00,48.00 674.00,43.72 736.00,46.53 736.00,240.28 674.00,237.47 612.00,232.83 550.00,232.17 488.00,230.69 426.00,229.35 364.00,227.20 302.00,220.32 240.00,217.09 178.00,212.47 116.00,201.08 54.00,189.22" class="band-outer" />
+      <polygon points="54.00,99.77 116.00,97.07 178.00,91.07 240.00,88.49 302.00,89.65 364.00,88.85 426.00,90.79 488.00,91.47 550.00,87.66 612.00,88.12 674.00,86.87 736.00,90.24 736.00,194.25 674.00,190.89 612.00,186.33 550.00,181.04 488.00,178.34 426.00,173.74 364.00,171.80 302.00,167.23 240.00,164.48 178.00,162.80 116.00,159.70 54.00,158.06" class="band-inner" />
+      <line x1="54" x2="736" y1="130.32" y2="130.32" class="today-line" />
+      <polyline points="54.00,129.35 116.00,128.93 178.00,128.90 240.00,129.14 302.00,129.57 364.00,130.12 426.00,130.73 488.00,131.39 550.00,132.05 612.00,132.71 674.00,133.35 736.00,133.96" class="p50-line" />
+      <polyline points="54.00,129.35 116.00,128.93 178.00,128.90 240.00,129.14 302.00,129.57 364.00,130.12 426.00,130.73 488.00,131.39 550.00,132.05 612.00,132.71 674.00,133.35 736.00,133.96" class="central-line" />
+      <text x="54.00" y="273.00" class="event-marker"><title>Jun 05 NFP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>N</text><text x="54.00" y="285.00" class="event-marker"><title>Jun 10 CPI | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>C</text><text x="54.00" y="297.00" class="event-marker"><title>Jun 17 FOMC SEP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>★</text><text x="54.00" y="309.00" class="event-marker"><title>Jun 25 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>P</text><text x="116.00" y="273.00" class="event-marker"><title>Aug 05 QRA (estimated) | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>Q</text><text x="116.00" y="285.00" class="event-marker"><title>Aug 07 NFP | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>N</text><text x="116.00" y="297.00" class="event-marker"><title>Aug 12 CPI | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>C</text><text x="116.00" y="309.00" class="event-marker"><title>Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>P</text><text x="178.00" y="273.00" class="event-marker"><title>Sep 04 NFP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>N</text><text x="178.00" y="285.00" class="event-marker"><title>Sep 11 CPI | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>C</text><text x="178.00" y="297.00" class="event-marker"><title>Sep 16 FOMC SEP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>★</text><text x="178.00" y="309.00" class="event-marker"><title>Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>P</text><text x="240.00" y="273.00" class="event-marker"><title>Oct 02 NFP | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>N</text><text x="240.00" y="285.00" class="event-marker"><title>Oct 14 CPI | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>C</text><text x="240.00" y="297.00" class="event-marker"><title>Oct 28 FOMC | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>F</text><text x="240.00" y="309.00" class="event-marker"><title>Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>P</text><text x="302.00" y="273.00" class="event-marker"><title>Nov 04 QRA (estimated) | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>Q</text><text x="302.00" y="285.00" class="event-marker"><title>Nov 06 NFP | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>N</text><text x="302.00" y="297.00" class="event-marker"><title>Nov 10 CPI | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>C</text><text x="302.00" y="309.00" class="event-marker"><title>Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>P</text><text x="364.00" y="273.00" class="event-marker"><title>Dec 04 NFP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>N</text><text x="364.00" y="285.00" class="event-marker"><title>Dec 09 FOMC SEP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>★</text><text x="364.00" y="297.00" class="event-marker"><title>Dec 10 CPI | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>C</text><text x="364.00" y="309.00" class="event-marker"><title>Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>P</text><text x="426.00" y="273.00" class="event-marker"><title>Jan 08 NFP (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="426.00" y="285.00" class="event-marker"><title>Jan 13 CPI (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="426.00" y="297.00" class="event-marker"><title>Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="488.00" y="273.00" class="event-marker"><title>Feb 03 QRA (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="488.00" y="285.00" class="event-marker"><title>Feb 05 NFP (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="488.00" y="297.00" class="event-marker"><title>Feb 11 CPI (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="488.00" y="309.00" class="event-marker"><title>Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="550.00" y="273.00" class="event-marker"><title>Mar 05 NFP (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="550.00" y="285.00" class="event-marker"><title>Mar 11 CPI (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="550.00" y="297.00" class="event-marker"><title>Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="612.00" y="273.00" class="event-marker"><title>Apr 02 NFP (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="612.00" y="285.00" class="event-marker"><title>Apr 14 CPI (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="612.00" y="297.00" class="event-marker"><title>Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="674.00" y="273.00" class="event-marker"><title>May 05 QRA (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="674.00" y="285.00" class="event-marker"><title>May 07 NFP (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="674.00" y="297.00" class="event-marker"><title>May 12 CPI (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="674.00" y="309.00" class="event-marker"><title>May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>P</text>
+      <text x="54.00" y="302" class="axis-label month-label">1</text><text x="116.00" y="302" class="axis-label month-label">2</text><text x="178.00" y="302" class="axis-label month-label">3</text><text x="240.00" y="302" class="axis-label month-label">4</text><text x="302.00" y="302" class="axis-label month-label">5</text><text x="364.00" y="302" class="axis-label month-label">6</text><text x="426.00" y="302" class="axis-label month-label">7</text><text x="488.00" y="302" class="axis-label month-label">8</text><text x="550.00" y="302" class="axis-label month-label">9</text><text x="612.00" y="302" class="axis-label month-label">10</text><text x="674.00" y="302" class="axis-label month-label">11</text><text x="736.00" y="302" class="axis-label month-label">12</text>
+    </svg>
+
+      <div class="legend">
+        <span><i class="swatch outer"></i>p10-p90</span>
+        <span><i class="swatch inner"></i>p25-p75</span>
+        <span><i class="stroke p50"></i>p50 (fan median)</span>
+        <span><i class="stroke central"></i>central (FADNS macro)</span>
+        <span><i class="stroke today"></i>today</span>
+      </div>
+    </article>
+
+    <article class="chart-card">
+      <div class="chart-head">
+        <h3>30Y</h3>
+        <span>-14.8bp at 3m / -36.8bp at 12m</span>
+      </div>
+
+    <svg class="fan-svg" viewBox="0 0 760 310" role="img" aria-label="30Y fan chart">
+      <title>30Y 12-month fan chart</title>
+      <rect x="30.00" y="28" width="48" height="228" class="event-band"><title>Jun 05 NFP | Jun 10 CPI | Jun 17 FOMC SEP | Jun 25 PCE | Jul 02 NFP | Jul 14 CPI | Jul 29 FOMC | Jul 30 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title></rect><rect x="92.00" y="28" width="48" height="228" class="event-band"><title>Aug 05 QRA (estimated) | Aug 07 NFP | Aug 12 CPI | Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title></rect><rect x="154.00" y="28" width="48" height="228" class="event-band"><title>Sep 04 NFP | Sep 11 CPI | Sep 16 FOMC SEP | Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title></rect><rect x="216.00" y="28" width="48" height="228" class="event-band"><title>Oct 02 NFP | Oct 14 CPI | Oct 28 FOMC | Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title></rect><rect x="278.00" y="28" width="48" height="228" class="event-band"><title>Nov 04 QRA (estimated) | Nov 06 NFP | Nov 10 CPI | Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title></rect><rect x="340.00" y="28" width="48" height="228" class="event-band"><title>Dec 04 NFP | Dec 09 FOMC SEP | Dec 10 CPI | Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title></rect><rect x="402.00" y="28" width="48" height="228" class="event-band"><title>Jan 08 NFP (estimated) | Jan 13 CPI (estimated) | Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="464.00" y="28" width="48" height="228" class="event-band"><title>Feb 03 QRA (estimated) | Feb 05 NFP (estimated) | Feb 11 CPI (estimated) | Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="526.00" y="28" width="48" height="228" class="event-band"><title>Mar 05 NFP (estimated) | Mar 11 CPI (estimated) | Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="588.00" y="28" width="48" height="228" class="event-band"><title>Apr 02 NFP (estimated) | Apr 14 CPI (estimated) | Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="650.00" y="28" width="48" height="228" class="event-band"><title>May 05 QRA (estimated) | May 07 NFP (estimated) | May 12 CPI (estimated) | May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title></rect>
+      <line x1="54" x2="736" y1="256.00" y2="256.00" class="grid" /><text x="10" y="260.00" class="axis-label">2.71</text><line x1="54" x2="736" y1="142.00" y2="142.00" class="grid" /><text x="10" y="146.00" class="axis-label">4.67</text><line x1="54" x2="736" y1="28.00" y2="28.00" class="grid" /><text x="10" y="32.00" class="axis-label">6.62</text>
+      <polygon points="54.00,84.16 116.00,83.03 178.00,76.26 240.00,69.97 302.00,66.50 364.00,62.70 426.00,56.71 488.00,48.05 550.00,46.71 612.00,44.59 674.00,43.72 736.00,45.07 736.00,240.28 674.00,238.93 612.00,234.49 550.00,233.42 488.00,234.04 426.00,230.86 364.00,224.36 302.00,213.57 240.00,207.78 178.00,198.62 116.00,189.52 54.00,175.74" class="band-outer" />
+      <polygon points="54.00,105.37 116.00,101.89 178.00,98.56 240.00,99.94 302.00,98.53 364.00,99.49 426.00,101.64 488.00,96.88 550.00,92.91 612.00,86.82 674.00,84.84 736.00,87.36 736.00,195.99 674.00,193.47 612.00,189.55 550.00,188.48 488.00,188.19 426.00,185.92 364.00,183.23 302.00,178.86 240.00,172.65 178.00,162.57 116.00,157.12 54.00,149.64" class="band-inner" />
+      <line x1="54" x2="736" y1="123.04" y2="123.04" class="today-line" />
+      <polyline points="54.00,126.30 116.00,129.16 178.00,131.67 240.00,133.88 302.00,135.83 364.00,137.56 426.00,139.08 488.00,140.44 550.00,141.64 612.00,142.71 674.00,143.66 736.00,144.51" class="p50-line" />
+      <polyline points="54.00,126.30 116.00,129.16 178.00,131.67 240.00,133.88 302.00,135.83 364.00,137.56 426.00,139.08 488.00,140.44 550.00,141.64 612.00,142.71 674.00,143.66 736.00,144.51" class="central-line" />
+      <text x="54.00" y="273.00" class="event-marker"><title>Jun 05 NFP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>N</text><text x="54.00" y="285.00" class="event-marker"><title>Jun 10 CPI | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>C</text><text x="54.00" y="297.00" class="event-marker"><title>Jun 17 FOMC SEP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>★</text><text x="54.00" y="309.00" class="event-marker"><title>Jun 25 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>P</text><text x="116.00" y="273.00" class="event-marker"><title>Aug 05 QRA (estimated) | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>Q</text><text x="116.00" y="285.00" class="event-marker"><title>Aug 07 NFP | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>N</text><text x="116.00" y="297.00" class="event-marker"><title>Aug 12 CPI | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>C</text><text x="116.00" y="309.00" class="event-marker"><title>Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>P</text><text x="178.00" y="273.00" class="event-marker"><title>Sep 04 NFP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>N</text><text x="178.00" y="285.00" class="event-marker"><title>Sep 11 CPI | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>C</text><text x="178.00" y="297.00" class="event-marker"><title>Sep 16 FOMC SEP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>★</text><text x="178.00" y="309.00" class="event-marker"><title>Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>P</text><text x="240.00" y="273.00" class="event-marker"><title>Oct 02 NFP | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>N</text><text x="240.00" y="285.00" class="event-marker"><title>Oct 14 CPI | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>C</text><text x="240.00" y="297.00" class="event-marker"><title>Oct 28 FOMC | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>F</text><text x="240.00" y="309.00" class="event-marker"><title>Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>P</text><text x="302.00" y="273.00" class="event-marker"><title>Nov 04 QRA (estimated) | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>Q</text><text x="302.00" y="285.00" class="event-marker"><title>Nov 06 NFP | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>N</text><text x="302.00" y="297.00" class="event-marker"><title>Nov 10 CPI | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>C</text><text x="302.00" y="309.00" class="event-marker"><title>Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>P</text><text x="364.00" y="273.00" class="event-marker"><title>Dec 04 NFP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>N</text><text x="364.00" y="285.00" class="event-marker"><title>Dec 09 FOMC SEP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>★</text><text x="364.00" y="297.00" class="event-marker"><title>Dec 10 CPI | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>C</text><text x="364.00" y="309.00" class="event-marker"><title>Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>P</text><text x="426.00" y="273.00" class="event-marker"><title>Jan 08 NFP (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="426.00" y="285.00" class="event-marker"><title>Jan 13 CPI (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="426.00" y="297.00" class="event-marker"><title>Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="488.00" y="273.00" class="event-marker"><title>Feb 03 QRA (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="488.00" y="285.00" class="event-marker"><title>Feb 05 NFP (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="488.00" y="297.00" class="event-marker"><title>Feb 11 CPI (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="488.00" y="309.00" class="event-marker"><title>Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="550.00" y="273.00" class="event-marker"><title>Mar 05 NFP (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="550.00" y="285.00" class="event-marker"><title>Mar 11 CPI (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="550.00" y="297.00" class="event-marker"><title>Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="612.00" y="273.00" class="event-marker"><title>Apr 02 NFP (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="612.00" y="285.00" class="event-marker"><title>Apr 14 CPI (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="612.00" y="297.00" class="event-marker"><title>Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="674.00" y="273.00" class="event-marker"><title>May 05 QRA (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="674.00" y="285.00" class="event-marker"><title>May 07 NFP (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="674.00" y="297.00" class="event-marker"><title>May 12 CPI (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="674.00" y="309.00" class="event-marker"><title>May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>P</text>
+      <text x="54.00" y="302" class="axis-label month-label">1</text><text x="116.00" y="302" class="axis-label month-label">2</text><text x="178.00" y="302" class="axis-label month-label">3</text><text x="240.00" y="302" class="axis-label month-label">4</text><text x="302.00" y="302" class="axis-label month-label">5</text><text x="364.00" y="302" class="axis-label month-label">6</text><text x="426.00" y="302" class="axis-label month-label">7</text><text x="488.00" y="302" class="axis-label month-label">8</text><text x="550.00" y="302" class="axis-label month-label">9</text><text x="612.00" y="302" class="axis-label month-label">10</text><text x="674.00" y="302" class="axis-label month-label">11</text><text x="736.00" y="302" class="axis-label month-label">12</text>
+    </svg>
+
+      <div class="legend">
+        <span><i class="swatch outer"></i>p10-p90</span>
+        <span><i class="swatch inner"></i>p25-p75</span>
+        <span><i class="stroke p50"></i>p50 (fan median)</span>
+        <span><i class="stroke central"></i>central (FADNS macro)</span>
+        <span><i class="stroke today"></i>today</span>
+      </div>
+    </article>
+
+    <article class="chart-card">
+      <div class="chart-head">
+        <h3>5s30s</h3>
+        <span>-17.0bp at 3m / -31.1bp at 12m</span>
+      </div>
+
+    <svg class="fan-svg" viewBox="0 0 760 310" role="img" aria-label="5s30s fan chart">
+      <title>5s30s 12-month fan chart</title>
+      <rect x="30.00" y="28" width="48" height="228" class="event-band"><title>Jun 05 NFP | Jun 10 CPI | Jun 17 FOMC SEP | Jun 25 PCE | Jul 02 NFP | Jul 14 CPI | Jul 29 FOMC | Jul 30 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title></rect><rect x="92.00" y="28" width="48" height="228" class="event-band"><title>Aug 05 QRA (estimated) | Aug 07 NFP | Aug 12 CPI | Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title></rect><rect x="154.00" y="28" width="48" height="228" class="event-band"><title>Sep 04 NFP | Sep 11 CPI | Sep 16 FOMC SEP | Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title></rect><rect x="216.00" y="28" width="48" height="228" class="event-band"><title>Oct 02 NFP | Oct 14 CPI | Oct 28 FOMC | Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title></rect><rect x="278.00" y="28" width="48" height="228" class="event-band"><title>Nov 04 QRA (estimated) | Nov 06 NFP | Nov 10 CPI | Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title></rect><rect x="340.00" y="28" width="48" height="228" class="event-band"><title>Dec 04 NFP | Dec 09 FOMC SEP | Dec 10 CPI | Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title></rect><rect x="402.00" y="28" width="48" height="228" class="event-band"><title>Jan 08 NFP (estimated) | Jan 13 CPI (estimated) | Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="464.00" y="28" width="48" height="228" class="event-band"><title>Feb 03 QRA (estimated) | Feb 05 NFP (estimated) | Feb 11 CPI (estimated) | Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="526.00" y="28" width="48" height="228" class="event-band"><title>Mar 05 NFP (estimated) | Mar 11 CPI (estimated) | Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="588.00" y="28" width="48" height="228" class="event-band"><title>Apr 02 NFP (estimated) | Apr 14 CPI (estimated) | Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title></rect><rect x="650.00" y="28" width="48" height="228" class="event-band"><title>May 05 QRA (estimated) | May 07 NFP (estimated) | May 12 CPI (estimated) | May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title></rect>
+      <line x1="54" x2="736" y1="256.00" y2="256.00" class="grid" /><text x="10" y="260.00" class="axis-label">-0.76</text><line x1="54" x2="736" y1="142.00" y2="142.00" class="grid" /><text x="10" y="146.00" class="axis-label">0.44</text><line x1="54" x2="736" y1="28.00" y2="28.00" class="grid" /><text x="10" y="32.00" class="axis-label">1.64</text>
+      <polygon points="54.00,61.07 116.00,66.45 178.00,62.11 240.00,60.76 302.00,59.55 364.00,58.44 426.00,63.09 488.00,63.01 550.00,61.73 612.00,55.70 674.00,49.15 736.00,43.72 736.00,234.85 674.00,240.28 612.00,233.06 550.00,231.22 488.00,229.17 426.00,216.72 364.00,212.06 302.00,200.07 240.00,192.23 178.00,185.85 116.00,179.39 54.00,174.01" class="band-outer" />
+      <polygon points="54.00,88.17 116.00,93.35 178.00,95.45 240.00,92.44 302.00,91.41 364.00,91.93 426.00,93.66 488.00,93.08 550.00,92.11 612.00,91.89 674.00,89.73 736.00,88.62 736.00,193.20 674.00,194.31 612.00,189.63 550.00,187.21 488.00,185.77 426.00,179.61 364.00,176.78 302.00,167.08 240.00,164.88 178.00,159.14 116.00,149.92 54.00,144.74" class="band-inner" />
+      <line x1="54" x2="736" y1="109.50" y2="109.50" class="today-line" />
+      <polyline points="54.00,116.26 116.00,121.54 178.00,125.67 240.00,128.91 302.00,131.45 364.00,133.44 426.00,135.00 488.00,136.23 550.00,137.19 612.00,137.95 674.00,138.55 736.00,139.01" class="p50-line" />
+      <polyline points="54.00,116.26 116.00,121.54 178.00,125.67 240.00,128.91 302.00,131.45 364.00,133.44 426.00,135.00 488.00,136.23 550.00,137.19 612.00,137.95 674.00,138.55 736.00,139.01" class="central-line" />
+      <text x="54.00" y="273.00" class="event-marker"><title>Jun 05 NFP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>N</text><text x="54.00" y="285.00" class="event-marker"><title>Jun 10 CPI | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>C</text><text x="54.00" y="297.00" class="event-marker"><title>Jun 17 FOMC SEP | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>★</text><text x="54.00" y="309.00" class="event-marker"><title>Jun 25 PCE | Jun 2026 contains NFP (6/05) + CPI (6/10) + FOMC (6/17) + PCE (6/25) + NFP (7/02) + CPI (7/14) + FOMC (7/29) + PCE (7/30); fan widened by configured event uncertainty.</title>P</text><text x="116.00" y="273.00" class="event-marker"><title>Aug 05 QRA (estimated) | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>Q</text><text x="116.00" y="285.00" class="event-marker"><title>Aug 07 NFP | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>N</text><text x="116.00" y="297.00" class="event-marker"><title>Aug 12 CPI | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>C</text><text x="116.00" y="309.00" class="event-marker"><title>Aug 26 PCE | Aug 2026 contains QRA (8/05, date estimated) + NFP (8/07) + CPI (8/12) + PCE (8/26); fan widened by configured event uncertainty.</title>P</text><text x="178.00" y="273.00" class="event-marker"><title>Sep 04 NFP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>N</text><text x="178.00" y="285.00" class="event-marker"><title>Sep 11 CPI | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>C</text><text x="178.00" y="297.00" class="event-marker"><title>Sep 16 FOMC SEP | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>★</text><text x="178.00" y="309.00" class="event-marker"><title>Sep 30 PCE | Sep 2026 contains NFP (9/04) + CPI (9/11) + FOMC (9/16) + PCE (9/30); fan widened by configured event uncertainty.</title>P</text><text x="240.00" y="273.00" class="event-marker"><title>Oct 02 NFP | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>N</text><text x="240.00" y="285.00" class="event-marker"><title>Oct 14 CPI | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>C</text><text x="240.00" y="297.00" class="event-marker"><title>Oct 28 FOMC | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>F</text><text x="240.00" y="309.00" class="event-marker"><title>Oct 29 PCE | Oct 2026 contains NFP (10/02) + CPI (10/14) + FOMC (10/28) + PCE (10/29); fan widened by configured event uncertainty.</title>P</text><text x="302.00" y="273.00" class="event-marker"><title>Nov 04 QRA (estimated) | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>Q</text><text x="302.00" y="285.00" class="event-marker"><title>Nov 06 NFP | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>N</text><text x="302.00" y="297.00" class="event-marker"><title>Nov 10 CPI | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>C</text><text x="302.00" y="309.00" class="event-marker"><title>Nov 25 PCE | Nov 2026 contains QRA (11/04, date estimated) + NFP (11/06) + CPI (11/10) + PCE (11/25); fan widened by configured event uncertainty.</title>P</text><text x="364.00" y="273.00" class="event-marker"><title>Dec 04 NFP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>N</text><text x="364.00" y="285.00" class="event-marker"><title>Dec 09 FOMC SEP | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>★</text><text x="364.00" y="297.00" class="event-marker"><title>Dec 10 CPI | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>C</text><text x="364.00" y="309.00" class="event-marker"><title>Dec 23 PCE | Dec 2026 contains NFP (12/04) + FOMC (12/09) + CPI (12/10) + PCE (12/23); fan widened by configured event uncertainty.</title>P</text><text x="426.00" y="273.00" class="event-marker"><title>Jan 08 NFP (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="426.00" y="285.00" class="event-marker"><title>Jan 13 CPI (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="426.00" y="297.00" class="event-marker"><title>Jan 29 PCE (estimated) | Jan 2027 contains NFP (1/08, date estimated) + CPI (1/13, date estimated) + PCE (1/29, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="488.00" y="273.00" class="event-marker"><title>Feb 03 QRA (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="488.00" y="285.00" class="event-marker"><title>Feb 05 NFP (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="488.00" y="297.00" class="event-marker"><title>Feb 11 CPI (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="488.00" y="309.00" class="event-marker"><title>Feb 26 PCE (estimated) | Feb 2027 contains QRA (2/03, date estimated) + NFP (2/05, date estimated) + CPI (2/11, date estimated) + PCE (2/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="550.00" y="273.00" class="event-marker"><title>Mar 05 NFP (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="550.00" y="285.00" class="event-marker"><title>Mar 11 CPI (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="550.00" y="297.00" class="event-marker"><title>Mar 26 PCE (estimated) | Mar 2027 contains NFP (3/05, date estimated) + CPI (3/11, date estimated) + PCE (3/26, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="612.00" y="273.00" class="event-marker"><title>Apr 02 NFP (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="612.00" y="285.00" class="event-marker"><title>Apr 14 CPI (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="612.00" y="297.00" class="event-marker"><title>Apr 30 PCE (estimated) | Apr 2027 contains NFP (4/02, date estimated) + CPI (4/14, date estimated) + PCE (4/30, date estimated); fan widened by configured event uncertainty.</title>P</text><text x="674.00" y="273.00" class="event-marker"><title>May 05 QRA (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>Q</text><text x="674.00" y="285.00" class="event-marker"><title>May 07 NFP (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>N</text><text x="674.00" y="297.00" class="event-marker"><title>May 12 CPI (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>C</text><text x="674.00" y="309.00" class="event-marker"><title>May 28 PCE (estimated) | May 2027 contains QRA (5/05, date estimated) + NFP (5/07, date estimated) + CPI (5/12, date estimated) + PCE (5/28, date estimated); fan widened by configured event uncertainty.</title>P</text>
+      <text x="54.00" y="302" class="axis-label month-label">1</text><text x="116.00" y="302" class="axis-label month-label">2</text><text x="178.00" y="302" class="axis-label month-label">3</text><text x="240.00" y="302" class="axis-label month-label">4</text><text x="302.00" y="302" class="axis-label month-label">5</text><text x="364.00" y="302" class="axis-label month-label">6</text><text x="426.00" y="302" class="axis-label month-label">7</text><text x="488.00" y="302" class="axis-label month-label">8</text><text x="550.00" y="302" class="axis-label month-label">9</text><text x="612.00" y="302" class="axis-label month-label">10</text><text x="674.00" y="302" class="axis-label month-label">11</text><text x="736.00" y="302" class="axis-label month-label">12</text>
+    </svg>
+
+      <div class="legend">
+        <span><i class="swatch outer"></i>p10-p90</span>
+        <span><i class="swatch inner"></i>p25-p75</span>
+        <span><i class="stroke p50"></i>p50 (fan median)</span>
+        <span><i class="stroke central"></i>central (FADNS macro)</span>
+        <span><i class="stroke today"></i>today</span>
+      </div>
+    </article>
+
+      </div>
+    </details>
+  </section>
+
+
+    <section class="panel" id="estimates">
+      <div class="section-kicker">Numbers</div>
+      <h2>Monthly Estimates — central path (p10–p90 range)</h2>
+      <table class="value-table">
+        <thead><tr><th>Month</th><th>2Y</th><th>10Y</th><th>2s10s</th></tr></thead>
+        <tbody><tr><th>m1</th><td><b>4.05</b><span class='range'>3.04 – 4.89</span></td><td><b>4.46</b><span class='range'>3.53 – 5.27</span></td><td><b>0.41</b><span class='range'>-0.20 – 1.04</span></td></tr><tr><th>m2</th><td><b>4.06</b><span class='range'>2.88 – 4.85</span></td><td><b>4.46</b><span class='range'>3.35 – 5.32</span></td><td><b>0.40</b><span class='range'>-0.20 – 1.04</span></td></tr><tr><th>m3</th><td><b>4.06</b><span class='range'>2.59 – 5.05</span></td><td><b>4.45</b><span class='range'>3.18 – 5.48</span></td><td><b>0.39</b><span class='range'>-0.23 – 1.10</span></td></tr><tr><th>m4</th><td><b>4.06</b><span class='range'>2.44 – 5.18</span></td><td><b>4.44</b><span class='range'>3.10 – 5.55</span></td><td><b>0.38</b><span class='range'>-0.26 – 1.20</span></td></tr><tr><th>m5</th><td><b>4.05</b><span class='range'>2.45 – 5.20</span></td><td><b>4.43</b><span class='range'>3.01 – 5.58</span></td><td><b>0.38</b><span class='range'>-0.28 – 1.20</span></td></tr><tr><th>m6</th><td><b>4.05</b><span class='range'>2.27 – 5.40</span></td><td><b>4.42</b><span class='range'>2.89 – 5.66</span></td><td><b>0.38</b><span class='range'>-0.41 – 1.33</span></td></tr><tr><th>m7</th><td><b>4.04</b><span class='range'>2.27 – 5.39</span></td><td><b>4.41</b><span class='range'>2.77 – 5.65</span></td><td><b>0.37</b><span class='range'>-0.42 – 1.32</span></td></tr><tr><th>m8</th><td><b>4.03</b><span class='range'>2.27 – 5.45</span></td><td><b>4.40</b><span class='range'>2.65 – 5.73</span></td><td><b>0.37</b><span class='range'>-0.50 – 1.32</span></td></tr><tr><th>m9</th><td><b>4.02</b><span class='range'>2.26 – 5.49</span></td><td><b>4.39</b><span class='range'>2.66 – 5.74</span></td><td><b>0.37</b><span class='range'>-0.56 – 1.33</span></td></tr><tr><th>m10</th><td><b>4.01</b><span class='range'>2.23 – 5.59</span></td><td><b>4.38</b><span class='range'>2.65 – 5.82</span></td><td><b>0.37</b><span class='range'>-0.61 – 1.36</span></td></tr><tr><th>m11</th><td><b>4.00</b><span class='range'>2.19 – 5.75</span></td><td><b>4.36</b><span class='range'>2.61 – 5.86</span></td><td><b>0.37</b><span class='range'>-0.71 – 1.46</span></td></tr><tr><th>m12</th><td><b>3.99</b><span class='range'>2.17 – 5.72</span></td><td><b>4.35</b><span class='range'>2.59 – 5.84</span></td><td><b>0.37</b><span class='range'>-0.71 – 1.46</span></td></tr></tbody>
+      </table>
+      <p class="source-line">Levels in % (2s10s is a spread in %, e.g. 0.38 = 38bp).
+      Central = macro-adjusted FADNS path; p10–p90 ≈ 80% range. These are scenario
+      estimates, not point forecasts.</p>
+    </section>
+
+
+    <section class="panel" id="baselines">
+      <div class="section-kicker">Baseline</div>
+      <h2>10Y Baselines & Market Range</h2>
+      <div class="metric-grid">
+        <div><span>random-walk 10Y</span><b>4.45%</b></div>
+        <div><span>12m central 10Y</span><b>4.35%</b></div>
+        <div><span>market low</span><b>3.90%</b></div>
+        <div><span>market high</span><b>4.80%</b></div>
+      </div>
+      <p class="plain-label">12m central is inside observed range versus the manual/free market-observed range.</p>
+      <p class="source-line">Range source: manual_market_observed.
+      Manually observed current market range for the 10Y outcome. Free-data placeholder until an explicit free market/probability feed is wired. Random-walk baseline holds the current 10Y level flat.</p>
+    </section>
+
+
+    <section class="panel" id="polymarket-check">
+      <div class="section-kicker">External Market Check</div>
+      <h2>Polymarket External Check</h2>
+      <div class="metric-grid">
+        <div><span>status</span><b>available</b></div>
+        <div><span>alignment</span><b>mixed</b></div>
+        <div><span>source</span><b>polymarket_gamma</b></div>
+        <div><span>usage</span><b>external_check_only_no_central_shift</b></div>
+      </div>
+      <p class="plain-label">TraceYield is range-bound while Polymarket leans lower: lower-threshold Yes 0.48 vs higher-threshold Yes 0.22. External check only; no central, p50, fan, overlay, or bp magnitude changed.</p>
+      <table class="driver-table">
+        <thead><tr><th>Market</th><th>Yes</th><th>bid / ask</th><th>spread</th><th>volume</th><th>conf</th><th>flags</th></tr></thead>
+        <tbody><tr><th>Will the 10-year Treasury yield hit 5.0% before 2027?</th><td>0.135</td><td>0.120 / 0.150</td><td>0.030</td><td>57495</td><td>med</td><td>none</td></tr><tr><th>Will the 10-year Treasury yield hit 4.8% before 2027?</th><td>0.220</td><td>0.180 / 0.260</td><td>0.080</td><td>50012</td><td>med</td><td>none</td></tr><tr><th>Will the 10-year Treasury yield dip below 3.9% before 2027?</th><td>0.485</td><td>0.470 / 0.500</td><td>0.030</td><td>40813</td><td>med</td><td>none</td></tr><tr><th>Will the 10-year Treasury yield dip below 1.0% before 2027?</th><td>0.038</td><td>0.038 / 0.039</td><td>0.001</td><td>39661</td><td>med</td><td>none</td></tr><tr><th>Will the 10-year Treasury yield dip below 3.5% before 2027?</th><td>0.225</td><td>0.190 / 0.260</td><td>0.070</td><td>31778</td><td>med</td><td>none</td></tr></tbody>
+      </table>
+      <p class="source-line">Read-only public Polymarket API snapshot. This is a sanity check, not a model input.</p>
+    </section>
+
+
+    <section class="panel factor-explorer" id="factor-explorer">
+      <div class="section-kicker">Interactive Attribution</div>
+      <h2>Macro Factor Explorer</h2>
+      <div class="plain-english-box">
+        <h3>What this means in plain English</h3>
+        <p><b>Random-walk curve</b> means "assume the yield does not move at all" for every future month. It is the honest baseline for rates because the long end is hard to beat.</p>
+        <p><b>Base</b> means the curve follows its own past shape without macro help. <b>Selected factors</b> means adding only the macro forces you choose below. <b>Official central</b> is selected factors with every macro block turned on.</p>
+      </div>
+      <div class="factor-toolbar">
+        <div class="factor-checks"><label class='factor-chip'><input type="checkbox" checked data-factor="inflation_regime" /><span>Inflation</span></label><label class='factor-chip'><input type="checkbox" checked data-factor="policy_path" /><span>Policy</span></label><label class='factor-chip'><input type="checkbox" checked data-factor="growth_risk" /><span>Growth</span></label><label class='factor-chip'><input type="checkbox" checked data-factor="liquidity_supply" /><span>Liquidity</span></label><label class='factor-chip'><input type="checkbox" checked data-factor="global_relative_value" /><span>Global</span></label></div>
+        <label class="target-picker"><span>Target</span><select id="factor-target"><option value='2Y'>2Y</option><option value='10Y' selected>10Y</option><option value='2s10s'>2s10s</option></select></label>
+      </div>
+      <label class="random-walk-toggle"><input type="checkbox" id="factor-show-random-walk" checked /> <span>Show random-walk curve</span></label>
+      <details class="factor-breakdown" open>
+        <summary>Factor Breakdown</summary>
+        <p class="source-line">Category toggles are exact block-level attribution. Sub-factor toggles allocate that block's contribution across its included inputs for explanation-only what-if views; they do not retrain the model or change the official path.</p>
+        <div class="factor-detail-grid"><article class='factor-detail-card'><h3>Inflation</h3><p><b>Includes:</b> CPI / Core CPI, PCE / Core PCE, breakevens, and 5y5y inflation expectations.</p><p><b>Why it can move yields:</b> When inflation is high, the dollars paid back by a bond buy less in the future, so investors demand more compensation. The Fed also has less room to cut and may need to keep short rates high to cool demand. Bond price down, yield up: that is the basic pressure. Higher yields also make borrowing more expensive, which helps slow spending and cool inflation. When inflation cools, that pressure can reverse.</p><p class='source-line'><b>Transmission caveat:</b> Not one-for-one: CPI/PCE first changes inflation expectations and Fed expectations, then the curve reacts.</p><div class='subfactor-grid'><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="CPIAUCSL" /><span>Headline CPI YoY</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="CPILFESL" /><span>Core CPI YoY</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="PCEPI" /><span>Headline PCE YoY</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="PCEPILFE" /><span>Core PCE YoY</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="T5YIE" /><span>5Y breakeven inflation</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="T10YIE" /><span>10Y breakeven inflation</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="inflation_regime" data-subfactor="T5YIFR" /><span>5Y5Y forward inflation</span></label></div></article><article class='factor-detail-card'><h3>Policy</h3><p><b>Includes:</b> Fed target/EFFR, FOMC tone, front-end Treasury proxy, and market-vs-dot gap.</p><p><b>Why it can move yields:</b> The 2Y is basically the market asking: where will the Fed keep rates over the next few meetings? If the market thinks cuts are delayed, investors demand a higher yield on short Treasuries. That can also flatten 2s10s because the front end moves more than the long end.</p><p class='source-line'><b>Transmission caveat:</b> This is the most direct channel for the front end, but Treasury bills also include bill basis and risk premium.</p><div class='subfactor-grid'><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="fomc_tone" /><span>FOMC tone</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="DFEDTARU" /><span>Fed target upper bound</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="EFFR" /><span>Effective fed funds</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="DGS2" /><span>2Y vs policy/dots</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="DGS3MO" /><span>3M bill proxy</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="DGS6MO" /><span>6M bill forward proxy</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="policy_path" data-subfactor="FEDTARMD" /><span>SEP dot median</span></label></div></article><article class='factor-detail-card'><h3>Growth</h3><p><b>Includes:</b> Payrolls, unemployment, claims, manufacturing, retail sales, and JOLTS.</p><p><b>Why it can move yields:</b> Strong jobs, spending, and production mean the economy can handle higher rates. That makes Fed cuts less urgent and can push yields up. Weak labor or spending does the opposite: markets start to price slower growth, safer assets, and easier policy.</p><p class='source-line'><b>Transmission caveat:</b> Growth usually works through a chain: data -&gt; recession risk / Fed path -&gt; curve shape.</p><div class='subfactor-grid'><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="growth_risk" data-subfactor="PAYEMS" /><span>Nonfarm payrolls</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="growth_risk" data-subfactor="UNRATE" /><span>Unemployment rate</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="growth_risk" data-subfactor="ICSA" /><span>Initial claims</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="growth_risk" data-subfactor="IPMAN" /><span>Manufacturing production</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="growth_risk" data-subfactor="RSAFS" /><span>Retail sales</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="growth_risk" data-subfactor="JTSJOL" /><span>JOLTS openings</span></label></div></article><article class='factor-detail-card'><h3>Liquidity / Supply</h3><p><b>Includes:</b> Fed balance sheet, reserves, RRP, Treasury General Account, and auction stress.</p><p><b>Why it can move yields:</b> Treasury yields are also a market-clearing price. If there is more Treasury supply or less cash/liquidity willing to absorb it, buyers may require a higher yield. That is why this block often matters more for 10Y/30Y term premium than for the policy front end.</p><p class='source-line'><b>Transmission caveat:</b> This is mostly a term-premium channel; it is not the same thing as expected Fed cuts.</p><div class='subfactor-grid'><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="liquidity_supply" data-subfactor="WALCL" /><span>Fed balance sheet</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="liquidity_supply" data-subfactor="WRESBAL" /><span>Bank reserves</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="liquidity_supply" data-subfactor="RRPONTSYD" /><span>Reverse repo</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="liquidity_supply" data-subfactor="WTREGEN" /><span>Treasury General Account</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="liquidity_supply" data-subfactor="treasury_auction_stress" /><span>Auction stress</span></label></div></article><article class='factor-detail-card'><h3>Global Relative Value</h3><p><b>Includes:</b> US- Germany 10Y spread, US- Japan 10Y spread, and broad dollar index.</p><p><b>Why it can move yields:</b> Global investors compare US yields with German/Japanese yields after currency and hedging costs. If US yields look attractive, demand can cap yields. If the dollar or hedging cost makes US bonds less attractive, the US yield may need to rise to pull buyers in.</p><p class='source-line'><b>Transmission caveat:</b> This is a relative-value and capital-flow channel, not a standalone macro forecast.</p><div class='subfactor-grid'><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="global_relative_value" data-subfactor="IRLTLT01DEM156N" /><span>Germany 10Y comparison</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="global_relative_value" data-subfactor="IRLTLT01JPM156N" /><span>Japan 10Y comparison</span></label><label class='subfactor-chip'><input type="checkbox" checked data-parent-factor="global_relative_value" data-subfactor="DTWEXBGS" /><span>Broad dollar index</span></label></div></article></div>
+      </details>
+      <div class="factor-layout">
+        <div class="factor-chart-shell">
+          <svg id="factor-scenario-svg" viewBox="0 0 860 360" role="img" aria-label="Selected macro factor path"></svg>
+        </div>
+        <div class="factor-summary" id="factor-summary">
+          <span>selected 12m</span>
+          <b>n/a</b>
+          <span>vs today</span>
+          <strong>n/a</strong>
+        </div>
+      </div>
+      <table class="factor-table">
+        <thead><tr><th>Month</th><th>Base</th><th>Selected factors</th><th>Official central</th><th>Random-walk curve</th><th>vs today</th><th>p10-p90</th></tr></thead>
+        <tbody id="factor-monthly-body"><tr><th>m1</th><td>4.307</td><td>4.459</td><td>4.459</td><td>4.453</td><td>0.6bp</td><td>3.535 - 5.272</td></tr><tr><th>m2</th><td>4.177</td><td>4.458</td><td>4.458</td><td>4.453</td><td>0.5bp</td><td>3.348 - 5.321</td></tr><tr><th>m3</th><td>4.061</td><td>4.453</td><td>4.453</td><td>4.453</td><td>0.0bp</td><td>3.182 - 5.479</td></tr><tr><th>m4</th><td>3.958</td><td>4.444</td><td>4.444</td><td>4.453</td><td>-0.8bp</td><td>3.102 - 5.554</td></tr><tr><th>m5</th><td>3.865</td><td>4.434</td><td>4.434</td><td>4.453</td><td>-1.9bp</td><td>3.013 - 5.576</td></tr><tr><th>m6</th><td>3.783</td><td>4.423</td><td>4.423</td><td>4.453</td><td>-3.0bp</td><td>2.894 - 5.657</td></tr><tr><th>m7</th><td>3.709</td><td>4.411</td><td>4.411</td><td>4.453</td><td>-4.2bp</td><td>2.775 - 5.648</td></tr><tr><th>m8</th><td>3.643</td><td>4.398</td><td>4.398</td><td>4.453</td><td>-5.4bp</td><td>2.646 - 5.729</td></tr><tr><th>m9</th><td>3.584</td><td>4.387</td><td>4.387</td><td>4.453</td><td>-6.6bp</td><td>2.657 - 5.744</td></tr><tr><th>m10</th><td>3.530</td><td>4.375</td><td>4.375</td><td>4.453</td><td>-7.8bp</td><td>2.646 - 5.819</td></tr><tr><th>m11</th><td>3.483</td><td>4.364</td><td>4.364</td><td>4.453</td><td>-8.8bp</td><td>2.612 - 5.861</td></tr><tr><th>m12</th><td>3.440</td><td>4.354</td><td>4.354</td><td>4.453</td><td>-9.9bp</td><td>2.592 - 5.841</td></tr></tbody>
+      </table>
+      <p class="source-line">Factor explorer uses exact base-vs-adjusted attribution from the saved trajectory. It is a view-layer what-if; official central and fan bands are unchanged.</p>
+    </section>
+
+
+    <section class="panel" id="why-it-moves">
+      <div class="section-kicker">Mechanism</div>
+      <h2>Why It Moves</h2>
+      <p class="source-line">These are not simple direct rules. The chain is: released data -> macro block z-score -> fitted ridge transition for Nelson-Siegel level/slope/curvature -> reconstructed tenor path. The table shows the 10Y 12m contribution from each block.</p>
+      <table class="driver-table">
+        <thead><tr><th>Block</th><th>10Y 12m contribution</th><th>Lean</th><th>Transmission chain</th></tr></thead>
+        <tbody><tr><th>Policy</th><td>+63.5bp</td><td>upward pressure</td><td>The 2Y is basically the market asking: where will the Fed keep rates over the next few meetings? If the market thinks cuts are delayed, investors demand a higher yield on short Treasuries. That can also flatten 2s10s because the front end moves more than the long end.</td></tr><tr><th>Global Relative Value</th><td>+18.3bp</td><td>upward pressure</td><td>Global investors compare US yields with German/Japanese yields after currency and hedging costs. If US yields look attractive, demand can cap yields. If the dollar or hedging cost makes US bonds less attractive, the US yield may need to rise to pull buyers in.</td></tr><tr><th>Inflation</th><td>+11.3bp</td><td>upward pressure</td><td>When inflation is high, the dollars paid back by a bond buy less in the future, so investors demand more compensation. The Fed also has less room to cut and may need to keep short rates high to cool demand. Bond price down, yield up: that is the basic pressure. Higher yields also make borrowing more expensive, which helps slow spending and cool inflation. When inflation cools, that pressure can reverse.</td></tr><tr><th>Growth</th><td>-1.6bp</td><td>downward pressure</td><td>Strong jobs, spending, and production mean the economy can handle higher rates. That makes Fed cuts less urgent and can push yields up. Weak labor or spending does the opposite: markets start to price slower growth, safer assets, and easier policy.</td></tr><tr><th>Liquidity / Supply</th><td>-0.0bp</td><td>near neutral</td><td>Treasury yields are also a market-clearing price. If there is more Treasury supply or less cash/liquidity willing to absorb it, buyers may require a higher yield. That is why this block often matters more for 10Y/30Y term premium than for the policy front end.</td></tr></tbody>
+      </table>
+    </section>
+
+
+    <section class="panel mapping-sandbox" id="policy-mapping">
+      <div class="section-kicker">Config Sandbox</div>
+      <h2>Policy Mapping Sandbox</h2>
+      <p class="source-line">This shows the current FOMC probability-to-overlay map. Adjusting these fields is an in-page scenario sandbox only; it does not rewrite config or the official path.</p>
+      <div class="mapping-controls">
+        <label><span>cut probability</span><input id="mapping-cut-prob" type="number" min="0" max="1" step="0.01" value="0.01" /></label>
+        <label><span>hike probability</span><input id="mapping-hike-prob" type="number" min="0" max="1" step="0.01" value="0.00" /></label>
+        <label><span>cut_prob_high</span><input id="mapping-cut-threshold" type="number" min="0" max="1" step="0.01" value="0.60" /></label>
+        <label><span>hike_prob_high</span><input id="mapping-hike-threshold" type="number" min="0" max="1" step="0.01" value="0.60" /></label>
+        <label><span>front_end_cut_bp</span><input id="mapping-cut-step" type="number" step="0.5" value="-12.5" /></label>
+        <label><span>front_end_hike_bp</span><input id="mapping-hike-step" type="number" step="0.5" value="12.5" /></label>
+      </div>
+      <table class="driver-table">
+        <thead><tr><th>Target</th><th>official central</th><th>sandbox central</th><th>sandbox step</th></tr></thead>
+        <tbody id="mapping-result-body"></tbody>
+      </table>
+      <p class="plain-label">Current rule: if cut probability >= cut_prob_high, apply front_end_cut_bp to 2Y; if hike probability >= hike_prob_high, apply front_end_hike_bp. 10Y is not shifted by this front-end surprise overlay.</p>
+    </section>
+
+
+    <section class="panel" id="base-vs-adjusted">
+      <div class="section-kicker">Why — Base vs Adjusted</div>
+      <h2>Macro augmentation vs base FADNS (at 6m horizon)</h2>
+      <p class="source-line">Base = FADNS with no macro. Adjusted = with 5 macro blocks.
+      Each block's bp contribution sums exactly to the total change (linearity:
+      passed). Magnitudes: fitted ridge transition B matrix; GPT categories do not inject bp.</p>
+      <table class="bva-table">
+        <thead><tr><th>Tenor</th><th>Base</th><th>Adjusted</th><th>Δbp</th><th>Inflation</th><th>Policy</th><th>Growth</th><th>Liquidity</th><th>Global</th></tr></thead>
+        <tbody><tr><th>2Y</th><td>3.41</td><td><b>4.05</b></td><td>+64.1</td><td>+12.2</td><td>+57.7</td><td>-10.0</td><td>-0.3</td><td>+4.5</td></tr><tr><th>10Y</th><td>3.78</td><td><b>4.42</b></td><td>+64.0</td><td>+6.7</td><td>+42.9</td><td>+1.5</td><td>+0.1</td><td>+12.9</td></tr><tr><th>2s10s</th><td>0.38</td><td><b>0.38</b></td><td>-0.1</td><td>-5.5</td><td>-14.8</td><td>+11.4</td><td>+0.4</td><td>+8.4</td></tr></tbody>
+      </table>
+      <h3>Bounded GPT regime (live GPT read)</h3>
+      <div class="regime-row"><span class='regime-chip'>Inflation: <b>neutral</b></span><span class='regime-chip'>Policy: <b>neutral</b></span><span class='regime-chip'>Growth: <b>neutral</b></span><span class='regime-chip'>Liquidity: <b>tight</b></span><span class='regime-chip'>Global: <b>neutral</b></span></div>
+      <p class="source-line">The Federal Reserve remains in a hawkish stance due to concerns about potential future inflation pressures even as current inflation appears to be stabilizing. Economic growth is maintaining a steady pace, neither accelerating nor decelerating significantly. Monetary policy is focused on tightening liquidity conditions to ensure inflation is kept in check, though the global market appears balanced, with no significant shifts in relative value.</p>
+    </section>
+
+
+    <section class="panel policy-panel" id="policy-path">
+      <div class="section-kicker">Policy Path</div>
+      <h2>Front-end driver: HOLD / low</h2>
+      <p class="quality-note">proxy only, low confidence</p>
+      <div class="metric-grid">
+        <div><span>3m implied</span><b>3.78%</b></div>
+        <div><span>6m implied</span><b>3.80%</b></div>
+        <div><span>12m implied</span><b>3.87%</b></div>
+        <div><span>Dot median</span><b>3.40%</b></div>
+      </div>
+      <p class="plain-label">market prices LESS easing than the dots (+40bp)</p>
+      <p class="source-line">Source: atlanta_mpt_object_pod. Atlanta Fed MPT probability source; FRED proxy supplies short-rate path. FRED proxy (3m=DGS3MO; 6m=2*DGS6MO-DGS3MO; 12m=2*DGS1-DGS6MO) says hold: 6m 3.8 vs current policy 3.75. This is a Treasury/front-end proxy, not futures pricing; the +/-25bp HOLD band allows for bill-vs-funds basis and term premium.</p>
+      <div class="market-row">
+        <span>DGS2 4.05%</span>
+        <span>DGS5 4.18%</span>
+        <span>2s10s 0.42</span>
+        <span>confirmation: diverges</span>
+      </div>
+    </section>
+
+
+    <section class="panel" id="base-adjusted">
+      <div class="section-kicker">Attribution</div>
+      <h2>Base vs Adjusted</h2>
+      <p class="plain-label">Magnitudes come from the fitted transition B matrix; GPT categories do not inject bp.</p>
+      <p>inflation: neutral, policy: hawkish, growth: neutral, liquidity_supply: tight, global_relative_value: neutral</p>
+      <p class="source-line">The Federal Reserve remains in a hawkish stance due to concerns about potential future inflation pressures even as current inflation appears to be stabilizing. Economic growth is maintaining a steady pace, neither accelerating nor decelerating significantly. Monetary policy is focused on tightening liquidity conditions to ensure inflation is kept in check, though the global market appears balanced, with no significant shifts in relative value.</p>
+      <table class="driver-table">
+        <thead><tr><th>Path</th><th>base</th><th>adjusted</th><th>adjusted-base</th></tr></thead>
+        <tbody><tr><th>3m 2Y</th><td>3.669</td><td>4.062</td><td>39.30bp</td></tr><tr><th>3m 10Y</th><td>4.061</td><td>4.453</td><td>39.20bp</td></tr><tr><th>3m 2s10s</th><td>0.392</td><td>0.391</td><td>-0.10bp</td></tr><tr><th>6m 2Y</th><td>3.405</td><td>4.046</td><td>64.11bp</td></tr><tr><th>6m 10Y</th><td>3.783</td><td>4.423</td><td>63.97bp</td></tr><tr><th>6m 2s10s</th><td>0.378</td><td>0.376</td><td>-0.14bp</td></tr></tbody>
+      </table>
+      <div class="attrib-bars"><div class="attrib-row"><span>3m 2Y inflation_regime</span><div class="attrib-track"><i style="width:19.2%; background:var(--accent-2);"></i></div><b>+6.50bp</b></div><div class="attrib-row"><span>3m 2Y policy_path</span><div class="attrib-track"><i style="width:100.0%; background:var(--accent-2);"></i></div><b>+33.80bp</b></div><div class="attrib-row"><span>3m 2Y growth_risk</span><div class="attrib-track"><i style="width:12.1%; background:var(--accent);"></i></div><b>-4.08bp</b></div><div class="attrib-row"><span>3m 2Y liquidity_supply</span><div class="attrib-track"><i style="width:0.4%; background:var(--accent);"></i></div><b>-0.13bp</b></div><div class="attrib-row"><span>3m 2Y global_relative_value</span><div class="attrib-track"><i style="width:9.5%; background:var(--accent-2);"></i></div><b>+3.21bp</b></div><div class="attrib-row"><span>3m 10Y inflation_regime</span><div class="attrib-track"><i style="width:14.2%; background:var(--accent-2);"></i></div><b>+3.67bp</b></div><div class="attrib-row"><span>3m 10Y policy_path</span><div class="attrib-track"><i style="width:100.0%; background:var(--accent-2);"></i></div><b>+25.91bp</b></div><div class="attrib-row"><span>3m 10Y growth_risk</span><div class="attrib-track"><i style="width:7.0%; background:var(--accent-2);"></i></div><b>+1.81bp</b></div><div class="attrib-row"><span>3m 10Y liquidity_supply</span><div class="attrib-track"><i style="width:0.3%; background:var(--accent-2);"></i></div><b>+0.07bp</b></div><div class="attrib-row"><span>3m 10Y global_relative_value</span><div class="attrib-track"><i style="width:29.8%; background:var(--accent-2);"></i></div><b>+7.73bp</b></div><div class="attrib-row"><span>3m 2s10s inflation_regime</span><div class="attrib-track"><i style="width:35.9%; background:var(--accent);"></i></div><b>-2.83bp</b></div><div class="attrib-row"><span>3m 2s10s policy_path</span><div class="attrib-track"><i style="width:100.0%; background:var(--accent);"></i></div><b>-7.89bp</b></div><div class="attrib-row"><span>3m 2s10s growth_risk</span><div class="attrib-track"><i style="width:74.7%; background:var(--accent-2);"></i></div><b>+5.89bp</b></div><div class="attrib-row"><span>3m 2s10s liquidity_supply</span><div class="attrib-track"><i style="width:2.6%; background:var(--accent-2);"></i></div><b>+0.20bp</b></div><div class="attrib-row"><span>3m 2s10s global_relative_value</span><div class="attrib-track"><i style="width:57.4%; background:var(--accent-2);"></i></div><b>+4.52bp</b></div><div class="attrib-row"><span>6m 2Y inflation_regime</span><div class="attrib-track"><i style="width:21.1%; background:var(--accent-2);"></i></div><b>+12.17bp</b></div><div class="attrib-row"><span>6m 2Y policy_path</span><div class="attrib-track"><i style="width:100.0%; background:var(--accent-2);"></i></div><b>+57.70bp</b></div><div class="attrib-row"><span>6m 2Y growth_risk</span><div class="attrib-track"><i style="width:17.3%; background:var(--accent);"></i></div><b>-9.96bp</b></div><div class="attrib-row"><span>6m 2Y liquidity_supply</span><div class="attrib-track"><i style="width:0.6%; background:var(--accent);"></i></div><b>-0.32bp</b></div><div class="attrib-row"><span>6m 2Y global_relative_value</span><div class="attrib-track"><i style="width:7.9%; background:var(--accent-2);"></i></div><b>+4.53bp</b></div><div class="attrib-row"><span>6m 10Y inflation_regime</span><div class="attrib-track"><i style="width:15.6%; background:var(--accent-2);"></i></div><b>+6.68bp</b></div><div class="attrib-row"><span>6m 10Y policy_path</span><div class="attrib-track"><i style="width:100.0%; background:var(--accent-2);"></i></div><b>+42.86bp</b></div><div class="attrib-row"><span>6m 10Y growth_risk</span><div class="attrib-track"><i style="width:3.5%; background:var(--accent-2);"></i></div><b>+1.48bp</b></div><div class="attrib-row"><span>6m 10Y liquidity_supply</span><div class="attrib-track"><i style="width:0.2%; background:var(--accent-2);"></i></div><b>+0.07bp</b></div><div class="attrib-row"><span>6m 10Y global_relative_value</span><div class="attrib-track"><i style="width:30.1%; background:var(--accent-2);"></i></div><b>+12.88bp</b></div><div class="attrib-row"><span>6m 2s10s inflation_regime</span><div class="attrib-track"><i style="width:37.0%; background:var(--accent);"></i></div><b>-5.49bp</b></div><div class="attrib-row"><span>6m 2s10s policy_path</span><div class="attrib-track"><i style="width:100.0%; background:var(--accent);"></i></div><b>-14.84bp</b></div><div class="attrib-row"><span>6m 2s10s growth_risk</span><div class="attrib-track"><i style="width:77.1%; background:var(--accent-2);"></i></div><b>+11.45bp</b></div><div class="attrib-row"><span>6m 2s10s liquidity_supply</span><div class="attrib-track"><i style="width:2.6%; background:var(--accent-2);"></i></div><b>+0.39bp</b></div><div class="attrib-row"><span>6m 2s10s global_relative_value</span><div class="attrib-track"><i style="width:56.3%; background:var(--accent-2);"></i></div><b>+8.35bp</b></div></div>
+    </section>
+
+
+    <section class="panel" id="drivers">
+      <div class="section-kicker">Why</div>
+      <h2>Driver Why Table</h2>
+      <table class="driver-table">
+        <thead><tr><th>Input</th><th>front-end lean</th><th>long-end lean</th><th>Reason</th></tr></thead>
+        <tbody><tr><th>policy path</th><td>→</td><td>→</td><td>FRED/probability path drives the front end; low-confidence proxy is labeled when applicable.</td></tr>
+<tr><th>inflation</th><td>↑</td><td>↑</td><td>Released CPI/PCE feed the inflation block; upcoming CPI/PCE dates widen the range only.</td></tr>
+<tr><th>growth</th><td>↑</td><td>→</td><td>Released labor data feed the growth block; upcoming NFP dates add uncertainty only.</td></tr>
+<tr><th>liquidity-supply</th><td>→</td><td>↑</td><td>Realized Treasury liquidity/auction stress can move central; upcoming QRA dates widen fan only.</td></tr>
+<tr><th>risk-off</th><td>→</td><td>→</td><td>Flight-to-quality pressure is a watch item; no news crawler is used here.</td></tr></tbody>
+      </table>
+    </section>
+
+
+    <section class="panel" id="timeline">
+      <div class="section-kicker">Calendar</div>
+      <h2>Event Timeline</h2>
+      <ol class="timeline"><li><time>Jun 05 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Jun 10 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Jun 17 FOMC SEP</time><span>policy decision; directional step only if surprise probabilities are high</span></li><li><time>Jun 25 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Jul 02 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Jul 14 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Jul 29 FOMC</time><span>policy decision; directional step only if surprise probabilities are high</span></li><li><time>Jul 30 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Aug 05 QRA (estimated)</time><span>supply and term-premium uncertainty; long-end fan widened</span></li><li><time>Aug 07 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Aug 12 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Aug 26 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Sep 04 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Sep 11 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Sep 16 FOMC SEP</time><span>policy decision; directional step only if surprise probabilities are high</span></li><li><time>Sep 30 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Oct 02 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Oct 14 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Oct 28 FOMC</time><span>policy decision; directional step only if surprise probabilities are high</span></li><li><time>Oct 29 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Nov 04 QRA (estimated)</time><span>supply and term-premium uncertainty; long-end fan widened</span></li><li><time>Nov 06 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Nov 10 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Nov 25 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Dec 04 NFP</time><span>growth and wage-risk print; fan widened</span></li><li><time>Dec 09 FOMC SEP</time><span>policy decision; directional step only if surprise probabilities are high</span></li><li><time>Dec 10 CPI</time><span>inflation surprise risk; fan widened</span></li><li><time>Dec 23 PCE</time><span>inflation confirmation risk; fan widened</span></li><li><time>Jan 08 NFP (estimated)</time><span>growth and wage-risk print; fan widened</span></li><li><time>Jan 13 CPI (estimated)</time><span>inflation surprise risk; fan widened</span></li><li><time>Jan 29 PCE (estimated)</time><span>inflation confirmation risk; fan widened</span></li><li><time>Feb 03 QRA (estimated)</time><span>supply and term-premium uncertainty; long-end fan widened</span></li><li><time>Feb 05 NFP (estimated)</time><span>growth and wage-risk print; fan widened</span></li><li><time>Feb 11 CPI (estimated)</time><span>inflation surprise risk; fan widened</span></li><li><time>Feb 26 PCE (estimated)</time><span>inflation confirmation risk; fan widened</span></li><li><time>Mar 05 NFP (estimated)</time><span>growth and wage-risk print; fan widened</span></li><li><time>Mar 11 CPI (estimated)</time><span>inflation surprise risk; fan widened</span></li><li><time>Mar 26 PCE (estimated)</time><span>inflation confirmation risk; fan widened</span></li><li><time>Apr 02 NFP (estimated)</time><span>growth and wage-risk print; fan widened</span></li><li><time>Apr 14 CPI (estimated)</time><span>inflation surprise risk; fan widened</span></li><li><time>Apr 30 PCE (estimated)</time><span>inflation confirmation risk; fan widened</span></li><li><time>May 05 QRA (estimated)</time><span>supply and term-premium uncertainty; long-end fan widened</span></li><li><time>May 07 NFP (estimated)</time><span>growth and wage-risk print; fan widened</span></li><li><time>May 12 CPI (estimated)</time><span>inflation surprise risk; fan widened</span></li><li><time>May 28 PCE (estimated)</time><span>inflation confirmation risk; fan widened</span></li></ol>
+    </section>
+
+
+    <section class="panel" id="whole-logic">
+      <div class="section-kicker">End-to-End Logic</div>
+      <h2>Whole Prediction Logic</h2>
+      <div class="logic-grid">
+        <article><h3>1. What yield means</h3><p>A Treasury yield is the compensation investors require to lend money to the US government. If inflation, policy risk, or supply risk rises, investors may ask for more yield before buying.</p></article>
+        <article><h3>2. What data changes</h3><p>Released CPI/PCE, jobs, liquidity, supply, global rates, and Fed tone change the market's story: inflation pressure, Fed cuts/hikes, recession risk, and how hard Treasury supply is to absorb.</p></article>
+        <article><h3>3. Base means no-macro FADNS</h3><p>Base means the curve follows its own historical shape dynamics. Random walk means the current yield stays flat. Selected factors means adding only the macro forces you choose on top of base.</p></article>
+        <article><h3>4. Why central moves</h3><p>The macro blocks push Nelson-Siegel level/slope/curvature. That becomes 2Y, 10Y, and curve-spread paths. If all selected-factor contributions are on, selected equals official central.</p></article>
+        <article><h3>5. Why range widens</h3><p>Unknown future events like CPI/NFP/FOMC/QRA widen uncertainty, not central. p10-p90 is the realistic range around the central view. TraceYield is not an error-correction model.</p></article>
+        <article><h3>6. External checks</h3><p>Polymarket, market range, and random-walk baseline ask: does the outside world agree, disagree, or simply say this is a wide uncertain range? They do not tune the model.</p></article>
+      </div>
+    </section>
+
+
+    <section class="panel grounded-analysis" id="grounded-macro-analysis">
+      <div class="section-kicker">Grounded Analysis</div>
+      <h2>Grounded Macro Analysis</h2>
+      <p class="plain-label">narrative_and_regime_only_no_bp_or_central_shift</p>
+      <p>The current U.S. yield curve reflects a delicate balancing act between heightened inflation pressures and stable economic expansion. Inflation remains elevated due to recent global energy price increases, as highlighted by recent CPI growth of 3.779% year-over-year. The FOMC’s decision to maintain the federal funds rate at 3.5%-3.75% is driven by a cautious approach to risks from the Middle East conflict and uncertainties associated with AI technology. Despite stable unemployment, the slow pace of job gains raises concerns about potential labor market weakness. Global factors, such as rising yields in advanced foreign economies, add pressure on U.S. yields, with relative value dynamics suggesting some richening of U.S. assets. In this context, liquidity conditions remain favorable, yet with an awareness of broader market risks.</p>
+      <div class="analysis-docs"><b>FOMC evidence used:</b><ul><li>statement 2026-04-29 (2235 chars)</li><li>minutes 2026-04-29 (46051 chars)</li></ul></div>
+      <div class="analysis-grid"><article class='analysis-factor-card'><h3>Inflation: hot</h3><p>Inflation pressures are driven by elevated energy prices and recent increases in core goods prices due to tariffs.</p><p class='source-line'><b>Data:</b> CPIAUCSL yoy pct: 3.779; PCEPI yoy pct: 3.767</p><p class='source-line'><b>Quote:</b> Inflation is elevated, in part reflecting the recent increase in global energy prices.; Participants observed that overall inflation had moved up, in part because of recent global energy price increases.</p></article><article class='analysis-factor-card'><h3>Policy: neutral</h3><p>The FOMC decided to hold rates steady, citing elevated inflation readings and geopolitical uncertainties.</p><p class='source-line'><b>Data:</b> Federal funds rate: 3.5%-3.75%</p><p class='source-line'><b>Quote:</b> The Committee decided to maintain the target range for the federal funds rate at 3‑1/2 to 3‑3/4 percent.; Participants generally judged that the continued elevated inflation readings together with uncertainty related to the duration and economic implications of the Middle East conflict could necessitate maintaining the current policy stance for longer.</p></article><article class='analysis-factor-card'><h3>Growth: neutral</h3><p>Despite solid GDP growth, job gains have been low on average, suggesting mixed signals for future growth momentum.</p><p class='source-line'><b>Data:</b> PAYEMS change 3m pct: 0.091; UNRATE: 4.3</p><p class='source-line'><b>Quote:</b> Recent indicators suggest that economic activity has been expanding at a solid pace.; Job gains have remained low, on average, and the unemployment rate has been little changed in recent months.</p></article><article class='analysis-factor-card'><h3>Liquidity: neutral</h3><p>Despite increased reserves, the stability in money market rates suggests adequate liquidity.</p><p class='source-line'><b>Data:</b> WALCL change 3m pct: 1.37; WRESBAL change 3m pct: 3.399</p><p class='source-line'><b>Quote:</b> The effective federal funds rate had remained 1 basis point below the interest on reserve balances rate.; Liquidity conditions in Treasury securities markets had remained favorable even at times of increased volatility.</p></article><article class='analysis-factor-card'><h3>Global: rich</h3><p>U.S. assets appear rich as foreign yields rise and the U.S. dollar appreciates amidst geopolitical tensions.</p><p class='source-line'><b>Data:</b> IRLTLT01DEM156N change 3m bp: 19.0; DTWEXBGS change 3m pct: 0.896</p><p class='source-line'><b>Quote:</b> Equity prices had more than reversed their earlier declines, while 2-year and 10-year Treasury yields rose a bit further over the intermeeting period.</p></article></div>
+      <h3>Logic chain</h3>
+      <ol class="analysis-chain"><li>Inflation remains elevated primarily due to higher energy prices affecting consumer and producer price indexes.</li><li>The FOMC maintains a neutral policy stance amidst uncertainties from the Middle East and potential AI impacts.</li><li>Economic expansion continues with stable GDP growth, yet the labor market shows subdued job creation.</li><li>Despite a rise in reserves, liquidity supply is stable, supported by favorable market conditions.</li><li>Foreign yield increases and geopolitical tensions contribute to the relative richness of U.S. assets.</li></ol>
+      <h3>FOMC evidence quotes</h3>
+      <div class="quote-grid"><blockquote><p>Inflation is elevated, in part reflecting the recent increase in global energy prices.</p><cite>statement 2026-04-29</cite></blockquote><blockquote><p>Participants generally judged that the continued elevated inflation readings together with uncertainty related to the duration and economic implications of the Middle East conflict could necessitate maintaining the current policy stance for longer.</p><cite>minutes 2026-04-29</cite></blockquote></div>
+    </section>
+
+
+    <footer class="methodology" id="methodology">
+      <h2>Methodology</h2>
+      <p>
+        This view uses a FADNS-style curve core over Treasury tenors plus macro context,
+        empirical historical forecast-error fans, and scheduled-event overlays. Directional
+        FOMC nudges are surprise-only; scheduled FOMC, CPI, NFP, PCE, and QRA dates widen
+        the fan by quadrature and do not move the center line before the data are known. Once
+        CPI/PCE/labor/supply data are released, they enter the macro blocks and can affect the
+        central path through the fitted transition. The headline, chart subtitles,
+        and estimate table use the macro-adjusted FADNS central path. Historical
+        forecast errors are recentered around that central path, so p50 is not a
+        separate empirical correction. The Base vs Adjusted panel shows how the
+        five macro blocks move the path away from the no-macro base, with each
+        block's basis-point contribution summing exactly to the change. The 10Y
+        baseline panel compares the model path with a random-walk level and a
+        manual/free market-observed range. The Polymarket panel is read-only
+        external confirmation; it does not move central, p50, fan bands, event
+        overlays, weights, thresholds, or basis-point magnitudes. TraceYield is
+        not an error-correction model: it does not estimate a cointegrating
+        long-run equilibrium and then force yields back to it. The empirical
+        error distribution is used for range only. The long end should be read with a
+        random-walk caveat: range and reasons matter more than point precision.
+        Inputs are free-data-only. References: arXiv:2601.04608 for the FADNS family;
+        Kuttner (2001) and Gürkaynak-Sack-Swanson (2005) for policy-event surprise logic.
+      </p>
+    </footer>
+
+  <script type="application/json" id="traceyield-chart-data">{"2Y":{"month":[1,2,3,4,5,6,7,8,9,10,11,12],"current":[4.034008,4.034008,4.034008,4.034008,4.034008,4.034008,4.034008,4.034008,4.034008,4.034008,4.034008,4.034008],"central":[4.051539,4.060082,4.062167,4.059693,4.054085,4.046401,4.037422,4.027722,4.017713,4.007689,3.997854,3.988345],"p10":[3.043073,2.878552,2.587853,2.438862,2.448082,2.274828,2.267402,2.265394,2.258437,2.230395,2.192399,2.170113],"p25":[3.554555,3.553021,3.462748,3.460274,3.483478,3.443031,3.413851,3.425318,3.412331,3.326642,3.215013,3.202095],"p50":[4.051539,4.060082,4.062167,4.059693,4.054085,4.046401,4.037422,4.027722,4.017713,4.007689,3.997854,3.988345],"p75":[4.508296,4.531996,4.666768,4.737014,4.760218,4.781346,4.752166,4.808731,4.83105,4.895808,4.957568,4.94465],"p90":[4.88587,4.85314,5.048789,5.175791,5.196347,5.395339,5.387913,5.445622,5.493609,5.594884,5.74634,5.724054],"uncertainty_widen_bp":[32.771939,14.899664,23.17326,23.17326,14.899664,23.17326,14.59452,14.899664,14.59452,14.59452,14.899664,null]},"5Y":{"month":[1,2,3,4,5,6,7,8,9,10,11,12],"current":[4.211569,4.211569,4.211569,4.211569,4.211569,4.211569,4.211569,4.211569,4.211569,4.211569,4.211569,4.211569],"central":[4.226811,4.233424,4.233889,4.230065,4.223341,4.214745,4.205032,4.194753,4.184299,4.173948,4.163887,4.154242],"p10":[3.283624,3.09677,2.91738,2.84458,2.793659,2.685322,2.65139,2.630193,2.606955,2.596604,2.52337,2.479239],"p25":[3.774565,3.74867,3.699835,3.673429,3.630075,3.558062,3.527495,3.45494,3.412519,3.329057,3.257306,3.204293],"p50":[4.226811,4.233424,4.233889,4.230065,4.223341,4.214745,4.205032,4.194753,4.184299,4.173948,4.163887,4.154242],"p75":[4.692823,4.735373,4.829905,4.870543,4.852276,4.864865,4.834298,4.823688,4.883636,4.876331,4.896026,4.843013],"p90":[5.055589,5.043864,5.231031,5.332206,5.312601,5.350078,5.316145,5.354139,5.417823,5.50841,5.575828,5.531696],"uncertainty_widen_bp":[29.698485,16.763055,21.0,21.0,16.763055,21.0,15.652476,16.763055,15.652476,15.652476,16.763055,null]},"10Y":{"month":[1,2,3,4,5,6,7,8,9,10,11,12],"current":[4.452721,4.452721,4.452721,4.452721,4.452721,4.452721,4.452721,4.452721,4.452721,4.452721,4.452721,4.452721],"central":[4.458833,4.458181,4.452861,4.444431,4.434042,4.422537,4.410524,4.398434,4.386567,4.375126,4.36424,4.353985],"p10":[3.534697,3.348271,3.181507,3.102208,3.013109,2.893617,2.774624,2.645972,2.657444,2.646003,2.611778,2.591673],"p25":[4.033362,4.001181,3.904167,3.803467,3.710599,3.62613,3.554204,3.48409,3.451669,3.440228,3.373585,3.3086],"p50":[4.458833,4.458181,4.452861,4.444431,4.434042,4.422537,4.410524,4.398434,4.386567,4.375126,4.36424,4.353985],"p75":[4.88878,4.975564,5.045116,5.063367,5.044832,5.072242,5.040414,5.039993,5.016457,5.028857,5.041798,4.976813],"p90":[5.271966,5.320686,5.479318,5.553854,5.576133,5.656814,5.647905,5.728701,5.743676,5.81925,5.860937,5.840832],"uncertainty_widen_bp":[28.495614,18.520259,20.149442,20.149442,18.520259,20.149442,16.186414,18.520259,16.186414,16.186414,18.520259,null]},"30Y":{"month":[1,2,3,4,5,6,7,8,9,10,11,12],"current":[4.991701,4.991701,4.991701,4.991701,4.991701,4.991701,4.991701,4.991701,4.991701,4.991701,4.991701,4.991701],"central":[4.935738,4.886712,4.84365,4.805738,4.772289,4.742721,4.716539,4.693318,4.672696,4.654358,4.638031,4.623481],"p10":[4.087794,3.851489,3.695319,3.538234,3.438824,3.253786,3.142243,3.087806,3.0984,3.080062,3.003896,2.980818],"p25":[4.535536,4.407239,4.313675,4.140738,4.034221,3.95927,3.913093,3.874264,3.86925,3.850912,3.78361,3.740467],"p50":[4.935738,4.886712,4.84365,4.805738,4.772289,4.742721,4.716539,4.693318,4.672696,4.654358,4.638031,4.623481],"p75":[5.29491,5.354545,5.41168,5.387983,5.412221,5.395647,5.358835,5.440477,5.508551,5.612954,5.646979,5.603836],"p90":[5.658617,5.678097,5.794198,5.902016,5.961481,6.026733,6.129415,6.278,6.301075,6.337341,6.35223,6.329152],"uncertainty_widen_bp":[24.859606,17.578396,17.578396,17.578396,17.578396,17.578396,14.456832,17.578396,14.456832,14.456832,17.578396,null]},"2s10s":{"month":[1,2,3,4,5,6,7,8,9,10,11,12],"current":[0.418713,0.418713,0.418713,0.418713,0.418713,0.418713,0.418713,0.418713,0.418713,0.418713,0.418713,0.418713],"central":[0.407295,0.398099,0.390694,0.384737,0.379957,0.376137,0.373101,0.370711,0.368854,0.367437,0.366386,0.36564],"p10":[-0.199566,-0.201383,-0.229872,-0.258692,-0.279897,-0.407591,-0.415115,-0.501797,-0.564602,-0.611612,-0.712114,-0.714854],"p25":[0.104621,0.09599,0.077694,0.049691,0.044893,-0.028029,-0.036621,-0.076872,-0.093047,-0.126731,-0.165023,-0.181225],"p50":[0.407295,0.398099,0.390694,0.384737,0.379957,0.376137,0.373101,0.370711,0.368854,0.367437,0.366386,0.36564],"p75":[0.71732,0.708689,0.729394,0.732361,0.727563,0.782049,0.773457,0.8089,0.815645,0.82642,0.868277,0.852075],"p90":[1.042255,1.040438,1.100047,1.195051,1.20297,1.327269,1.319745,1.32452,1.327644,1.362564,1.458511,1.45577],"uncertainty_widen_bp":[43.428102,23.769729,30.708305,30.708305,23.769729,30.708305,21.794495,23.769729,21.794495,21.794495,23.769729,null]},"5s30s":{"month":[1,2,3,4,5,6,7,8,9,10,11,12],"current":[0.780132,0.780132,0.780132,0.780132,0.780132,0.780132,0.780132,0.780132,0.780132,0.780132,0.780132,0.780132],"central":[0.708927,0.653288,0.609761,0.575673,0.548948,0.527976,0.511506,0.498566,0.488397,0.48041,0.474144,0.46924],"p10":[0.100457,0.043769,-0.024237,-0.091509,-0.174088,-0.300408,-0.349486,-0.480657,-0.502278,-0.5216,-0.597666,-0.540455],"p25":[0.408904,0.354306,0.257211,0.196708,0.173516,0.071355,0.041502,-0.023369,-0.03853,-0.064112,-0.11336,-0.1017],"p50":[0.708927,0.653288,0.609761,0.575673,0.548948,0.527976,0.511506,0.498566,0.488397,0.48041,0.474144,0.46924],"p75":[1.004896,0.950298,0.928187,0.959911,0.970745,0.965254,0.94708,0.953131,0.963419,0.965715,0.988498,1.000158],"p90":[1.290408,1.233719,1.279435,1.293721,1.306392,1.31816,1.269083,1.269948,1.283462,1.347028,1.41595,1.473161],"uncertainty_widen_bp":[38.729833,24.289916,27.386128,27.386128,24.289916,27.386128,21.307276,24.289916,21.307276,21.307276,24.289916,null]}}</script>
+  <script type="application/json" id="traceyield-factor-scenario-data">{"blocks":["inflation_regime","policy_path","growth_risk","liquidity_supply","global_relative_value"],"labels":{"inflation_regime":"Inflation","policy_path":"Policy","growth_risk":"Growth","liquidity_supply":"Liquidity","global_relative_value":"Global"},"subfactors":{"inflation_regime":{"CPIAUCSL":"Headline CPI YoY","CPILFESL":"Core CPI YoY","PCEPI":"Headline PCE YoY","PCEPILFE":"Core PCE YoY","T5YIE":"5Y breakeven inflation","T10YIE":"10Y breakeven inflation","T5YIFR":"5Y5Y forward inflation"},"policy_path":{"fomc_tone":"FOMC tone","DFEDTARU":"Fed target upper bound","EFFR":"Effective fed funds","DGS2":"2Y vs policy/dots","DGS3MO":"3M bill proxy","DGS6MO":"6M bill forward proxy","FEDTARMD":"SEP dot median"},"growth_risk":{"PAYEMS":"Nonfarm payrolls","UNRATE":"Unemployment rate","ICSA":"Initial claims","IPMAN":"Manufacturing production","RSAFS":"Retail sales","JTSJOL":"JOLTS openings"},"liquidity_supply":{"WALCL":"Fed balance sheet","WRESBAL":"Bank reserves","RRPONTSYD":"Reverse repo","WTREGEN":"Treasury General Account","treasury_auction_stress":"Auction stress"},"global_relative_value":{"IRLTLT01DEM156N":"Germany 10Y comparison","IRLTLT01JPM156N":"Japan 10Y comparison","DTWEXBGS":"Broad dollar index"}},"subfactor_weights":{"inflation_regime":{"CPIAUCSL":0.14285714285714285,"CPILFESL":0.14285714285714285,"PCEPI":0.14285714285714285,"PCEPILFE":0.14285714285714285,"T5YIE":0.14285714285714285,"T10YIE":0.14285714285714285,"T5YIFR":0.14285714285714285},"policy_path":{"fomc_tone":0.14285714285714285,"DFEDTARU":0.14285714285714285,"EFFR":0.14285714285714285,"DGS2":0.14285714285714285,"DGS3MO":0.14285714285714285,"DGS6MO":0.14285714285714285,"FEDTARMD":0.14285714285714285},"growth_risk":{"PAYEMS":0.16666666666666666,"UNRATE":0.16666666666666666,"ICSA":0.16666666666666666,"IPMAN":0.16666666666666666,"RSAFS":0.16666666666666666,"JTSJOL":0.16666666666666666},"liquidity_supply":{"WALCL":0.2,"WRESBAL":0.2,"RRPONTSYD":0.2,"WTREGEN":0.2,"treasury_auction_stress":0.2},"global_relative_value":{"IRLTLT01DEM156N":0.3333333333333333,"IRLTLT01JPM156N":0.3333333333333333,"DTWEXBGS":0.3333333333333333}},"targets":{"2Y":{"months":{"1":{"base":3.898635996713118,"adjusted":4.051538881100474,"official":4.051539,"current":4.034008,"random_walk":4.034008,"p10":3.043073,"p90":4.88587,"contributions_bp":{"inflation_regime":2.269538958001338,"policy_path":12.764272418526351,"growth_risk":-1.0404325112157677,"liquidity_supply":-0.031480380299921715,"global_relative_value":1.3283899537243984}},"2":{"base":3.7776062361815876,"adjusted":4.060082660782266,"official":4.060082,"current":4.034008,"random_walk":4.034008,"p10":2.878552,"p90":4.85314,"contributions_bp":{"inflation_regime":4.433303207395859,"policy_path":23.931457039639753,"growth_risk":-2.4302123899471764,"liquidity_supply":-0.07541303098338381,"global_relative_value":2.3885076339640454}},"3":{"base":3.669167815057889,"adjusted":4.06216716146111,"official":4.062167,"current":4.034008,"random_walk":4.034008,"p10":2.587853,"p90":5.048789,"contributions_bp":{"inflation_regime":6.498759890010734,"policy_path":33.79764129281399,"growth_risk":-4.079698745274139,"liquidity_supply":-0.12865333790629271,"global_relative_value":3.2118855406795883}},"4":{"base":3.5718135890649974,"adjusted":4.059693639945524,"official":4.059693,"current":4.034008,"random_walk":4.034008,"p10":2.438862,"p90":5.175791,"contributions_bp":{"inflation_regime":8.472691107684781,"policy_path":42.59662318718301,"growth_risk":-5.919303254904447,"liquidity_supply":-0.1887568957614634,"global_relative_value":3.8267509438534804}},"5":{"base":3.4842411865366225,"adjusted":4.054085280911809,"official":4.054085,"current":4.034008,"random_walk":4.034008,"p10":2.448082,"p90":5.196347,"contributions_bp":{"inflation_regime":10.36126266523955,"policy_path":50.513621737028394,"growth_risk":-7.894996911800598,"liquidity_supply":-0.25382292537526413,"global_relative_value":4.258344872429616}},"6":{"base":3.405320939581252,"adjusted":4.046400998033807,"official":4.046401,"current":4.034008,"random_walk":4.034008,"p10":2.274828,"p90":5.395339,"contributions_bp":{"inflation_regime":12.170085883619189,"policy_path":57.695910119295405,"growth_risk":-9.964832425003465,"liquidity_supply":-0.3223730515564078,"global_relative_value":4.5292153189036055}},"7":{"base":3.3340695752594316,"adjusted":4.037422757886659,"official":4.037422,"current":4.034008,"random_walk":4.034008,"p10":2.267402,"p90":5.387913,"contributions_bp":{"inflation_regime":13.904273146469967,"policy_path":64.26106852678296,"growth_risk":-12.096251510565596,"liquidity_supply":-0.39325741089163824,"global_relative_value":4.659485510930086}},"8":{"base":3.2696285181969555,"adjusted":4.027722524461934,"official":4.027722,"current":4.034008,"random_walk":4.034008,"p10":2.265394,"p90":5.445622,"contributions_bp":{"inflation_regime":15.568487789593288,"policy_path":70.30339515391518,"growth_risk":-14.26399887391186,"liquidity_supply":-0.4655818877802257,"global_relative_value":4.667098444685337}},"9":{"base":3.211245900526899,"adjusted":4.017713524297806,"official":4.017713,"current":4.034008,"random_walk":4.034008,"p10":2.258437,"p90":5.493609,"contributions_bp":{"inflation_regime":17.166988890758038,"policy_path":75.89889135485414,"growth_risk":-16.448505261995553,"liquidity_supply":-0.5386516888290312,"global_relative_value":4.568039082307076}},"10":{"base":3.158261565603698,"adjusted":4.007689454135252,"official":4.007689,"current":4.034008,"random_walk":4.034008,"p10":2.230395,"p90":5.594884,"contributions_bp":{"inflation_regime":18.70367146798074,"policy_path":81.10914250419786,"growth_risk":-18.63463328801297,"liquidity_supply":-0.6119275556611005,"global_relative_value":4.376535724655116}},"11":{"base":3.1100945006711056,"adjusted":3.9978544215953846,"official":3.997854,"current":4.034008,"random_walk":4.034008,"p10":2.192399,"p90":5.74634,"contributions_bp":{"inflation_regime":20.182102547975095,"policy_path":85.98434310765494,"growth_risk":-20.8107039144218,"liquidity_supply":-0.6849917576693448,"global_relative_value":4.105242108892977}},"12":{"base":3.0662322499583716,"adjusted":3.9883457682575374,"official":3.988345,"current":4.034008,"random_walk":4.034008,"p10":2.170113,"p90":5.724054,"contributions_bp":{"inflation_regime":21.605553523247433,"policy_path":90.56565834456828,"growth_risk":-22.96774015094164,"liquidity_supply":-0.7575216559555947,"global_relative_value":3.7654017690019783}}}},"10Y":{"months":{"1":{"base":4.306646301597345,"adjusted":4.458833386752776,"official":4.458833,"current":4.452721,"random_walk":4.452721,"p10":3.534697,"p90":5.271966,"contributions_bp":{"inflation_regime":1.3072319085807296,"policy_path":9.999020835646748,"growth_risk":0.9519058978064022,"liquidity_supply":0.036647573769803675,"global_relative_value":2.9239022997401336}},"2":{"base":4.17667250159485,"adjusted":4.458181319671254,"official":4.458181,"current":4.452721,"random_walk":4.452721,"p10":3.348271,"p90":5.320686,"contributions_bp":{"inflation_regime":2.527190286952862,"policy_path":18.54646703894644,"growth_risk":1.5283434423977444,"liquidity_supply":0.059934507353747835,"global_relative_value":5.488946531990822}},"3":{"base":4.06087102520049,"adjusted":4.452860803027902,"official":4.452861,"current":4.452721,"random_walk":4.452721,"p10":3.181507,"p90":5.479318,"contributions_bp":{"inflation_regime":3.6677136694444354,"policy_path":25.91257504382313,"growth_risk":1.8117420161862612,"liquidity_supply":0.07275801315513829,"global_relative_value":7.734189040133965}},"4":{"base":3.9575695747263966,"adjusted":4.4444308649885,"official":4.444431,"current":4.452721,"random_walk":4.452721,"p10":3.102208,"p90":5.553854,"contributions_bp":{"inflation_regime":4.73584998370792,"policy_path":32.31164486794037,"growth_risk":1.8666242544195588,"liquidity_supply":0.07738927370287764,"global_relative_value":9.694620646442205}},"5":{"base":3.865313358298557,"adjusted":4.434042547661057,"official":4.434042,"current":4.452721,"random_walk":4.452721,"p10":3.013109,"p90":5.576133,"contributions_bp":{"inflation_regime":5.737938544601792,"policy_path":37.91421752455511,"growth_risk":1.7435813275881094,"liquidity_supply":0.07561205848884431,"global_relative_value":11.40156948101906}},"6":{"base":3.7828328922039858,"adjusted":4.4225375917456455,"official":4.422537,"current":4.452721,"random_walk":4.452721,"p10":2.893617,"p90":5.656814,"contributions_bp":{"inflation_regime":6.679683614448257,"policy_path":42.85653493690909,"growth_risk":1.4823531196545812,"liquidity_supply":0.06883016807837707,"global_relative_value":12.883068115078306}},"7":{"base":3.7090172930403096,"adjusted":4.410524000056745,"official":4.410524,"current":4.452721,"random_walk":4.452721,"p10":2.774624,"p90":5.647905,"contributions_bp":{"inflation_regime":7.566220363793437,"policy_path":47.24789611054945,"growth_risk":1.114216318356561,"liquidity_supply":0.05815077145976392,"global_relative_value":14.164187137487408}},"8":{"base":3.6428920048416247,"adjusted":4.39843382169688,"official":4.398434,"current":4.452721,"random_walk":4.452721,"p10":2.645972,"p90":5.728701,"contributions_bp":{"inflation_regime":8.402173992637119,"policy_path":51.17638390433788,"growth_risk":0.6638372270148563,"liquidity_supply":0.044449094828752055,"global_relative_value":15.267337466710657}},"9":{"base":3.583600125997013,"adjusted":4.38656727235641,"official":4.386567,"current":4.452721,"random_walk":4.452721,"p10":2.657444,"p90":5.743676,"contributions_bp":{"inflation_regime":9.191712702466921,"policy_path":54.7133290801046,"growth_risk":0.15071043459291728,"liquidity_supply":0.028418678721421467,"global_relative_value":16.21254374005768}},"10":{"base":3.5303866725344295,"adjusted":4.375126360605486,"official":4.375126,"current":4.452721,"random_walk":4.452721,"p10":2.646003,"p90":5.81925,"contributions_bp":{"inflation_regime":9.938595144619953,"policy_path":57.916795162311075,"growth_risk":-0.40972306121708896,"liquidity_supply":0.010610462002657858,"global_relative_value":17.017691099393176}},"11":{"base":3.4825852489046207,"adjusted":4.364240460968079,"official":4.36424,"current":4.452721,"random_walk":4.452721,"p10":2.611778,"p90":5.860937,"contributions_bp":{"inflation_regime":10.646212910579976,"policy_path":60.834303413550536,"growth_risk":-1.005205949218273,"liquidity_supply":-0.00853678883998712,"global_relative_value":17.698747620277718}},"12":{"base":3.4396067030437245,"adjusted":4.353985712519724,"official":4.353985,"current":4.452721,"random_walk":4.452721,"p10":2.591673,"p90":5.840832,"contributions_bp":{"inflation_regime":11.317628574743702,"policy_path":63.504967615382554,"growth_risk":-1.625987011367746,"liquidity_supply":-0.028672758157733656,"global_relative_value":18.269964527003214}}}},"2s10s":{"months":{"1":{"base":0.4080103048842272,"adjusted":0.40729450565230163,"official":0.407295,"current":0.418713,"random_walk":0.418713,"p10":-0.199566,"p90":1.042255,"contributions_bp":{"inflation_regime":-0.9623070494206085,"policy_path":-2.7652515828796034,"growth_risk":1.99233840902217,"liquidity_supply":0.06812795406972538,"global_relative_value":1.5955123460157352}},"2":{"base":0.3990662654132624,"adjusted":0.3980986588889879,"official":0.398099,"current":0.418713,"random_walk":0.418713,"p10":-0.201383,"p90":1.040438,"contributions_bp":{"inflation_regime":-1.9061129204429972,"policy_path":-5.384990000693316,"growth_risk":3.9585558323449206,"liquidity_supply":0.13534753833713165,"global_relative_value":3.100438898026777}},"3":{"base":0.39170321014260123,"adjusted":0.3906936415667923,"official":0.390694,"current":0.418713,"random_walk":0.418713,"p10":-0.229872,"p90":1.100047,"contributions_bp":{"inflation_regime":-2.8310462205662987,"policy_path":-7.885066248990869,"growth_risk":5.8914407614604,"liquidity_supply":0.20141135106143102,"global_relative_value":4.5223034994543765}},"4":{"base":0.38575598566139924,"adjusted":0.3847372250429757,"official":0.384737,"current":0.418713,"random_walk":0.418713,"p10":-0.258692,"p90":1.195051,"contributions_bp":{"inflation_regime":-3.7368411239768604,"policy_path":-10.284978319242638,"growth_risk":7.785927509324006,"liquidity_supply":0.26614616946434105,"global_relative_value":5.867869702588725}},"5":{"base":0.38107217176193453,"adjusted":0.3799572667492477,"official":0.379957,"current":0.418713,"random_walk":0.418713,"p10":-0.279897,"p90":1.20297,"contributions_bp":{"inflation_regime":-4.6233241206377595,"policy_path":-12.599404212473274,"growth_risk":9.638578239388707,"liquidity_supply":0.3294349838641084,"global_relative_value":7.143224608589444}},"6":{"base":0.37751195262273374,"adjusted":0.3761365937118386,"official":0.376137,"current":0.418713,"random_walk":0.418713,"p10":-0.407591,"p90":1.327269,"contributions_bp":{"inflation_regime":-5.490402269170931,"policy_path":-14.839375182386311,"growth_risk":11.447185544658044,"liquidity_supply":0.3912032196347849,"global_relative_value":8.3538527961747}},"7":{"base":0.374947717780878,"adjusted":0.3731012421700868,"official":0.373101,"current":0.418713,"random_walk":0.418713,"p10":-0.415115,"p90":1.319745,"contributions_bp":{"inflation_regime":-6.33805278267653,"policy_path":-17.013172416233513,"growth_risk":13.210467828922157,"liquidity_supply":0.4514081823514021,"global_relative_value":9.50470162655732}},"8":{"base":0.37326348664466913,"adjusted":0.370711297234946,"official":0.370711,"current":0.418713,"random_walk":0.418713,"p10":-0.501797,"p90":1.32452,"contributions_bp":{"inflation_regime":-7.166313796956169,"policy_path":-19.127011249577297,"growth_risk":14.927836100926717,"liquidity_supply":0.5100309826089777,"global_relative_value":10.60023902202532}},"9":{"base":0.37235422547011376,"adjusted":0.36885374805860405,"official":0.368854,"current":0.418713,"random_walk":0.418713,"p10":-0.564602,"p90":1.327644,"contributions_bp":{"inflation_regime":-7.975276188291115,"policy_path":-21.185562274749536,"growth_risk":16.59921569658847,"liquidity_supply":0.5670703675504527,"global_relative_value":11.644504657750606}},"10":{"base":0.3721251069307314,"adjusted":0.36743690647023364,"official":0.367437,"current":0.418713,"random_walk":0.418713,"p10":-0.611612,"p90":1.362564,"contributions_bp":{"inflation_regime":-8.765076323360786,"policy_path":-23.192347341886787,"growth_risk":18.22491022679588,"liquidity_supply":0.6225380176637584,"global_relative_value":12.64115537473806}},"11":{"base":0.37249074823351513,"adjusted":0.36638603937269476,"official":0.366386,"current":0.418713,"random_walk":0.418713,"p10":-0.712114,"p90":1.458511,"contributions_bp":{"inflation_regime":-9.535889637395119,"policy_path":-25.150039694104397,"growth_risk":19.80549796520353,"liquidity_supply":0.6764549688293577,"global_relative_value":13.593505511384743}},"12":{"base":0.3733744530853529,"adjusted":0.3656399442621865,"official":0.36564,"current":0.418713,"random_walk":0.418713,"p10":-0.714854,"p90":1.45577,"contributions_bp":{"inflation_regime":-10.287924948503731,"policy_path":-27.060690729185723,"growth_risk":21.341753139573893,"liquidity_supply":0.7288488977978611,"global_relative_value":14.504562758001235}}}}}}</script>
+  <script type="application/json" id="traceyield-policy-mapping-data">{"month":1,"event_date":"2026-06-17","cut_prob":0.0105,"hike_prob":null,"cut_prob_high":0.6,"hike_prob_high":0.6,"front_end_cut_bp":-12.5,"front_end_hike_bp":12.5,"base":{"2Y":4.051539,"10Y":4.458833,"2s10s":0.407295}}</script>
+
+  <script>
+  (function () {
+    const dataEl = document.getElementById("traceyield-factor-scenario-data");
+    const svg = document.getElementById("factor-scenario-svg");
+    const targetSelect = document.getElementById("factor-target");
+    const showRandomWalk = document.getElementById("factor-show-random-walk");
+    const tbody = document.getElementById("factor-monthly-body");
+    const summary = document.getElementById("factor-summary");
+    if (!dataEl || !svg || !targetSelect || !tbody || !summary) return;
+
+    const scenario = JSON.parse(dataEl.textContent);
+    const fmt = (value, digits = 3) => Number.isFinite(value) ? value.toFixed(digits) : "n/a";
+    const fmtBp = (value) => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}bp` : "n/a";
+    const selectedFactors = () => Array.from(document.querySelectorAll("[data-factor]"))
+      .filter((input) => input.checked)
+      .map((input) => input.dataset.factor);
+    const subfactorMultiplier = (factor) => {
+      const subInputs = Array.from(document.querySelectorAll(`[data-parent-factor="${factor}"]`));
+      if (!subInputs.length) return 1;
+      const selectedWeight = subInputs
+        .filter((input) => input.checked)
+        .reduce((acc, input) => {
+          const weight = Number(((scenario.subfactor_weights || {})[factor] || {})[input.dataset.subfactor] || 0);
+          return acc + weight;
+        }, 0);
+      return Math.max(0, Math.min(1, selectedWeight));
+    };
+
+    function rowsFor(target, factors) {
+      const targetData = scenario.targets[target] || { months: {} };
+      return Array.from({ length: 12 }, (_, idx) => {
+        const month = String(idx + 1);
+        const point = targetData.months[month] || {};
+        const base = Number(point.base);
+        const contribution = factors.reduce((acc, factor) => {
+          const bp = Number((point.contributions_bp || {})[factor] || 0);
+          return acc + bp * subfactorMultiplier(factor);
+        }, 0);
+        const selected = Number.isFinite(base) ? base + contribution / 100 : NaN;
+        const current = Number(point.current);
+        return {
+          month,
+          base,
+          selected,
+          official: Number(point.official),
+          current,
+          p10: Number(point.p10),
+          p90: Number(point.p90),
+          randomWalk: Number(point.random_walk),
+          deltaBp: Number.isFinite(selected) && Number.isFinite(current) ? (selected - current) * 100 : NaN,
+        };
+      });
+    }
+
+    function pathFor(rows, key, xFor, yFor) {
+      return rows
+        .filter((row) => Number.isFinite(row[key]))
+        .map((row) => `${xFor(Number(row.month))},${yFor(row[key])}`)
+        .join(" ");
+    }
+
+    function svgNode(name, attrs, text) {
+      const node = document.createElementNS("http://www.w3.org/2000/svg", name);
+      Object.entries(attrs || {}).forEach(([key, value]) => node.setAttribute(key, value));
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function draw(rows, target) {
+      const width = 860;
+      const height = 360;
+      const left = 58;
+      const right = 28;
+      const top = 28;
+      const bottom = 48;
+      const values = rows
+        .flatMap((row) => [row.base, row.selected, row.official, showRandomWalk?.checked ? row.randomWalk : NaN])
+        .filter(Number.isFinite);
+      let low = Math.min(...values);
+      let high = Math.max(...values);
+      if (!Number.isFinite(low) || !Number.isFinite(high)) return;
+      if (Math.abs(high - low) < 0.001) {
+        low -= 0.25;
+        high += 0.25;
+      }
+      const pad = (high - low) * 0.12;
+      low -= pad;
+      high += pad;
+      const xFor = (month) => left + ((month - 1) * (width - left - right)) / 11;
+      const yFor = (value) => top + ((high - value) * (height - top - bottom)) / (high - low);
+      svg.replaceChildren();
+      svg.appendChild(svgNode("rect", { x: 0, y: 0, width, height, fill: "#fbfaf6" }));
+      [low, (low + high) / 2, high].forEach((tick) => {
+        const y = yFor(tick);
+        svg.appendChild(svgNode("line", { x1: left, x2: width - right, y1: y, y2: y, class: "factor-axis" }));
+        svg.appendChild(svgNode("text", { x: 12, y: y + 4, class: "factor-axis-label" }, tick.toFixed(2)));
+      });
+      rows.forEach((row) => {
+        const x = xFor(Number(row.month));
+        svg.appendChild(svgNode("text", { x, y: height - 12, class: "factor-axis-label", "text-anchor": "middle" }, row.month));
+      });
+      svg.appendChild(svgNode("polyline", { points: pathFor(rows, "base", xFor, yFor), class: "factor-path-base" }));
+      if (showRandomWalk?.checked) {
+        svg.appendChild(svgNode("polyline", { points: pathFor(rows, "randomWalk", xFor, yFor), class: "factor-path-random-walk" }));
+      }
+      svg.appendChild(svgNode("polyline", { points: pathFor(rows, "official", xFor, yFor), class: "factor-path-official" }));
+      svg.appendChild(svgNode("polyline", { points: pathFor(rows, "selected", xFor, yFor), class: "factor-path-selected" }));
+      svg.appendChild(svgNode("text", { x: left, y: 18, class: "factor-axis-label" }, `${target} selected factors`));
+      svg.appendChild(svgNode("text", { x: width - 390, y: 18, class: "factor-axis-label" }, "solid=selected dashed=official dotted=base thin=random-walk"));
+    }
+
+    function renderTable(rows) {
+      tbody.innerHTML = rows.map((row) => `
+        <tr>
+          <th>m${row.month}</th>
+          <td>${fmt(row.base)}</td>
+          <td><b>${fmt(row.selected)}</b></td>
+          <td>${fmt(row.official)}</td>
+          <td>${fmt(row.randomWalk)}</td>
+          <td>${fmtBp(row.deltaBp)}</td>
+          <td>${fmt(row.p10)} - ${fmt(row.p90)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSummary(rows) {
+      const last = rows[rows.length - 1] || {};
+      summary.innerHTML = `
+        <span>selected 12m</span>
+        <b>${fmt(last.selected)}</b>
+        <span>vs today</span>
+        <strong>${fmtBp(last.deltaBp)}</strong>
+      `;
+    }
+
+    window.updateFactorScenario = function updateFactorScenario() {
+      const target = targetSelect.value;
+      const rows = rowsFor(target, selectedFactors());
+      draw(rows, target);
+      renderTable(rows);
+      renderSummary(rows);
+    };
+
+    document.querySelectorAll("[data-factor]").forEach((input) => {
+      input.addEventListener("change", window.updateFactorScenario);
+    });
+    document.querySelectorAll("[data-subfactor]").forEach((input) => {
+      input.addEventListener("change", window.updateFactorScenario);
+    });
+    targetSelect.addEventListener("change", window.updateFactorScenario);
+    showRandomWalk?.addEventListener("change", window.updateFactorScenario);
+    window.updateFactorScenario();
+  }());
+  </script>
+
+
+  <script>
+  (function () {
+    const dataEl = document.getElementById("traceyield-policy-mapping-data");
+    const body = document.getElementById("mapping-result-body");
+    if (!dataEl || !body) return;
+    const data = JSON.parse(dataEl.textContent);
+    const num = (id) => Number(document.getElementById(id)?.value || 0);
+    const fmt = (value, digits = 3) => Number.isFinite(value) ? value.toFixed(digits) : "n/a";
+    const fmtBp = (value) => Number.isFinite(value) ? `${value >= 0 ? "+" : ""}${value.toFixed(1)}bp` : "n/a";
+
+    window.updatePolicyMappingSandbox = function updatePolicyMappingSandbox() {
+      const cutProb = num("mapping-cut-prob");
+      const hikeProb = num("mapping-hike-prob");
+      const cutThreshold = num("mapping-cut-threshold");
+      const hikeThreshold = num("mapping-hike-threshold");
+      const cutStep = num("mapping-cut-step");
+      const hikeStep = num("mapping-hike-step");
+      let step = 0;
+      if (cutProb >= cutThreshold) step = cutStep;
+      else if (hikeProb >= hikeThreshold) step = hikeStep;
+      const rows = ["2Y", "10Y", "2s10s"].map((target) => {
+        const official = Number((data.base || {})[target]);
+        let sandbox = official;
+        let targetStep = 0;
+        if (target === "2Y") targetStep = step;
+        if (target === "2s10s") targetStep = -step;
+        if (Number.isFinite(official)) sandbox = official + targetStep / 100;
+        return `
+          <tr>
+            <th>${target}</th>
+            <td>${fmt(official)}</td>
+            <td><b>${fmt(sandbox)}</b></td>
+            <td>${fmtBp(targetStep)}</td>
+          </tr>
+        `;
+      });
+      body.innerHTML = rows.join("");
+    };
+    ["mapping-cut-prob", "mapping-hike-prob", "mapping-cut-threshold", "mapping-hike-threshold", "mapping-cut-step", "mapping-hike-step"].forEach((id) => {
+      document.getElementById(id)?.addEventListener("input", window.updatePolicyMappingSandbox);
+    });
+    window.updatePolicyMappingSandbox();
+  }());
+  </script>
+
+</main>
+</body>
+</html>

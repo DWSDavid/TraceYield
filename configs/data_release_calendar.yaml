@@ -1,0 +1,192 @@
+# Macro data-release calendar (deterministic event-calendar input).
+#
+# Each entry = one scheduled high-impact US macro print, with the REFERENCE month it
+# covers and its public RELEASE date (all 8:30 a.m. ET). Used by the event overlay to
+# know which forecast-month contains a CPI / Core-PCE / NFP print and whether it lands
+# BEFORE or AFTER an FOMC decision (see configs/fomc_calendar.yaml).
+#
+# precision:
+#   confirmed = taken from the official BLS/BEA schedule (verified).
+#   estimated = derived from the fixed monthly release pattern below; REFRESH from the
+#               official schedule pages when available (they block simple scrapers — use a
+#               browser fetch or update by hand each month).
+#
+# Fixed release patterns (US):
+#   nfp  (Employment Situation, BLS): ~first Friday of the month, covers PRIOR month.
+#   cpi  (Consumer Price Index, BLS): ~second week (Tue-Thu), covers PRIOR month.
+#   pce  (Personal Income & Outlays / Core PCE, BEA): ~last week, covers PRIOR month.
+# FRED series already wired: CPIAUCSL (CPI), PCEPILFE (core PCE). NFP = PAYEMS (add if used).
+#
+# Sources: https://www.bls.gov/schedule/  |  https://www.bea.gov/news/schedule
+# Maintained by Claude; current as of 2026-06-02.
+
+releases:
+  # ---- NFP / Employment Situation (first Friday) -------------------------------
+  - indicator: nfp
+    reference_month: "2026-05"
+    release_date: 2026-06-05
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-06"
+    release_date: 2026-07-02
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-07"
+    release_date: 2026-08-07
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-08"
+    release_date: 2026-09-04
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-09"
+    release_date: 2026-10-02
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-10"
+    release_date: 2026-11-06
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-11"
+    release_date: 2026-12-04
+    precision: confirmed
+  - indicator: nfp
+    reference_month: "2026-12"
+    release_date: 2027-01-08
+    precision: estimated
+  - indicator: nfp
+    reference_month: "2027-01"
+    release_date: 2027-02-05
+    precision: estimated
+  - indicator: nfp
+    reference_month: "2027-02"
+    release_date: 2027-03-05
+    precision: estimated
+  - indicator: nfp
+    reference_month: "2027-03"
+    release_date: 2027-04-02
+    precision: estimated
+  - indicator: nfp
+    reference_month: "2027-04"
+    release_date: 2027-05-07
+    precision: estimated
+
+  # ---- CPI (second week) -------------------------------------------------------
+  - indicator: cpi
+    reference_month: "2026-05"
+    release_date: 2026-06-10
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-06"
+    release_date: 2026-07-14
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-07"
+    release_date: 2026-08-12
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-08"
+    release_date: 2026-09-11
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-09"
+    release_date: 2026-10-14
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-10"
+    release_date: 2026-11-10
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-11"
+    release_date: 2026-12-10
+    precision: confirmed
+  - indicator: cpi
+    reference_month: "2026-12"
+    release_date: 2027-01-13
+    precision: estimated
+  - indicator: cpi
+    reference_month: "2027-01"
+    release_date: 2027-02-11
+    precision: estimated
+  - indicator: cpi
+    reference_month: "2027-02"
+    release_date: 2027-03-11
+    precision: estimated
+  - indicator: cpi
+    reference_month: "2027-03"
+    release_date: 2027-04-14
+    precision: estimated
+  - indicator: cpi
+    reference_month: "2027-04"
+    release_date: 2027-05-12
+    precision: estimated
+
+  # ---- Core PCE / Personal Income & Outlays (last week) ------------------------
+  - indicator: pce
+    reference_month: "2026-05"
+    release_date: 2026-06-25
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-06"
+    release_date: 2026-07-30
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-07"
+    release_date: 2026-08-26
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-08"
+    release_date: 2026-09-30
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-09"
+    release_date: 2026-10-29
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-10"
+    release_date: 2026-11-25
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-11"
+    release_date: 2026-12-23
+    precision: confirmed
+  - indicator: pce
+    reference_month: "2026-12"
+    release_date: 2027-01-29
+    precision: estimated
+  - indicator: pce
+    reference_month: "2027-01"
+    release_date: 2027-02-26
+    precision: estimated
+  - indicator: pce
+    reference_month: "2027-02"
+    release_date: 2027-03-26
+    precision: estimated
+  - indicator: pce
+    reference_month: "2027-03"
+    release_date: 2027-04-30
+    precision: estimated
+  - indicator: pce
+    reference_month: "2027-04"
+    release_date: 2027-05-28
+    precision: estimated
+
+  # ---- QRA / Treasury Quarterly Refunding Announcement (first Wed of Feb/May/Aug/Nov) -
+  # Drives long-end (10Y/30Y) supply / term-premium uncertainty. Reference = the quarter.
+  # Confirm exact dates against https://home.treasury.gov/news/press-releases (refunding).
+  - indicator: qra
+    reference_month: "2026-08"
+    release_date: 2026-08-05
+    precision: estimated
+  - indicator: qra
+    reference_month: "2026-11"
+    release_date: 2026-11-04
+    precision: estimated
+  - indicator: qra
+    reference_month: "2027-02"
+    release_date: 2027-02-03
+    precision: estimated
+  - indicator: qra
+    reference_month: "2027-05"
+    release_date: 2027-05-05
+    precision: estimated

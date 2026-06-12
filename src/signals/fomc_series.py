@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import re
 from datetime import date, datetime, timedelta
+from functools import lru_cache
+from pathlib import Path
 from urllib.parse import urljoin
 
 import pandas as pd
@@ -137,13 +139,16 @@ def build(use_llm: bool = True) -> pd.DataFrame:
 
     SERIES_PATH.parent.mkdir(parents=True, exist_ok=True)
     out.to_parquet(SERIES_PATH)
+    _load_series.cache_clear()
     return out
 
 
-def _load_series() -> pd.DataFrame:
-    if not SERIES_PATH.exists():
+@lru_cache(maxsize=1)
+def _load_series(path_key: str) -> pd.DataFrame:
+    path = Path(path_key)
+    if not path.exists():
         return build(use_llm=False)
-    df = pd.read_parquet(SERIES_PATH)
+    df = pd.read_parquet(path)
     df.index = pd.to_datetime(df.index)
     return df.sort_index()
 
@@ -151,7 +156,7 @@ def _load_series() -> pd.DataFrame:
 def fomc_factor_asof(d: date | str | pd.Timestamp) -> float:
     """Return the latest FOMC score known on or before d, with no look-ahead."""
     asof = pd.Timestamp(d).normalize()
-    df = _load_series()
+    df = _load_series(str(SERIES_PATH))
     known = df[df.index <= asof]
     if known.empty:
         return 0.0

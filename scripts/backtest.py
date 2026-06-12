@@ -1,8 +1,9 @@
 """Run the walk-forward backtest on the cached FRED history.
 
-  python scripts/backtest.py            # uses latest cached FRED parquet
-  python scripts/backtest.py 2010-01-01 # custom start date
+python scripts/backtest.py            # uses latest cached FRED parquet
+python scripts/backtest.py 2010-01-01 # custom start date
 """
+
 from __future__ import annotations
 
 import sys

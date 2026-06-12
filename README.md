@@ -40,9 +40,14 @@ FRED + Fed docs ─▶ 5 factor scores ─▶ weighted blend ─▶ direction + 
 ## Layout
 See [`CLAUDE.md`](CLAUDE.md) for the full repo map and design decisions.
 
+## Chinese handoff docs
+- [`docs/USER_GUIDE_ZH.md`](docs/USER_GUIDE_ZH.md) - Chinese daily SOP, setup, output guide, report interpretation, and GitHub handoff rules.
+- [`docs/NITTAN_FIXED_INCOME_BRIEF_ZH.md`](docs/NITTAN_FIXED_INCOME_BRIEF_ZH.md) - Manager-facing fixed-income rationale for Nittan / inter-dealer broker use cases, FADNS, baselines, and cross-market linkage.
+
 ## Status
-🟡 **Scaffold.** Wired: structure, config, factor blend, report, backtest stub.
-Next: real FRED ingestion run → keyword NLP on FOMC statements → first backtest.
+🟢 **Manager handoff build.** Wired: FRED/FOMC ingestion, factor scoring, release-lagged backtests, FADNS curve trajectory, policy-path overlays, Polymarket external check, grounded macro explanation, Markdown reports, and self-contained HTML curve reports.
+
+Current handoff focus: keep `scripts/daily_run.py`, `scripts/curve_run.py`, and `pytest` green; use the Chinese docs above for operating and explaining the system.
 
 ## Disclaimer
 Research/educational tool. Not investment advice.

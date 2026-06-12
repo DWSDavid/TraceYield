@@ -1,0 +1,49 @@
+# Driver-to-tenor loadings for v2 UST curve impact.
+# Scores retain the same sign convention: positive = upward yield pressure.
+
+tenor_loadings:
+  policy_path:
+    2Y: 1.00
+    5Y: 0.90
+    10Y: 0.45
+    30Y: 0.15
+  macro_surprise:
+    2Y: 0.90
+    5Y: 0.90
+    10Y: 0.50
+    30Y: 0.25
+  liquidity_supply:
+    2Y: 0.10
+    5Y: 0.35
+    10Y: 0.90
+    30Y: 1.00
+  term_premium:
+    2Y: 0.00
+    5Y: 0.30
+    10Y: 1.00
+    30Y: 1.00
+  growth_risk:
+    2Y: 0.90
+    5Y: 0.80
+    10Y: 0.55
+    30Y: 0.40
+  global_relative_value:
+    2Y: 0.05
+    5Y: 0.25
+    10Y: 0.75
+    30Y: 0.85
+  positioning_momentum:
+    2Y: 0.40
+    5Y: 0.65
+    10Y: 0.85
+    30Y: 0.70
+  risk_off_overlay:
+    2Y: 0.35
+    5Y: 0.45
+    10Y: 0.85
+    30Y: 0.90
+
+call_thresholds:
+  level: 0.04
+  slope: 0.025
+  conflict: 0.08

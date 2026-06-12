@@ -1,0 +1,41 @@
+# FOMC Summary of Economic Projections (SEP) — median dot-plot policy path.
+#
+# PREFERRED: pull these LIVE from FRED (free, already wired) instead of trusting this
+# file — it auto-updates each SEP meeting:
+#     FEDTARMD    = SEP median fed funds rate, by projection year
+#     FEDTARMDLR  = SEP median fed funds rate, longer run
+#     FEDTARRH / FEDTARRL = SEP range high/low (for dispersion, optional)
+# This YAML is a FALLBACK + provenance record. SEP refreshes only at the Mar/Jun/Sep/Dec
+# meetings; update after each (next refresh: 2026-06-17).
+#
+# Used by src/signals/policy_path.py for `fed_dot_median_path` and `market_vs_fed_gap_bp`
+# ( = market-implied path  -  this median path ).
+
+release: 2026-03-18              # latest SEP at time of writing
+next_release: 2026-06-17
+
+# Current FOMC target range after the Dec 2025 25bp cut. Midpoint = 3.625%.
+current_target_range_pct: [3.50, 3.75]
+current_target_midpoint_pct: 3.625
+
+# Year-end MEDIAN fed funds rate (midpoint, %), as reported in the SEP (one decimal).
+# March 2026 median path = one 25bp cut in 2026 and one 25bp cut in 2027.
+median_fed_funds_rate_pct:
+  "2026": 3.4
+  "2027": 3.1
+  "2028": 3.1
+  longer_run: 3.0
+
+# Supporting medians (context for the narrative).
+median_core_pce_pct:
+  "2026": 2.7
+median_unemployment_pct:
+  "2026": null            # fill from SEP PDF / FRED if needed
+
+notes: >
+  March 2026 dot plot: 14 of 19 dots clumped between the 3.25-3.50% and 3.50-3.75%
+  ranges; medians unchanged from Sep 2025 for 2026-2028. As of June 2026 the market is
+  actually pricing LESS easing than the dots (core PCE 3.3%, Polymarket ~57% on zero
+  2026 cuts vs the dots' one cut; Powell out, Warsh in), so market_vs_fed_gap_bp is
+  POSITIVE (more hawkish than the Fed) — measured ~+47bp by the FRED proxy. VERIFY exact
+  decimals against the official SEP table (fomcprojtabl20260318) or FRED FEDTARMD.

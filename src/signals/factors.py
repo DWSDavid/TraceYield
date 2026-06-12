@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import pandas as pd
 
+from src.signals.yield_trend import yield_trend_factor
+
 
 def _zscore_last(s: pd.Series, window: int = 252) -> float:
     """Z-score of the latest value vs a trailing window, clipped to [-1, 1]."""
@@ -82,4 +84,5 @@ def compute_all(df: pd.DataFrame, hawkish: float = 0.0, political: float = 0.0) 
         "liquidity": liquidity_factor(df),
         "global_rates": global_rates_factor(df),
         "political_risk": political_risk_factor(political),
+        "yield_trend": yield_trend_factor(df),
     }

@@ -4,11 +4,10 @@ Cache keeps a timestamped parquet per series so any past run is reproducible and
 we don't re-hit FRED rate limits. If fredapi/network is unavailable, falls back
 to whatever is cached.
 """
+
 from __future__ import annotations
 
 from datetime import date
-from pathlib import Path
-
 import pandas as pd
 
 from src.utils.config import DATA, env, fred_series
@@ -29,15 +28,21 @@ def fetch_all(start: str = "2010-01-01") -> pd.DataFrame:
     Columns = FRED series IDs. Missing days forward-filled at the signal stage,
     not here (we keep raw NaNs in the cache).
     """
-    from fredapi import Fred  # imported lazily so the module loads without the dep
-
     CACHE.mkdir(parents=True, exist_ok=True)
-    fred = Fred(api_key=env("FRED_API_KEY"))
+    try:
+        from fredapi import Fred  # imported lazily so the module loads without the dep
+
+        fred = Fred(api_key=env("FRED_API_KEY"))
+    except Exception as e:  # noqa: BLE001 - cache fallback keeps daily_run alive
+        print(f"[fred] fredapi unavailable ({e}); using cache only")
+        fred = None
     ids = _flatten_series_ids(fred_series())
 
     frames = {}
     for sid in ids:
         try:
+            if fred is None:
+                raise RuntimeError("fredapi unavailable")
             s = fred.get_series(sid, observation_start=start)
             s.name = sid
             frames[sid] = s
